@@ -1,26 +1,229 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  --color-felt: #0a1f3d;
+  --color-felt-deep: #050f1f;
+  --color-felt-light: #122a4c;
+  --color-jungle: #1e3b6b;
+  --color-moss: #2d4a7d;
+  --color-banana: #f4c430;
+  --color-banana-bright: #ffdd33;
+  --color-gold: #d4a017;
+  --color-brass: #b8860b;
+  --color-cream: #f6ecc9;
+  --color-bone: #e8dcb3;
+  --color-smoke: #0f1a1a;
+  --color-oak: #382058;
+  --color-neon-green: #7eb8ff;
+
+  --font-display: var(--font-display), 'Impact', sans-serif;
+  --font-headline: var(--font-headline), 'Georgia', serif;
+  --font-body: var(--font-body), 'Georgia', serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', monospace;
+  --font-hand: var(--font-hand), 'Marker Felt', cursive;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  background: var(--color-felt-deep);
+  color: var(--color-cream);
+  font-family: var(--font-body);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-image:
+    radial-gradient(ellipse at top, rgba(30, 55, 107, 0.22), transparent 55%),
+    radial-gradient(ellipse at bottom, rgba(212, 160, 23, 0.08), transparent 60%),
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.012) 0,
+      rgba(255, 255, 255, 0.012) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
+
+/* Film grain overlay — rendered above everything, purely decorative */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
+}
+
+/* Neon glow helper */
+.neon {
+  text-shadow:
+    0 0 4px var(--color-banana-bright),
+    0 0 14px var(--color-banana),
+    0 0 38px rgba(244, 196, 48, 0.7),
+    0 0 72px rgba(244, 196, 48, 0.35);
+}
+
+.neon-green {
+  text-shadow:
+    0 0 4px var(--color-neon-green),
+    0 0 18px rgba(126, 184, 255, 0.7),
+    0 0 42px rgba(126, 184, 255, 0.35);
+}
+
+/* Animated neon flicker on hover */
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  20%, 24%, 55% {
+    opacity: 0.65;
+    filter: brightness(0.6);
+  }
+}
+.flicker:hover {
+  animation: flicker 1.8s infinite;
+}
+
+@keyframes slow-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-0.6deg); }
+}
+.float {
+  animation: slow-float 6s ease-in-out infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% { background-position: -200% 50%; }
+  100% { background-position: 200% 50%; }
+}
+.shimmer {
+  background: linear-gradient(
+    110deg,
+    transparent 25%,
+    rgba(255, 221, 51, 0.35) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 4s linear infinite;
+}
+
+/* Ornate divider - art deco style */
+.deco-divider {
+  position: relative;
+  height: 22px;
+  background-image:
+    linear-gradient(to right, transparent, var(--color-gold), transparent);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.deco-divider::before,
+.deco-divider::after {
+  content: '♠';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-gold);
+  font-size: 1rem;
+  background: var(--color-felt-deep);
+  padding: 0 0.75rem;
+}
+.deco-divider::before { left: 50%; transform: translate(-50%, -50%); }
+.deco-divider::after { display: none; }
+
+/* Torn paper edge */
+.torn-bottom {
+  -webkit-mask: radial-gradient(8px at 50% calc(100% - 4px), #0000 98%, #000) 50% / 16px 100%;
+  mask: radial-gradient(8px at 50% calc(100% - 4px), #0000 98%, #000) 50% / 16px 100%;
+}
+
+/* Custom scrollbar inside cards */
+.scroll-felt::-webkit-scrollbar { width: 8px; }
+.scroll-felt::-webkit-scrollbar-track { background: rgba(10,61,31,0.3); }
+.scroll-felt::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-gold), var(--color-brass));
+  border-radius: 4px;
+}
+
+/* Input styles */
+.jungle-input {
+  background: rgba(5, 31, 16, 0.7);
+  border: 1px solid rgba(212, 160, 23, 0.45);
+  color: var(--color-cream);
+  padding: 0.75rem 1rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.jungle-input:focus {
+  outline: none;
+  border-color: var(--color-banana);
+  box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.15);
+}
+
+/* Wall post card */
+.wall-card {
+  position: relative;
+  padding: 1.5rem 1.25rem 1.75rem;
+  border-radius: 0.35rem;
+  box-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.35),
+    0 18px 40px -18px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  break-inside: avoid;
+}
+.wall-card::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff4d4d, #8a0000);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.55), inset -1px -1px 2px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+@keyframes entry-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise {
+  animation: entry-rise 0.6s ease-out both;
+}
+
+/* Staggered reveal helpers */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.25s; }
+.delay-3 { animation-delay: 0.4s; }
+.delay-4 { animation-delay: 0.55s; }
+.delay-5 { animation-delay: 0.7s; }
+
+/* Gentle glow pulse for floating CTA — no transform, iPad-safe */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 6px 24px rgba(244,196,48,0.4); }
+  50% { box-shadow: 0 6px 32px rgba(244,196,48,0.8), 0 0 60px rgba(244,196,48,0.3); }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Modal slide-up */
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0.5; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }

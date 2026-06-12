@@ -1,0 +1,9 @@
+node_modules
+.next
+.env.local
+.env*.local
+scripts
+supabase
+/tmp
+playwright-report
+test-results
