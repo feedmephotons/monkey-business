@@ -458,7 +458,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 </p>
                 <div className="flex gap-3">
                   <a
-                    href="https://apps.apple.com/us/app/pokerbros/id1465194546"
+                    href="https://i.pokerbros.net/D1LwWJqsU2b"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
@@ -466,7 +466,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                     App Store
                   </a>
                   <a
-                    href="https://play.google.com/store/apps/details?id=com.kpgame.PokerBros"
+                    href="https://i.pokerbros.net/D1LwWJqsU2b"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
