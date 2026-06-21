@@ -670,7 +670,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </p>
             </div>
           ) : (
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 [column-fill:_balance]">
+            <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
               {posts.map((p, i) => (
                 <div key={p.id} className="mb-6 break-inside-avoid">
                   <WallPost post={p} index={i} />
