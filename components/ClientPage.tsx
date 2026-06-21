@@ -151,7 +151,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 priority
               />
             </div>
-            <div className="absolute -bottom-6 -right-3 sm:-right-6 bg-navy-deep border-2 border-light-blue rounded-full w-28 h-28 flex flex-col items-center justify-center text-center shadow-lg rotate-[8deg]">
+            {/* <div className="absolute -bottom-6 -right-3 sm:-right-6 bg-navy-deep border-2 border-light-blue rounded-full w-28 h-28 flex flex-col items-center justify-center text-center shadow-lg rotate-[8deg]">
               <span className="font-[family-name:var(--font-mono)] text-[0.55rem] uppercase tracking-widest text-red">
                 Total Pool
               </span>
@@ -161,7 +161,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <span className="font-[family-name:var(--font-hand)] text-xs text-white/70">
                 to give away
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
 
