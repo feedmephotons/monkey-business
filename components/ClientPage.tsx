@@ -343,7 +343,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
       </section>*/}
 
       {/* ─────────────────────────── SLOT ─────────────────────────── */}
-      <section id="slot" className="relative py-24 px-5 sm:px-10">
+      {/* <section id="slot" className="relative py-24 px-5 sm:px-10">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-felt.png" alt="" fill className="object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-transparent to-navy-deep" />
@@ -386,7 +386,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ─────────────────────────── JOIN THE CLUB ─────────────────────────── */}
       <section id="club" className="relative py-24 px-5 sm:px-10">
