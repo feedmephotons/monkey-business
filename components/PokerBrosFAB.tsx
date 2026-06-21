@@ -14,12 +14,12 @@ export default function PokerBrosFAB() {
   const [platform, setPlatform] = useState<'ios' | 'android' | 'desktop'>('desktop')
 
   useEffect(() => {
+    // All download links should now go to the club referral link
+    setDownloadUrl(CLUB_LINK)
     const ua = navigator.userAgent
     if (/iPhone|iPad|iPod/i.test(ua)) {
-      setDownloadUrl(IOS_URL)
       setPlatform('ios')
     } else if (/Android/i.test(ua)) {
-      setDownloadUrl(ANDROID_URL)
       setPlatform('android')
     }
   }, [])
@@ -127,14 +127,10 @@ export default function PokerBrosFAB() {
                       <span className="text-cream/50 text-xs">Club ID</span>
                       <span className="text-banana-bright font-bold text-lg">1670819</span>
                     </div>
-                    <div className="flex items-baseline gap-3">
-                      <span className="text-cream/50 text-xs">Referrer</span>
-                      <span className="text-cream font-bold text-lg">2058251</span>
-                    </div>
                   </div>
                   <div className="shrink-0 w-20 h-20 rounded bg-white p-1">
                     <Image
-                      src="/img/pokerbros-qr.png"
+                      src="/img/pokerbros-qr-official.png"
                       alt="Scan to join Monkey Biz Poker on PokerBros"
                       width={80}
                       height={80}
