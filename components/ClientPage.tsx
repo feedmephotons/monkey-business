@@ -75,17 +75,14 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             <a href="#schedule" className="hover:text-red transition">
               Schedule
             </a>
-            <a href="#club" className="hover:text-red transition">
-              Club
-            </a>
-            <a href="#slot" className="hover:text-red transition">
-              Slot
+            <a href="#wall" className="hover:text-red transition">
+              Wall
             </a>
             <a href="#contact" className="hover:text-red transition">
               Contact
             </a>
-            <a href="#wall" className="hover:text-red transition">
-              Wall
+            <a href="#club" className="px-4 py-2 text-xs rounded-sm bg-red hover:bg-red-bright text-white transition -my-2">
+              Join Now
             </a>
           </div>
         </nav>
