@@ -414,7 +414,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <div className="flex flex-col items-center text-center">
                 <div className="w-48 h-48 sm:w-56 sm:h-56 bg-white rounded-lg p-2.5 shadow-lg">
                   <Image
-                    src="/img/pokerbros-qr-new.png"
+                    src="/img/pokerbros-qr-official.png"
                     alt="Scan to join Monkey Biz Poker on PokerBros"
                     width={224}
                     height={224}
