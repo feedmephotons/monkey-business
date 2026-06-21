@@ -1,4 +1,5 @@
 import Image from 'next/image'
+"use client"; // Added for onClick handler
 import { supabase, type WallPost as WallPostType, type BudgetRow } from '@/lib/supabase'
 import WallForm from '@/components/WallForm'
 import WallPost from '@/components/WallPost'
@@ -134,40 +135,33 @@ export default async function Home() {
       {/* ─────────────────────────── HERO ─────────────────────────── */}
       <section className="relative flex flex-col" style={{ minHeight: '100svh' }}>
         <div className="absolute inset-0 -z-10">
-          <Image
-            src="/img/bg-jungle.png"
-            alt=""
-            fill
-            priority
-            className="object-cover opacity-60"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-felt-deep/70 via-felt-deep/60 to-felt-deep" />
+          <div className="absolute inset-0 bg-gradient-to-b from-navy-deep/70 via-navy-deep/60 to-navy-deep" />
         </div>
 
         <nav className="relative z-10 flex items-center justify-between px-5 sm:px-10 py-5">
           <div className="flex items-center gap-3">
-            <span className="font-[family-name:var(--font-display)] text-banana text-lg tracking-widest neon">
+            <span className="font-[family-name:var(--font-display)] text-red text-lg tracking-widest neon">
               M.B.
             </span>
-            <span className="hidden sm:block h-px w-16 bg-gold/50" />
-            <span className="hidden sm:inline-block text-[0.65rem] uppercase tracking-[0.3em] text-cream/60 font-[family-name:var(--font-mono)]">
+            <span className="hidden sm:block h-px w-16 bg-light-blue/50" />
+            <span className="hidden sm:inline-block text-[0.65rem] uppercase tracking-[0.3em] text-white/60 font-[family-name:var(--font-mono)]">
               Est. 1974 · Members Only
             </span>
           </div>
-          <div className="flex items-center gap-3 sm:gap-4 text-[0.65rem] uppercase tracking-[0.25em] text-cream/60 font-[family-name:var(--font-mono)]">
-            <a href="#schedule" className="hover:text-banana transition">
+          <div className="flex items-center gap-3 sm:gap-4 text-[0.65rem] uppercase tracking-[0.25em] text-white/60 font-[family-name:var(--font-mono)]">
+            <a href="#schedule" className="hover:text-red transition">
               Schedule
             </a>
-            <a href="#club" className="hover:text-banana transition">
+            <a href="#club" className="hover:text-red transition">
               Club
             </a>
-            <a href="#slot" className="hover:text-banana transition">
+            <a href="#slot" className="hover:text-red transition">
               Slot
             </a>
-            <a href="#contact" className="hover:text-banana transition">
+            <a href="#contact" className="hover:text-red transition">
               Contact
             </a>
-            <a href="#wall" className="hover:text-banana transition">
+            <a href="#wall" className="hover:text-red transition">
               Wall
             </a>
           </div>
@@ -175,51 +169,50 @@ export default async function Home() {
 
         <div className="relative z-10 flex-1 grid lg:grid-cols-[1.05fr_1fr] items-center gap-10 lg:gap-6 px-5 sm:px-10 pb-16">
           <div className="space-y-6 max-w-[640px]">
-            <div className="inline-flex items-center gap-2 px-3 py-1 border border-gold/40 rounded-full text-[0.65rem] uppercase tracking-[0.25em] text-banana/90 font-[family-name:var(--font-mono)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-banana animate-pulse" />
-              Last week of May · Monkey Mania
-            </div>
-
             <h1
-              className="font-[family-name:var(--font-display)] text-banana neon"
-              style={{ lineHeight: 0.82 }}
+              className="font-[family-name:var(--font-display)] text-white"
+              style={{ lineHeight: 1.1 }}
             >
+              <span
+                className="block text-4xl sm:text-5xl text-light-blue"
+              >
+                Swing into the action.
+              </span>
+              <span
+                className="block text-red-bright neon"
+                style={{ fontSize: 'clamp(2.8rem, 9vw, 6.5rem)'}}
+              >
+                Private Poker
+              </span>
               <span
                 className="block"
                 style={{ fontSize: 'clamp(2.6rem, 8vw, 5.8rem)' }}
               >
-                MONKEY BIZ
-              </span>
-              <span
-                className="block text-banana-bright"
-                style={{ fontSize: 'clamp(2.8rem, 9vw, 6.5rem)', paddingLeft: '0.06em' }}
-              >
-                POKER
+                on PokerBros
               </span>
             </h1>
 
-            <p className="font-[family-name:var(--font-headline)] text-xl sm:text-2xl text-cream/90 leading-snug max-w-[520px]">
-              Seven days. Seven stacks. One week of the most ridiculous freerolls, splash pots,
-              satellites and a deep stack finale.
+            <p className="font-[family-name:var(--font-headline)] text-xl sm:text-2xl text-white/90 leading-snug max-w-[520px]">
+              Join our private club for daily games, big pots, and zero rake. All the action, none of the nonsense.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-2">
               <a
-                href="#schedule"
-                className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-b from-banana-bright to-gold text-felt-deep rounded font-[family-name:var(--font-display)] tracking-wider shadow-[0_6px_0_rgba(0,0,0,0.35),0_14px_32px_-10px_rgba(244,196,48,0.55)] hover:translate-y-[1px] active:translate-y-[4px] active:shadow-[0_2px_0_rgba(0,0,0,0.35)] transition"
+                href="#club"
+                className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-display)] tracking-wider text-lg shadow-[0_6px_0_rgba(0,0,0,0.35),0_14px_32px_-10px_rgba(191,10,48,0.55)] hover:translate-y-[1px] active:translate-y-[4px] active:shadow-[0_2px_0_rgba(0,0,0,0.35)] transition"
               >
-                SEE THE WEEK
+                JOIN THE CLUB NOW
                 <span className="inline-block group-hover:translate-x-1 transition">→</span>
               </a>
               <a
-                href="#wall"
-                className="inline-flex items-center gap-2 px-6 py-3 border border-gold/60 text-cream rounded font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest hover:bg-gold/10 hover:border-banana transition"
+                href="#schedule"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-light-blue/60 text-white rounded font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest hover:bg-light-blue/10 hover:border-red transition"
               >
-                Write on the Wall
+                View Schedule
               </a>
             </div>
 
-            <div className="flex items-center gap-5 pt-6 text-cream/50">
+            <div className="flex items-center gap-5 pt-6 text-white/50">
               <span className="font-[family-name:var(--font-mono)] text-[0.6rem] sm:text-[0.65rem] uppercase tracking-[0.3em]">
                 Freerolls · High Hands · Splash Pots · Satellites · A Monkey in a Suit
               </span>
@@ -227,8 +220,8 @@ export default async function Home() {
           </div>
 
           <div className="relative float">
-            <div className="absolute -inset-4 bg-banana/20 blur-3xl rounded-full" />
-            <div className="relative rounded-lg overflow-hidden ring-2 ring-gold/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]">
+            <div className="absolute -inset-4 bg-red/20 blur-3xl rounded-full" />
+            <div className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]">
               <Image
                 src="/img/hero-monkey.png"
                 alt="A capuchin in a velvet green tux at the poker table"
@@ -238,30 +231,30 @@ export default async function Home() {
                 priority
               />
             </div>
-            <div className="absolute -bottom-6 -right-3 sm:-right-6 bg-felt-deep border-2 border-gold rounded-full w-28 h-28 flex flex-col items-center justify-center text-center shadow-lg rotate-[8deg]">
-              <span className="font-[family-name:var(--font-mono)] text-[0.55rem] uppercase tracking-widest text-banana">
+            <div className="absolute -bottom-6 -right-3 sm:-right-6 bg-navy-deep border-2 border-light-blue rounded-full w-28 h-28 flex flex-col items-center justify-center text-center shadow-lg rotate-[8deg]">
+              <span className="font-[family-name:var(--font-mono)] text-[0.55rem] uppercase tracking-widest text-red">
                 Total Pool
               </span>
-              <span className="font-[family-name:var(--font-display)] text-2xl text-banana-bright neon leading-none mt-1">
+              <span className="font-[family-name:var(--font-display)] text-2xl text-red-bright neon leading-none mt-1">
                 $1,210
               </span>
-              <span className="font-[family-name:var(--font-hand)] text-xs text-cream/70">
+              <span className="font-[family-name:var(--font-hand)] text-xs text-white/70">
                 to give away
               </span>
             </div>
           </div>
         </div>
 
-        <div className="relative z-10 border-y border-gold/30 bg-felt-deep/70 backdrop-blur overflow-hidden">
-          <div className="flex gap-10 py-3 whitespace-nowrap animate-[marquee_40s_linear_infinite] font-[family-name:var(--font-display)] text-2xl text-banana/80">
+        <div className="relative z-10 border-y border-light-blue/30 bg-navy-deep/70 backdrop-blur overflow-hidden">
+          <div className="flex gap-10 py-3 whitespace-nowrap animate-[marquee_40s_linear_infinite] font-[family-name:var(--font-display)] text-2xl text-red/80">
             {Array.from({ length: 6 }).map((_, i) => (
               <span key={i} className="flex items-center gap-10">
                 <span>♠ MONKEY MANIA WEEK</span>
-                <span className="text-banana-bright">✦</span>
+                <span className="text-red-bright">✦</span>
                 <span>LAST WEEK OF MAY</span>
-                <span className="text-banana-bright">♣</span>
+                <span className="text-red-bright">♣</span>
                 <span>NO COVER, ALL MISCHIEF</span>
-                <span className="text-banana-bright">♦</span>
+                <span className="text-red-bright">♦</span>
               </span>
             ))}
           </div>
@@ -479,17 +472,17 @@ export default async function Home() {
       <section id="club" className="relative py-24 px-5 sm:px-10">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-jungle.png" alt="" fill className="object-cover opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-b from-felt-deep via-felt-deep/95 to-felt-deep" />
+          <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
         </div>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <span className="text-[0.7rem] uppercase tracking-[0.3em] text-banana font-[family-name:var(--font-mono)]">
+            <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
               Chapter Four
             </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-cream">
-              Join <em className="text-banana">Monkey Biz</em>
+            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+              Join <em className="text-red">Monkey Biz</em>
             </h2>
-            <p className="mt-4 font-[family-name:var(--font-body)] italic text-cream/70 max-w-xl mx-auto">
+            <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
               Download PokerBros and join the club. Click the referral link below and you&apos;ll be
               added to Monkey Biz Poker automatically.
             </p>
@@ -497,7 +490,7 @@ export default async function Home() {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Left — QR code + club info */}
-            <div className="rounded-sm border border-gold/40 bg-felt-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)]">
+            <div className="rounded-sm border border-light-blue/40 bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)]">
               <div className="flex flex-col items-center text-center">
                 <div className="w-48 h-48 sm:w-56 sm:h-56 bg-white rounded-lg p-2.5 shadow-lg">
                   <Image
@@ -508,24 +501,24 @@ export default async function Home() {
                     className="w-full h-full"
                   />
                 </div>
-                <p className="mt-4 font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.25em] text-cream/50">
+                <p className="mt-4 font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.25em] text-white/50">
                   Scan with your phone camera
                 </p>
 
                 <div className="mt-6 w-full grid grid-cols-2 gap-4">
-                  <div className="rounded border border-gold/30 bg-felt-light/30 p-4 text-center">
-                    <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-cream/50 mb-1">
+                  <div className="rounded border border-light-blue/30 bg-navy/30 p-4 text-center">
+                    <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-white/50 mb-1">
                       Club ID
                     </div>
-                    <div className="font-[family-name:var(--font-display)] text-2xl text-banana-bright neon">
+                    <div className="font-[family-name:var(--font-display)] text-2xl text-red-bright neon">
                       1670819
                     </div>
                   </div>
-                  <div className="rounded border border-gold/30 bg-felt-light/30 p-4 text-center">
-                    <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-cream/50 mb-1">
+                  <div className="rounded border border-light-blue/30 bg-navy/30 p-4 text-center">
+                    <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-white/50 mb-1">
                       Referrer
                     </div>
-                    <div className="font-[family-name:var(--font-display)] text-2xl text-cream">
+                    <div className="font-[family-name:var(--font-display)] text-2xl text-white">
                       2058251
                     </div>
                   </div>
@@ -535,12 +528,12 @@ export default async function Home() {
 
             {/* Right — steps */}
             <div className="space-y-5">
-              <div className="rounded-sm border border-gold/30 bg-felt-deep/75 backdrop-blur p-6">
+              <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="w-8 h-8 rounded-full bg-banana text-felt-deep font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">1</span>
-                  <span className="font-[family-name:var(--font-headline)] text-xl text-cream">Download PokerBros</span>
+                  <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">1</span>
+                  <span className="font-[family-name:var(--font-headline)] text-xl text-white">Download PokerBros</span>
                 </div>
-                <p className="font-[family-name:var(--font-body)] text-cream/70 mb-4">
+                <p className="font-[family-name:var(--font-body)] text-white/70 mb-4">
                   Free app available on iPhone and Android. Takes 30 seconds.
                 </p>
                 <div className="flex gap-3">
@@ -548,7 +541,7 @@ export default async function Home() {
                     href="https://apps.apple.com/us/app/pokerbros/id1465194546"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-banana-bright to-gold text-felt-deep rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
+                    className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
                   >
                     App Store
                   </a>
@@ -556,19 +549,19 @@ export default async function Home() {
                     href="https://play.google.com/store/apps/details?id=com.kpgame.PokerBros"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-banana-bright to-gold text-felt-deep rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
+                    className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
                   >
                     Google Play
                   </a>
                 </div>
               </div>
 
-              <div className="rounded-sm border border-gold/30 bg-felt-deep/75 backdrop-blur p-6">
+              <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="w-8 h-8 rounded-full bg-banana text-felt-deep font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">2</span>
-                  <span className="font-[family-name:var(--font-headline)] text-xl text-cream">Join the Club</span>
+                  <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">2</span>
+                  <span className="font-[family-name:var(--font-headline)] text-xl text-white">Join the Club</span>
                 </div>
-                <p className="font-[family-name:var(--font-body)] text-cream/70 mb-4">
+                <p className="font-[family-name:var(--font-body)] text-white/70 mb-4">
                   Tap the link below from your phone. It opens PokerBros and auto-adds you to
                   Monkey Biz Poker — no club code needed.
                 </p>
@@ -576,25 +569,74 @@ export default async function Home() {
                   href="https://i.pokerbros.net/D1LwWJqsU2b"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full text-center px-5 py-3 border-2 border-banana text-banana rounded font-[family-name:var(--font-display)] tracking-wider text-xl hover:bg-banana/10 transition"
+                  className="block w-full text-center px-6 py-4 border-2 border-red-bright text-red-bright rounded font-[family-name:var(--font-display)] tracking-wider text-2xl hover:bg-red/20 transition"
                 >
                   JOIN MONKEY BIZ
                 </a>
               </div>
 
-              <div className="rounded-sm border border-gold/30 bg-felt-deep/75 backdrop-blur p-6">
+              <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="w-8 h-8 rounded-full bg-banana text-felt-deep font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">3</span>
-                  <span className="font-[family-name:var(--font-headline)] text-xl text-cream">Or Join Manually</span>
+                  <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">3</span>
+                  <span className="font-[family-name:var(--font-headline)] text-xl text-white">Or Join Manually</span>
                 </div>
-                <p className="font-[family-name:var(--font-body)] text-cream/70">
-                  Open PokerBros, tap &ldquo;Search Club,&rdquo; enter Club ID <strong className="text-banana">1670819</strong> and
-                  Referrer <strong className="text-banana">2058251</strong>.
+                <p className="font-[family-name:var(--font-body)] text-white/70">
+                  Open PokerBros, tap &ldquo;Search Club,&rdquo; enter Club ID <strong className="text-red">1670819</strong> and
+                  Referrer <strong className="text-red">2058251</strong>.
                 </p>
               </div>
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ─────────────────────────── PROMOTIONS ─────────────────────────── */}
+      <section id="promotions" className="relative py-20 px-5 sm:px-10">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-navy-deep via-navy/60 to-navy-deep" />
+          <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+              <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
+                  Spread the Word
+              </span>
+              <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+                  Share the <em className="text-red">Action</em>
+              </h2>
+              <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
+                  Invite your friends, join the community, and get in on the conversation.
+              </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-5">
+                  <a href="https://t.me/Monkeybizpoker" target="_blank" rel="noopener noreferrer" className="block p-6 rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur hover:border-red/70 transition">
+                      <h3 className="font-[family-name:var(--font-headline)] text-2xl text-red">Join on Telegram</h3>
+                      <p className="text-white/70">Get updates, chat with players, and never miss a game.</p>
+                  </a>
+                  <button onClick={() => navigator.clipboard.writeText('https://monkeybizpoker.com')} className="block p-6 rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur hover:border-red/70 transition text-left">
+                      <h3 className="font-[family-name:var(--font-headline)] text-2xl text-red">Share This Page</h3>
+                      <p className="text-white/70">Copy a link to the site and send it to your crew.</p>
+                  </button>
+              </div>
+          </div>
+      </section>
+
+      {/* ─────────────────────────── MERCH ─────────────────────────── */}
+      <section id="merch" className="relative py-24 px-5 sm:px-10">
+          <div className="absolute inset-0 -z-10">
+              <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
+          </div>
+          <div className="max-w-5xl mx-auto">
+              <div className="text-center">
+              <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
+                  Coming Soon
+              </span>
+              <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+                  Monkey <em className="text-red">Merch</em>
+              </h2>
+              <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
+                  T-shirts, hoodies, card protectors, and more. Stay tuned for the drop.
+              </p>
+              </div>
+          </div>
       </section>
 
       {/* ─────────────────────────── CONTACT ─────────────────────────── */}

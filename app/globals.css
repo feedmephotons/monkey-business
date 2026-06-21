@@ -1,20 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-felt: #0a1f3d;
-  --color-felt-deep: #050f1f;
+  --color-navy-deep: #001C4A;
+  --color-navy: #002868;
+  --color-red: #BF0A30;
+  --color-red-bright: #E50000;
+  --color-white: #F5F5F5;
+  --color-light-blue: #6495ED;
+  --color-smoke: #0f1a1a;
+  --color-oak: #382058;
+
+  /* Legacy for now */
+  --color-felt: var(--color-navy);
+  --color-felt-deep: var(--color-navy-deep);
   --color-felt-light: #122a4c;
   --color-jungle: #1e3b6b;
   --color-moss: #2d4a7d;
-  --color-banana: #f4c430;
-  --color-banana-bright: #ffdd33;
-  --color-gold: #d4a017;
+  --color-banana: var(--color-red);
+  --color-banana-bright: var(--color-red-bright);
+  --color-gold: var(--color-light-blue);
   --color-brass: #b8860b;
-  --color-cream: #f6ecc9;
+  --color-cream: var(--color-white);
   --color-bone: #e8dcb3;
-  --color-smoke: #0f1a1a;
-  --color-oak: #382058;
-  --color-neon-green: #7eb8ff;
+  --color-neon-green: var(--color-light-blue);
 
   --font-display: var(--font-display), 'Impact', sans-serif;
   --font-headline: var(--font-headline), 'Georgia', serif;
@@ -29,22 +37,15 @@
 
 html,
 body {
-  background: var(--color-felt-deep);
-  color: var(--color-cream);
+  background: var(--color-navy-deep);
+  color: var(--color-white);
   font-family: var(--font-body);
 }
 
 body {
   background-image:
-    radial-gradient(ellipse at top, rgba(30, 55, 107, 0.22), transparent 55%),
-    radial-gradient(ellipse at bottom, rgba(212, 160, 23, 0.08), transparent 60%),
-    repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.012) 0,
-      rgba(255, 255, 255, 0.012) 1px,
-      transparent 1px,
-      transparent 3px
-    );
+    radial-gradient(ellipse at top, rgba(100, 149, 237, 0.1), transparent 55%),
+    radial-gradient(ellipse at bottom, rgba(191, 10, 48, 0.08), transparent 60%);
 }
 
 /* Film grain overlay — rendered above everything, purely decorative */
@@ -62,10 +63,10 @@ body::after {
 /* Neon glow helper */
 .neon {
   text-shadow:
-    0 0 4px var(--color-banana-bright),
-    0 0 14px var(--color-banana),
-    0 0 38px rgba(244, 196, 48, 0.7),
-    0 0 72px rgba(244, 196, 48, 0.35);
+    0 0 4px var(--color-red-bright),
+    0 0 14px var(--color-red),
+    0 0 38px rgba(191, 10, 48, 0.7),
+    0 0 72px rgba(191, 10, 48, 0.35);
 }
 
 .neon-green {
