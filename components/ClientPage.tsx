@@ -165,7 +165,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
           </div>
         </div>
 
-        <div className="relative z-10 border-y border-light-blue/30 bg-navy-deep/70 backdrop-blur overflow-hidden">
+        {/*<div className="relative z-10 border-y border-light-blue/30 bg-navy-deep/70 backdrop-blur overflow-hidden">
           <div className="flex gap-10 py-3 whitespace-nowrap animate-[marquee_40s_linear_infinite] font-[family-name:var(--font-display)] text-2xl text-red/80">
             {Array.from({ length: 6 }).map((_, i) => (
               <span key={i} className="flex items-center gap-10">
@@ -178,11 +178,11 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </span>
             ))}
           </div>
-        </div>
+        </div>*/}
       </section>
 
       {/* ─────────────────────────── SCHEDULE ─────────────────────────── */}
-      <section id="schedule" className="relative py-24 px-5 sm:px-10">
+      {/*<section id="schedule" className="relative py-24 px-5 sm:px-10">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-schedule.png" alt="" fill className="object-cover opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
@@ -268,10 +268,10 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             ))}
           </div>
         </div>
-      </section>
+      </section>*/}
 
       {/* ─────────────────────────── BUDGET CAGE ─────────────────────────── */}
-      <section className="relative py-24 px-5 sm:px-10">
+      {/*<section className="relative py-24 px-5 sm:px-10">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-budget.png" alt="" fill className="object-cover opacity-15" />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy to-navy-deep" />
@@ -340,7 +340,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
           </div>
         </div>
-      </section>
+      </section>*/}
 
       {/* ─────────────────────────── SLOT ─────────────────────────── */}
       <section id="slot" className="relative py-24 px-5 sm:px-10">
