@@ -1,5 +1,5 @@
-import Image from 'next/image'
 "use client"; // Added for onClick handler
+import Image from 'next/image'
 import { supabase, type WallPost as WallPostType, type BudgetRow } from '@/lib/supabase'
 import WallForm from '@/components/WallForm'
 import WallPost from '@/components/WallPost'
