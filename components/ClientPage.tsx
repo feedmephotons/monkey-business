@@ -425,21 +425,13 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   Scan with your phone camera
                 </p>
 
-                <div className="mt-6 w-full grid grid-cols-2 gap-4">
+                <div className="mt-6 w-full">
                   <div className="rounded border border-light-blue/30 bg-navy/30 p-4 text-center">
                     <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-white/50 mb-1">
                       Club ID
                     </div>
                     <div className="font-[family-name:var(--font-display)] text-2xl text-red-bright neon">
                       1670819
-                    </div>
-                  </div>
-                  <div className="rounded border border-light-blue/30 bg-navy/30 p-4 text-center">
-                    <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-white/50 mb-1">
-                      Referrer
-                    </div>
-                    <div className="font-[family-name:var(--font-display)] text-2xl text-white">
-                      2058251
                     </div>
                   </div>
                 </div>
@@ -501,8 +493,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <span className="font-[family-name:var(--font-headline)] text-xl text-white">Or Join Manually</span>
                 </div>
                 <p className="font-[family-name:var(--font-body)] text-white/70">
-                  Open PokerBros, tap &ldquo;Search Club,&rdquo; enter Club ID <strong className="text-red">1670819</strong> and
-                  Referrer <strong className="text-red">2058251</strong>.
+                  Open PokerBros, tap &ldquo;Search Club,&rdquo; and enter Club ID <strong className="text-red">1670819</strong>.
                 </p>
               </div>
             </div>
