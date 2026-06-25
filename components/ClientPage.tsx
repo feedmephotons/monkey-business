@@ -113,7 +113,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </h1>
 
             <p className="font-[family-name:var(--font-headline)] text-xl sm:text-2xl text-white/90 leading-snug max-w-[520px]">
-              Join our private club for daily games, big pots, and zero rake. All the action, none of the nonsense.
+              Join our private club for daily games, big pots, and tournaments. All the action, none of the nonsense.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-2">
