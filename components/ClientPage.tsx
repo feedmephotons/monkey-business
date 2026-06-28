@@ -17,13 +17,10 @@ type ScheduleNight = {
 }
 
 const SCHEDULE: ScheduleNight[] = [
-    { day: 'MON', date: 'May 25', title: 'Freeroll', pool: '$305', detail: 'Kick the week off with a taste of free money. Top finishers take home the pool.', accent: 'var(--color-light-blue)' },
-    { day: 'TUE', date: 'May 26', title: 'Freeroll', pool: '$190', detail: 'Round two. Tighter pool, looser lineup. Bring your A-game and B-jokes.', accent: 'var(--color-red)' },
-    { day: 'WED', date: 'May 27', title: 'High Hands', pool: '$200', detail: 'Hour 1 (6:30p): $100 for the hour’s highest hand. Night Shift (8:00p → close): another $100 running all night.', accent: 'var(--color-red-bright)' },
-    { day: 'THU', date: 'May 28', title: 'Freeroll', pool: '$200', detail: 'Play hard tonight — Thursday’s finish unlocks EXTRA-EXTRA CHIPS for Friday’s splash pot.', accent: 'var(--color-light-blue)' },
-    { day: 'FRI', date: 'May 29', title: 'Splash Pot Night', pool: '$200 + $110', detail: 'Splash Pot budget: $200. Plus $110 allocated to 11 free satellite seats. Chaos, in a good way.', accent: 'var(--color-red)' },
-    { day: 'SAT', date: 'May 30', title: 'Satellite Tournament', pool: '$10 Buy-in', detail: '$10 satellite tournament (7-man). First place wins a FREE seat into Sunday’s Deep Stack tournament. Your shot at the big game starts here.', accent: 'var(--color-red-bright)' },
-    { day: 'SUN', date: 'May 31', title: 'Deep Stack Tournament', pool: 'THE MAIN EVENT', detail: 'The week’s finale. Saturday’s satellite winner plays for free — everyone else, buy in and bring your best. Winner takes the stack.', accent: 'var(--color-red)', headline: true },
+    { day: 'FRI', date: 'July 5', title: 'Freeroll', pool: 'Hot', detail: 'Kick off the month with free money. No better way to start the weekend.', accent: 'var(--color-light-blue)' },
+    { day: 'SAT', date: 'July 13', title: 'Freeroll', pool: 'Hotter', detail: 'Weekend action continues. Bring your A-game and your beer money.', accent: 'var(--color-red)' },
+    { day: 'THU', date: 'July 25', title: 'Freeroll', pool: 'Hottest', detail: 'Thirsty Thursday, but for chips. Quench your thirst for action with a free stack on the house.', accent: 'var(--color-red-bright)' },
+    { day: 'WED', date: 'July 31', title: 'Freeroll', pool: 'Inferno', detail: 'End the month on a high note. Nothing beats a winning hand you didn\'t have to pay for.', accent: 'var(--color-light-blue)' },
 ]
 
 const BUDGET_TOTAL_CENTS = 121000 // $1,210
@@ -72,6 +69,9 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </span>
           </div>
           <div className="flex items-center gap-3 sm:gap-4 text-[0.65rem] uppercase tracking-[0.25em] text-white/60 font-[family-name:var(--font-mono)]">
+            <a href="#events" className="hover:text-red transition">
+              Events
+            </a>
             <a href="#schedule" className="hover:text-red transition">
               Schedule
             </a>
@@ -134,7 +134,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
             <div className="flex items-center gap-5 pt-6 text-white/50">
               <span className="font-[family-name:var(--font-mono)] text-[0.6rem] sm:text-[0.65rem] uppercase tracking-[0.3em]">
-                Freerolls · High Hands · Splash Pots · Satellites · A Monkey in a Suit
+                Freerolls• High Hands•Tournaments• Bananas• A Monkey In A Suit
               </span>
             </div>
           </div>
@@ -181,8 +181,51 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
         </div>*/}
       </section>
 
+      {/* ─────────────────────────── UPCOMING EVENTS ─────────────────────────── */}
+      <section id="events" className="relative py-20 px-5 sm:px-10 bg-navy">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
+              Big Games Coming
+            </span>
+            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+              Special <em className="text-red">Events</em>
+            </h2>
+            <div className="deco-divider mt-6 max-w-sm mx-auto" />
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Event 1: Ladies Night */}
+            <div className="rounded-sm border-2 border-red-bright bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(191,10,48,0.5)]">
+              <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-red-bright neon mb-3">
+                Ladies Night
+              </h3>
+              <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
+                Get ready for a night dedicated to the queens of the felt. Date is pending for next week, stay tuned for the final call!
+              </p>
+              <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60">
+                <span className="font-bold text-white">Date:</span> Next Week (TBA)
+              </div>
+            </div>
+
+            {/* Event 2: Heads Up Tournament 2 */}
+            <div className="rounded-sm border border-light-blue/40 bg-navy-deep/75 backdrop-blur p-6 sm:p-8">
+              <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-white mb-3">
+                The Heads Up Tournament 2
+              </h3>
+              <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
+                The ultimate test of skill is back. Go one-on-one for the crown. The tournament kicks off as soon as we have 16 players locked in.
+              </p>
+              <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60">
+                <span className="font-bold text-white">Requirement:</span> 16 Confirmed & Paid Players to Start
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ─────────────────────────── SCHEDULE ─────────────────────────── */}
-      {/*<section id="schedule" className="relative py-24 px-5 sm:px-10">
+      <section id="schedule" className="relative py-24 px-5 sm:px-10">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-schedule.png" alt="" fill className="object-cover opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
@@ -191,19 +234,18 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
             <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
-              Chapter One
+              This Month
             </span>
             <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-              The Week, <em className="text-red">Unspooled</em>
+              Jamming in <em className="text-red">July</em>
             </h2>
             <div className="deco-divider mt-6 max-w-sm mx-auto" />
             <p className="mt-4 font-[family-name:var(--font-body)] text-white/70 italic max-w-xl mx-auto">
-              Five nights. Budget capped at ${(BUDGET_TOTAL_CENTS / 100).toLocaleString()}. Every
-              dollar accounted for.
+              4 HOT FREEROLLS. Don't miss out.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
             {SCHEDULE.map((night, idx) => (
               <article
                 key={night.day}
@@ -268,7 +310,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             ))}
           </div>
         </div>
-      </section>*/}
+      </section>
 
       {/* ─────────────────────────── BUDGET CAGE ─────────────────────────── */}
       {/*<section className="relative py-24 px-5 sm:px-10">
