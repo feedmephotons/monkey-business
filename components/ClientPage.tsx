@@ -722,7 +722,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               MONKEY BIZ POKER
             </div>
             <div className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.3em] text-white/50 mt-1">
-              Private poker lounge · Est. 1974
+              Private poker lounge · Est. 2023
             </div>
           </div>
           <div className="text-center text-white/50 font-[family-name:var(--font-body)] italic">
