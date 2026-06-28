@@ -65,7 +65,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </span>
             <span className="hidden sm:block h-px w-16 bg-light-blue/50" />
             <span className="hidden sm:inline-block text-[0.65rem] uppercase tracking-[0.3em] text-white/60 font-[family-name:var(--font-mono)]">
-              Est. 1974 · Members Only
+              Est. 2023 · Members Only
             </span>
           </div>
           <div className="flex items-center gap-3 sm:gap-4 text-[0.65rem] uppercase tracking-[0.25em] text-white/60 font-[family-name:var(--font-mono)]">
