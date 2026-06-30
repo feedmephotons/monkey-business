@@ -241,7 +241,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </h2>
             <div className="deco-divider mt-6 max-w-sm mx-auto" />
             <p className="mt-4 font-[family-name:var(--font-body)] text-white/70 italic max-w-xl mx-auto">
-              4 HOT FREEROLLS. Don't miss out.
+              4 hot FREEROLLS. Don’t Monkey Around & Miss Out
             </p>
           </div>
 
