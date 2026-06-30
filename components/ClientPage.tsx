@@ -17,10 +17,10 @@ type ScheduleNight = {
 }
 
 const SCHEDULE: ScheduleNight[] = [
-    { day: 'FRI', date: 'July 5', title: 'Freeroll', pool: '250', detail: 'Kick off the month with free money. No better way to start the weekend.', accent: 'var(--color-light-blue)' },
-    { day: 'SAT', date: 'July 13', title: 'Freeroll', pool: '250', detail: 'Weekend action continues. Bring your A-game and your beer money.', accent: 'var(--color-red)' },
-    { day: 'THU', date: 'July 25', title: 'Freeroll', pool: '250', detail: 'Thirsty Thursday, but for chips. Quench your thirst for action with a free stack on the house.', accent: 'var(--color-red-bright)' },
-    { day: 'WED', date: 'July 31', title: 'Freeroll', pool: '250', detail: 'End the month on a high note. Nothing beats a winning hand you didn\'t have to pay for.', accent: 'var(--color-light-blue)' },
+    { day: 'SUN', date: 'July 5', title: 'Freeroll', pool: '250', detail: 'Kick off the month with free money. No better way to end the weekend.', accent: 'var(--color-light-blue)' },
+    { day: 'MON', date: 'July 13', title: 'Freeroll', pool: '250', detail: 'Your case of the Mondays just got cured. Free chips to start the week.', accent: 'var(--color-red)' },
+    { day: 'SAT', date: 'July 25', title: 'Freeroll', pool: '250', detail: "Saturday Night Stacks. The weekend's in full swing and so are the cards. Ante up.", accent: 'var(--color-red-bright)' },
+    { day: 'FRI', date: 'July 31', title: 'Freeroll', pool: '250', detail: 'FREEROLL FRIDAY! End the month on a high note. Nothing beats a winning hand you didn’t have to pay for.', accent: 'var(--color-light-blue)' },
 ]
 
 const BUDGET_TOTAL_CENTS = 121000 // $1,210
