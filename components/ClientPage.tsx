@@ -58,16 +58,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep/70 via-navy-deep/60 to-navy-deep" />
         </div>
 
-        <nav className="relative z-10 flex items-center justify-between px-5 sm:px-10 py-5">
-          <div className="flex items-center gap-3">
-            <span className="font-[family-name:var(--font-display)] text-red text-lg tracking-widest neon">
-              M.B.
-            </span>
-            <span className="hidden sm:block h-px w-16 bg-light-blue/50" />
-            <span className="hidden sm:inline-block text-[0.65rem] uppercase tracking-[0.3em] text-white/60 font-[family-name:var(--font-mono)]">
-              Est. 2023 · Members Only
-            </span>
-          </div>
+        <nav className="relative z-10 flex items-center justify-center px-5 sm:px-10 py-5">
           <div className="flex items-center gap-3 sm:gap-4 text-[0.65rem] uppercase tracking-[0.25em] text-white/60 font-[family-name:var(--font-mono)]">
             <a href="#events" className="hover:text-red transition">
               Events
@@ -143,8 +134,8 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             <div className="absolute -inset-4 bg-red/20 blur-3xl rounded-full" />
             <div className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]">
               <Image
-                src="/img/hero-beach-monkeys.jpg"
-                alt="Three monkeys in beach attire playing poker on a tropical beach"
+                src="/img/hero-freeroll-flyer-jul26.jpg"
+                alt="Monkey Biz Poker Freeroll Flyer"
                 width={1200}
                 height={700}
                 className="w-full h-auto"
@@ -725,9 +716,8 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               Private poker lounge · Est. 2023
             </div>
           </div>
-          <div className="text-center text-white/50 font-[family-name:var(--font-body)] italic">
-            “If you can&apos;t spot the sucker in your first half hour at the table, then you
-            <em className="text-red"> are</em> the sucker.” — Rounders
+          <div className="text-center text-white/50 font-[family-name:var(--font-display)] text-xl neon-green">
+            The Card Game Is Bananas!!!
           </div>
           <div className="sm:text-right font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.3em] text-white/50">
             © {new Date().getFullYear()} M.B.
