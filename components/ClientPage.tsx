@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import WallForm from '@/components/WallForm'
 import WallPost from '@/components/WallPost'
@@ -86,6 +86,14 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
       prevFlyer()
     }
   }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveFlyerIndex((prev) => (prev + 1) % FLYERS.length)
+    }, 6000) // Slowly changes every 6 seconds
+
+    return () => clearInterval(timer)
+  }, [activeFlyerIndex])
 
   const spent = budget.reduce((s, r) => s + r.amount_cents, 0)
   const remaining = BUDGET_TOTAL_CENTS - spent
