@@ -63,6 +63,30 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
     setActiveFlyerIndex((prev) => (prev - 1 + FLYERS.length) % FLYERS.length)
   }
 
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > 50
+    const isRightSwipe = distance < -50
+    if (isLeftSwipe) {
+      nextFlyer()
+    } else if (isRightSwipe) {
+      prevFlyer()
+    }
+  }
+
   const spent = budget.reduce((s, r) => s + r.amount_cents, 0)
   const remaining = BUDGET_TOTAL_CENTS - spent
   const pct = Math.min(100, Math.round((spent / BUDGET_TOTAL_CENTS) * 100))
@@ -149,27 +173,32 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
           <div className="relative float">
             <div className="absolute -inset-4 bg-red/20 blur-3xl rounded-full" />
-            <div className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] group">
+            <div 
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+              className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] group cursor-grab active:cursor-grabbing"
+            >
               <Image
                 src={FLYERS[activeFlyerIndex].src}
                 alt={FLYERS[activeFlyerIndex].alt}
                 width={1200}
                 height={700}
-                className="w-full h-auto transition-opacity duration-300"
+                className="w-full h-auto transition-opacity duration-300 pointer-events-none select-none"
                 priority
               />
 
               {/* Navigation Arrows */}
               <button
                 onClick={prevFlyer}
-                className="absolute left-3 top-1/2 -translate-y-1/2 bg-navy-deep/80 hover:bg-red text-white w-9 h-9 rounded-full border border-light-blue/30 hover:border-red transition flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-lg text-lg select-none"
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-navy-deep/80 hover:bg-red text-white w-9 h-9 rounded-full border border-light-blue/30 hover:border-red transition flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 shadow-lg text-lg select-none z-10"
                 aria-label="Previous Flyer"
               >
                 ‹
               </button>
               <button
                 onClick={nextFlyer}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-navy-deep/80 hover:bg-red text-white w-9 h-9 rounded-full border border-light-blue/30 hover:border-red transition flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-lg text-lg select-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-navy-deep/80 hover:bg-red text-white w-9 h-9 rounded-full border border-light-blue/30 hover:border-red transition flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 shadow-lg text-lg select-none z-10"
                 aria-label="Next Flyer"
               >
                 ›
