@@ -134,7 +134,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             <div className="absolute -inset-4 bg-red/20 blur-3xl rounded-full" />
             <div className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]">
               <Image
-                src="/img/hero-freeroll-flyer-jul26.jpg"
+                src="/img/hero-freeroll-flyer-jul13.png"
                 alt="Monkey Biz Poker Freeroll Flyer"
                 width={1200}
                 height={700}
