@@ -1,10 +1,17 @@
 "use client";
 
+import { useState } from 'react'
 import Image from 'next/image'
 import WallForm from '@/components/WallForm'
 import WallPost from '@/components/WallPost'
 import PokerBrosFAB from '@/components/PokerBrosFAB'
 import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
+
+const FLYERS = [
+  { src: '/img/hero-freeroll-flyer-jul13.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 13th' },
+  { src: '/img/hero-freeroll-flyer-jul25.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 25th' },
+  { src: '/img/hero-freeroll-flyer-jul31.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 31st' },
+]
 
 type ScheduleNight = {
   day: string
@@ -46,6 +53,16 @@ interface ClientPageProps {
 }
 
 export default function ClientPage({ posts, budget }: ClientPageProps) {
+  const [activeFlyerIndex, setActiveFlyerIndex] = useState(0)
+
+  const nextFlyer = () => {
+    setActiveFlyerIndex((prev) => (prev + 1) % FLYERS.length)
+  }
+
+  const prevFlyer = () => {
+    setActiveFlyerIndex((prev) => (prev - 1 + FLYERS.length) % FLYERS.length)
+  }
+
   const spent = budget.reduce((s, r) => s + r.amount_cents, 0)
   const remaining = BUDGET_TOTAL_CENTS - spent
   const pct = Math.min(100, Math.round((spent / BUDGET_TOTAL_CENTS) * 100))
@@ -132,15 +149,47 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
           <div className="relative float">
             <div className="absolute -inset-4 bg-red/20 blur-3xl rounded-full" />
-            <div className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)]">
+            <div className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] group">
               <Image
-                src="/img/hero-freeroll-flyer-jul13.png"
-                alt="Monkey Biz Poker Freeroll Flyer"
+                src={FLYERS[activeFlyerIndex].src}
+                alt={FLYERS[activeFlyerIndex].alt}
                 width={1200}
                 height={700}
-                className="w-full h-auto"
+                className="w-full h-auto transition-opacity duration-300"
                 priority
               />
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={prevFlyer}
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-navy-deep/80 hover:bg-red text-white w-9 h-9 rounded-full border border-light-blue/30 hover:border-red transition flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-lg text-lg select-none"
+                aria-label="Previous Flyer"
+              >
+                ‹
+              </button>
+              <button
+                onClick={nextFlyer}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-navy-deep/80 hover:bg-red text-white w-9 h-9 rounded-full border border-light-blue/30 hover:border-red transition flex items-center justify-center opacity-0 group-hover:opacity-100 shadow-lg text-lg select-none"
+                aria-label="Next Flyer"
+              >
+                ›
+              </button>
+
+              {/* Dots indicator */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                {FLYERS.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveFlyerIndex(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition ${
+                      index === activeFlyerIndex
+                        ? 'bg-red border border-white'
+                        : 'bg-white/40 hover:bg-white/70'
+                    }`}
+                    aria-label={`Go to flyer ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
             {/* <div className="absolute -bottom-6 -right-3 sm:-right-6 bg-navy-deep border-2 border-light-blue rounded-full w-28 h-28 flex flex-col items-center justify-center text-center shadow-lg rotate-[8deg]">
               <span className="font-[family-name:var(--font-mono)] text-[0.55rem] uppercase tracking-widest text-red">
