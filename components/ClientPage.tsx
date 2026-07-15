@@ -749,53 +749,6 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
         </div>
       </section>
 
-      {/* ─────────────────────────── SPLAT A BAD BEAT ─────────────────────────── */}
-      <section id="splat" className="relative py-24 px-5 sm:px-10 bg-navy">
-        <div className="absolute inset-0 -z-10">
-          <Image src="/img/bg-jungle.png" alt="" fill className="object-cover opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
-        </div>
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
-              Bad Beat Section
-            </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-              Splat a <em className="text-red">Bad Beat</em> 🍌💥
-            </h2>
-            <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
-              Did your nut flush get cracked by runner-runner? Submit your horrible bad beats here and rate them on the official Banana Scale!
-            </p>
-          </div>
-
-          <div className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
-            <WallForm isBadBeat={true} />
-          </div>
-
-          {(() => {
-            const badBeats = posts.filter((p) => p.is_bad_beat)
-            if (badBeats.length === 0) {
-              return (
-                <div className="text-center py-16">
-                  <p className="font-[family-name:var(--font-hand)] text-3xl text-red/70">
-                    No bad beats posted yet. Slipped up?
-                  </p>
-                </div>
-              )
-            }
-            return (
-              <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
-                {badBeats.map((p, i) => (
-                  <div key={p.id} className="mb-6 break-inside-avoid">
-                    <WallPost post={p} index={i} />
-                  </div>
-                ))}
-              </div>
-            )
-          })()}
-        </div>
-      </section>
-
       {/* ─────────────────────────── THE WALL ─────────────────────────── */}
       <section id="wall" className="relative py-24 px-5 sm:px-10">
         <div className="absolute inset-0 -z-10">
@@ -817,30 +770,24 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
           </div>
 
           <div className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
-            <WallForm isBadBeat={false} />
+            <WallForm />
           </div>
 
-          {(() => {
-            const generalPosts = posts.filter((p) => !p.is_bad_beat)
-            if (generalPosts.length === 0) {
-              return (
-                <div className="text-center py-16">
-                  <p className="font-[family-name:var(--font-hand)] text-3xl text-red/70">
-                    Nothing on the wall yet. Be first.
-                  </p>
+          {posts.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="font-[family-name:var(--font-hand)] text-3xl text-red/70">
+                Nothing on the wall yet. Be first.
+              </p>
+            </div>
+          ) : (
+            <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
+              {posts.map((p, i) => (
+                <div key={p.id} className="mb-6 break-inside-avoid">
+                  <WallPost post={p} index={i} />
                 </div>
-              )
-            }
-            return (
-              <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
-                {generalPosts.map((p, i) => (
-                  <div key={p.id} className="mb-6 break-inside-avoid">
-                    <WallPost post={p} index={i} />
-                  </div>
-                ))}
-              </div>
-            )
-          })()}
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
