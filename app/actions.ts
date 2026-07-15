@@ -52,7 +52,11 @@ export async function postToWall(input: PostInput) {
 }
 
 export async function ratePost(postId: string, ratingTier: number) {
-  const columnName = 'banana_count'
+  if (ratingTier < 1 || ratingTier > 5) {
+    return { ok: false as const, error: 'Invalid rating, champ.' }
+  }
+
+  const columnName = `banana_${ratingTier}`
 
   // Fetch current value
   const { data: post, error: fetchError } = await admin()

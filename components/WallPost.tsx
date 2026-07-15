@@ -27,9 +27,9 @@ function timeAgo(iso: string) {
 export default function WallPost({ post, index }: { post: WallPostType; index: number }) {
   const [isPending, startTransition] = useTransition()
 
-  const handleRate = () => {
+  const handleRate = (tier: number) => {
     startTransition(async () => {
-      await ratePost(post.id, 1)
+      await ratePost(post.id, tier)
     })
   }
 
@@ -138,30 +138,52 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
       </div>
 
       <div className="mt-4">
-        {/* 4. MASSIVE FULL-WIDTH YELLOW 'THROW BANANA' BUTTON (FROM JOSH'S MOCKUP) */}
-        {post.is_bad_beat ? (
+        {/* 4. DRIPPING 5-TIER BANANA RATING ROW (FROM JOSH'S REQUEST) */}
+        {post.is_bad_beat && (
           <div 
-            className="border-t border-dashed pt-3 mb-3"
+            className="flex justify-between items-center gap-1 border-t border-dashed pt-3 mb-3 animate-fade-in"
             style={{ borderColor: `rgba(255,209,59,0.2)` }}
           >
-            <button
-              onClick={handleRate}
-              disabled={isPending}
-              className="w-full py-3 bg-[#ffd13b] hover:bg-[#ffe14c] disabled:opacity-50 text-black font-black rounded-lg text-sm uppercase tracking-wider transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-[0_4px_12px_rgba(255,209,59,0.25)] flex items-center justify-center gap-2"
-            >
-              <span>🍌</span>
-              <span>{isPending ? 'THROWING...' : 'Throw Banana'}</span>
-              <span className="bg-black/10 px-2 py-0.5 rounded-full text-xs font-mono font-bold">({post.banana_count || 0})</span>
-            </button>
-            
-            {/* Social actions row (React, Comment, Share) */}
-            <div className="flex justify-between text-[0.7rem] text-white/40 font-mono mt-3 px-1">
-              <span>☺ React (19)</span>
-              <span>💬 Comment (7)</span>
-              <span>➦ Share</span>
-            </div>
+            {[1, 2, 3, 4, 5].map((tier) => {
+              const count = (post as any)[`banana_${tier}`] || 0
+              
+              const tierNames = [
+                "Slipped & Fell (The Peel)",
+                "Mild Bruising (Double)",
+                "Serious Pain (Trio Bunch)",
+                "Table Flipped (Quad Cluster)",
+                "Absolute Rigged (Monster Bunch)"
+              ]
+              
+              return (
+                <button
+                  key={tier}
+                  onClick={() => handleRate(tier)}
+                  disabled={isPending}
+                  className="flex flex-col items-center gap-1 p-1 rounded-lg hover:bg-white/5 active:scale-95 disabled:opacity-50 transition-all duration-150 group/btn flex-1 cursor-pointer"
+                  title={tierNames[tier - 1]}
+                >
+                  <div className="relative w-11 h-11 transition-transform group-hover/btn:scale-115">
+                    <Image
+                      src={`/img/banana-${tier}.png`}
+                      alt={tierNames[tier - 1]}
+                      fill
+                      sizes="44px"
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                  <span 
+                    className="text-[0.7rem] font-bold opacity-80" 
+                    style={{ color: '#ffd13b' }}
+                  >
+                    {count}
+                  </span>
+                </button>
+              )
+            })}
           </div>
-        ) : null}
+        )}
 
         {/* Card Footer (Author & Date) */}
         {!post.is_bad_beat && (
