@@ -32,7 +32,7 @@ const FONTS: { key: 'display' | 'serif' | 'mono' | 'hand'; label: string; classN
   { key: 'hand', label: 'Scribble', className: 'font-[family-name:var(--font-hand)]' },
 ]
 
-export default function WallForm() {
+export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat?: boolean; placeholder?: string }) {
   const [author, setAuthor] = useState('')
   const [message, setMessage] = useState('')
   const [fontColor, setFontColor] = useState(FONT_COLORS[0])
@@ -52,6 +52,7 @@ export default function WallForm() {
         font_color: fontColor,
         bg_color: bgColor,
         font_family: font,
+        is_bad_beat: isBadBeat,
       })
       if (res.ok) {
         setMessage('')
@@ -75,7 +76,7 @@ export default function WallForm() {
           }}
         >
           <p
-            className={`text-2xl md:text-3xl leading-snug break-words ${currentFont.className}`}
+            className={`text-xl md:text-2xl leading-snug break-words ${currentFont.className}`}
             style={{ color: fontColor }}
           >
             {message || 'Your masterpiece appears here…'}
@@ -113,7 +114,7 @@ export default function WallForm() {
           </label>
           <textarea
             className="jungle-input w-full min-h-[96px] resize-none"
-            placeholder="How's the air up there, Mr. High Hand?"
+            placeholder={placeholder || "How's the air up there, Mr. High Hand?"}
             maxLength={500}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
