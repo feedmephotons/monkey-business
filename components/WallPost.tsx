@@ -36,8 +36,12 @@ function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: b
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline font-bold transition duration-150 hover:opacity-80 break-all cursor-pointer relative z-30"
-          style={{ color: isBadBeat ? '#ffd13b' : defaultColor }}
+          className="underline font-bold transition duration-150 hover:opacity-80 break-all cursor-pointer relative z-30 font-sans normal-case"
+          style={{ 
+            color: isBadBeat ? '#ffd13b' : defaultColor,
+            textTransform: 'none',
+            fontFamily: 'sans-serif'
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {part}
