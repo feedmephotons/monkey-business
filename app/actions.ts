@@ -18,6 +18,7 @@ type PostInput = {
   font_color: string
   bg_color: string
   font_family: 'display' | 'serif' | 'mono' | 'hand'
+  is_bad_beat?: boolean
 }
 
 export async function postToWall(input: PostInput) {
@@ -38,6 +39,7 @@ export async function postToWall(input: PostInput) {
       bg_color: input.bg_color,
       font_family: input.font_family,
       rotation,
+      is_bad_beat: !!input.is_bad_beat,
     })
 
   if (error) {

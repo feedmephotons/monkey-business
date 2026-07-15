@@ -32,7 +32,7 @@ const FONTS: { key: 'display' | 'serif' | 'mono' | 'hand'; label: string; classN
   { key: 'hand', label: 'Scribble', className: 'font-[family-name:var(--font-hand)]' },
 ]
 
-export default function WallForm() {
+export default function WallForm({ isBadBeat = false }: { isBadBeat?: boolean }) {
   const [author, setAuthor] = useState('')
   const [message, setMessage] = useState('')
   const [fontColor, setFontColor] = useState(FONT_COLORS[0])
@@ -52,6 +52,7 @@ export default function WallForm() {
         font_color: fontColor,
         bg_color: bgColor,
         font_family: font,
+        is_bad_beat: isBadBeat,
       })
       if (res.ok) {
         setMessage('')

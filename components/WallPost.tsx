@@ -52,49 +52,51 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
       </div>
 
       <div className="mt-4">
-        {/* Interactive 5-Tier Banana Rating Panel */}
-        <div 
-          className="flex justify-between items-center gap-1 border-t border-dashed pt-2 mb-3"
-          style={{ borderColor: `${post.font_color}33` }}
-        >
-          {[1, 2, 3, 4, 5].map((tier) => {
-            const count = (post as any)[`banana_${tier}`] || 0
-            
-            // Text representation for accessibility/title
-            const tierNames = [
-              "Slipped & Fell (The Peel)",
-              "Mild Bruising (Double)",
-              "Serious Pain (Trio Bunch)",
-              "Table Flipped (Quad Cluster)",
-              "Absolute Rigged (Monster Bunch)"
-            ]
-            
-            return (
-              <button
-                key={tier}
-                onClick={() => handleRate(tier)}
-                disabled={isPending}
-                className="flex flex-col items-center gap-1 p-1 rounded hover:bg-black/10 active:scale-95 disabled:opacity-50 transition-all duration-150 group/btn"
-                title={tierNames[tier - 1]}
-              >
-                <Image
-                  src={`/img/banana-${tier}.png`}
-                  alt={tierNames[tier - 1]}
-                  width={40}
-                  height={40}
-                  className="w-8 h-8 object-contain transition-transform duration-200 group-hover/btn:scale-115 group-active/btn:scale-90"
-                  priority
-                />
-                <span 
-                  className="text-[0.7rem] font-bold opacity-80" 
-                  style={{ color: post.font_color }}
+        {/* Interactive 5-Tier Banana Rating Panel (Only for Bad Beats) */}
+        {post.is_bad_beat && (
+          <div 
+            className="flex justify-between items-center gap-1 border-t border-dashed pt-2 mb-3"
+            style={{ borderColor: `${post.font_color}33` }}
+          >
+            {[1, 2, 3, 4, 5].map((tier) => {
+              const count = (post as any)[`banana_${tier}`] || 0
+              
+              // Text representation for accessibility/title
+              const tierNames = [
+                "Slipped & Fell (The Peel)",
+                "Mild Bruising (Double)",
+                "Serious Pain (Trio Bunch)",
+                "Table Flipped (Quad Cluster)",
+                "Absolute Rigged (Monster Bunch)"
+              ]
+              
+              return (
+                <button
+                  key={tier}
+                  onClick={() => handleRate(tier)}
+                  disabled={isPending}
+                  className="flex flex-col items-center gap-1 p-1 rounded hover:bg-black/10 active:scale-95 disabled:opacity-50 transition-all duration-150 group/btn"
+                  title={tierNames[tier - 1]}
                 >
-                  {count}
-                </span>
-              </button>
-            )
-          })}
-        </div>
+                  <Image
+                    src={`/img/banana-${tier}.png`}
+                    alt={tierNames[tier - 1]}
+                    width={40}
+                    height={40}
+                    className="w-8 h-8 object-contain transition-transform duration-200 group-hover/btn:scale-115 group-active/btn:scale-90"
+                    priority
+                  />
+                  <span 
+                    className="text-[0.7rem] font-bold opacity-80" 
+                    style={{ color: post.font_color }}
+                  >
+                    {count}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        )}
 
         {/* Footer (Author & Time) */}
         <div

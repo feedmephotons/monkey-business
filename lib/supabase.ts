@@ -21,6 +21,7 @@ export type WallPost = {
   banana_3: number
   banana_4: number
   banana_5: number
+  is_bad_beat: boolean
 }
 
 export type BudgetRow = {

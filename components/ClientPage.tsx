@@ -53,6 +53,7 @@ interface ClientPageProps {
 
 export default function ClientPage({ posts, budget }: ClientPageProps) {
   const [activeFlyerIndex, setActiveFlyerIndex] = useState(0)
+  const [activeWallTab, setActiveWallTab] = useState<'general' | 'bad_beat'>('general')
 
   const nextFlyer = () => {
     setActiveFlyerIndex((prev) => (prev + 1) % FLYERS.length)
@@ -768,25 +769,66 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </p>
           </div>
 
-          <div className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
-            <WallForm />
+          {/* TAB SELECTOR */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex rounded-lg bg-navy-deep/80 p-1.5 border border-light-blue/20 shadow-lg">
+              <button
+                type="button"
+                onClick={() => setActiveWallTab('general')}
+                className={`px-6 py-2.5 rounded font-[family-name:var(--font-display)] text-sm tracking-wider transition-all duration-150 cursor-pointer ${
+                  activeWallTab === 'general'
+                    ? 'bg-red text-white shadow-md'
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                THE WALL
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveWallTab('bad_beat')}
+                className={`px-6 py-2.5 rounded font-[family-name:var(--font-display)] text-sm tracking-wider transition-all duration-150 cursor-pointer flex items-center gap-1.5 ${
+                  activeWallTab === 'bad_beat'
+                    ? 'bg-banana text-felt-deep font-bold shadow-md'
+                    : 'text-banana/60 hover:text-banana hover:bg-white/5'
+                }`}
+              >
+                <span>BANANA SPLATS</span>
+                <span className="text-xs">🍌💥</span>
+              </button>
+            </div>
           </div>
 
-          {posts.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="font-[family-name:var(--font-hand)] text-3xl text-red/70">
-                Nothing on the wall yet. Be first.
-              </p>
-            </div>
-          ) : (
-            <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
-              {posts.map((p, i) => (
-                <div key={p.id} className="mb-6 break-inside-avoid">
-                  <WallPost post={p} index={i} />
+          <div className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
+            <WallForm isBadBeat={activeWallTab === 'bad_beat'} />
+          </div>
+
+          {(() => {
+            const filteredPosts = posts.filter((p) => 
+              activeWallTab === 'bad_beat' ? p.is_bad_beat : !p.is_bad_beat
+            )
+
+            if (filteredPosts.length === 0) {
+              return (
+                <div className="text-center py-16">
+                  <p className="font-[family-name:var(--font-hand)] text-3xl text-red/70">
+                    {activeWallTab === 'bad_beat' 
+                      ? 'No bad beats posted yet. Slipped up?'
+                      : 'Nothing on the wall yet. Be first.'}
+                  </p>
                 </div>
-              ))}
-            </div>
-          )}
+              )
+            }
+
+            return (
+              <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
+                {filteredPosts.map((p, i) => (
+                  <div key={p.id} className="mb-6 break-inside-avoid">
+                    <WallPost post={p} index={i} />
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
         </div>
       </section>
 
