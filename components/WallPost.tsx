@@ -33,11 +33,14 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
     })
   }
 
+  // Check if message contains a link
+  const hasLink = post.message.includes('http://') || post.message.includes('https://')
+
   return (
     <div
-      className={`wall-card rise flex flex-col justify-between h-full relative overflow-visible ${
+      className={`wall-card rise flex flex-col justify-between h-full relative overflow-visible transition-all duration-200 ${
         post.is_bad_beat 
-          ? 'border-2 border-yellow/60 shadow-[0_0_15px_rgba(255,209,59,0.2)] bg-[#042112]' 
+          ? 'border-2 border-yellow shadow-[0_0_20px_rgba(255,209,59,0.35)] bg-[#0f0f0f] rounded-xl' 
           : ''
       }`}
       style={{
@@ -46,68 +49,140 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
         animationDelay: `${Math.min(index * 0.06, 0.9)}s`,
       }}
     >
-      {/* Decorative Banana Splat in Top Right of Bad Beat Cards */}
+      {/* 1. DRIPPING "BAD BEAT!" HEADER PUDDLE (FROM JOSH'S MOCKUP) */}
       {post.is_bad_beat && (
-        <div className="absolute -top-5 -right-5 w-14 h-14 pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] z-10">
-          <Image
-            src="/img/banana-splat.svg"
-            alt="Banana Splat!"
-            fill
-            className="object-contain animate-float"
-            priority
-          />
+        <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-52 h-14 z-20 pointer-events-none select-none drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]">
+          <svg viewBox="0 0 120 30" width="100%" height="100%">
+            <path d="M 8,12 
+                     C 12,4 108,4 112,12 
+                     C 116,18 108,26 98,24 
+                     C 94,30 90,30 87,24 
+                     C 81,24 76,28 73,20
+                     C 67,29 55,29 49,20
+                     C 43,29 36,27 33,20
+                     C 27,27 18,23 8,12" 
+                  fill="#ffd13b" stroke="#000000" stroke-width="1.5" stroke-linejoin="round" />
+            <text x="60" y="19" fill="#000000" font-family="Impact, Arial Black, sans-serif" font-weight="900" font-size="8.5" text-anchor="middle" letter-spacing="0.3">BAD BEAT!</text>
+            <path d="M 80,10 C 76,8 70,11 68,13 C 70,12 73,10 80,10" stroke="#000000" stroke-width="1" fill="#ffd13b" />
+          </svg>
         </div>
       )}
 
-      <div>
+      {/* 2. DRIPPING YELLOW BOTTOM BORDER (FROM JOSH'S MOCKUP) */}
+      {post.is_bad_beat && (
+        <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-[101.5%] h-6 z-20 pointer-events-none select-none">
+          <svg viewBox="0 0 100 10" width="100%" height="100%" preserveAspectRatio="none">
+            <path d="M 0,0 L 100,0 
+                     C 92,0 88,7 85,2 
+                     C 79,2 75,9 71,2
+                     C 63,2 59,10 55,2
+                     C 48,2 43,9 39,2
+                     C 33,2 29,10 25,2
+                     C 19,2 14,7 10,1
+                     L 0,0 Z" 
+                  fill="#ffd13b" stroke="#ffd13b" stroke-width="0.3" />
+          </svg>
+        </div>
+      )}
+
+      {/* CARD CONTENT */}
+      <div className={post.is_bad_beat ? 'pt-6' : ''}>
+        {/* User avatar / header if Bad Beat */}
+        {post.is_bad_beat && (
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-full bg-yellow/10 border border-yellow/30 flex items-center justify-center text-sm">
+              🤵
+            </div>
+            <div className="flex-1">
+              <div className="text-xs font-bold text-white/90">@poker_mike</div>
+              <div className="text-[0.6rem] text-white/50 uppercase tracking-widest font-mono">Monkey Biz Wall</div>
+            </div>
+          </div>
+        )}
+
+        {/* 3. STYLIZED POKER TABLE REPLAY GRAPHIC (FROM JOSH'S MOCKUP) */}
+        {post.is_bad_beat && hasLink && (
+          <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] p-4 my-4 shadow-inner relative overflow-hidden flex flex-col items-center">
+            {/* The felt ring */}
+            <div className="w-full max-w-[280px] aspect-[2/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-2 relative">
+              {/* Community Cards */}
+              <div className="flex gap-1 mb-1 scale-90 sm:scale-100">
+                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">A<span className="text-[0.65rem] text-red-600">♦</span></span>
+                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">K<span className="text-[0.65rem] text-red-600">♥</span></span>
+                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">10<span className="text-[0.65rem] text-red-600">♥</span></span>
+                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">9<span className="text-[0.65rem]">♠</span></span>
+                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">Q<span className="text-[0.65rem]">♠</span></span>
+              </div>
+              <span className="text-[0.55rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLIAN WINS (Straight Flush)</span>
+
+              {/* Hero Hand (A A) */}
+              <div className="absolute -bottom-2 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-1 flex gap-0.5 scale-75">
+                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">A<span className="text-[0.5rem]">♠</span></span>
+                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">A<span className="text-[0.5rem] text-red-600">♥</span></span>
+              </div>
+              {/* Villian Hand (10 J) */}
+              <div className="absolute -top-2 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-1 flex gap-0.5 scale-75">
+                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">10<span className="text-[0.5rem]">♠</span></span>
+                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">J<span className="text-[0.5rem]">♠</span></span>
+              </div>
+            </div>
+          </div>
+        )}
+
         <p
           className={`text-xl md:text-2xl leading-snug break-words ${FONT_CLASS[post.font_family]}`}
-          style={{ color: post.is_bad_beat ? '#ffd13b' : post.font_color }}
+          style={{ color: post.is_bad_beat ? '#ffffff' : post.font_color }}
         >
           {post.message}
         </p>
       </div>
 
       <div className="mt-4">
-        {/* Rating/Interactive Row (Only for Bad Beats) */}
+        {/* 4. MASSIVE FULL-WIDTH YELLOW 'THROW BANANA' BUTTON (FROM JOSH'S MOCKUP) */}
         {post.is_bad_beat ? (
           <div 
-            className="flex justify-between items-center gap-3 border-t border-dashed pt-3 mb-3"
+            className="border-t border-dashed pt-3 mb-3"
             style={{ borderColor: `rgba(255,209,59,0.2)` }}
           >
             <button
               onClick={handleRate}
               disabled={isPending}
-              className="px-4 py-2 bg-yellow hover:bg-yellow-bright disabled:opacity-50 text-felt-deep font-bold rounded-lg text-xs uppercase tracking-widest transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+              className="w-full py-3 bg-[#ffd13b] hover:bg-[#ffe14c] disabled:opacity-50 text-black font-black rounded-lg text-sm uppercase tracking-wider transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-[0_4px_12px_rgba(255,209,59,0.25)] flex items-center justify-center gap-2"
             >
-              {isPending ? 'THROWING...' : 'Throw Banana'}
+              <span>🍌</span>
+              <span>{isPending ? 'THROWING...' : 'Throw Banana'}</span>
+              <span className="bg-black/10 px-2 py-0.5 rounded-full text-xs font-mono font-bold">({post.banana_count || 0})</span>
             </button>
             
-            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-felt-deep/60 rounded-full border border-yellow/30 shadow-inner">
-              <span className="text-xs">🍌</span>
-              <span className="text-xs font-bold text-yellow font-mono">{post.banana_count || 0}</span>
+            {/* Social actions row (React, Comment, Share) */}
+            <div className="flex justify-between text-[0.7rem] text-white/40 font-mono mt-3 px-1">
+              <span>☺ React (19)</span>
+              <span>💬 Comment (7)</span>
+              <span>➦ Share</span>
             </div>
           </div>
         ) : null}
 
         {/* Card Footer (Author & Date) */}
-        <div
-          className="flex items-baseline justify-between gap-3 border-t border-dashed pt-2"
-          style={{ borderColor: post.is_bad_beat ? 'rgba(255,209,59,0.2)' : `${post.font_color}44` }}
-        >
-          <span
-            className="font-[family-name:var(--font-hand)] text-lg"
-            style={{ color: post.is_bad_beat ? '#ffd13b' : post.font_color }}
+        {!post.is_bad_beat && (
+          <div
+            className="flex items-baseline justify-between gap-3 border-t border-dashed pt-2"
+            style={{ borderColor: `${post.font_color}44` }}
           >
-            — {post.author}
-          </span>
-          <span
-            className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-wider opacity-60"
-            style={{ color: post.is_bad_beat ? '#ffd13b' : post.font_color }}
-          >
-            {timeAgo(post.created_at)}
-          </span>
-        </div>
+            <span
+              className="font-[family-name:var(--font-hand)] text-lg"
+              style={{ color: post.font_color }}
+            >
+              — {post.author}
+            </span>
+            <span
+              className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-wider opacity-60"
+              style={{ color: post.font_color }}
+            >
+              {timeAgo(post.created_at)}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
