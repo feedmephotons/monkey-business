@@ -8,7 +8,6 @@ import PokerBrosFAB from '@/components/PokerBrosFAB'
 import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 
 const FLYERS = [
-  { src: '/img/hero-freeroll-flyer-jul13.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 13th' },
   { src: '/img/hero-freeroll-flyer-jul25.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 25th' },
   { src: '/img/hero-freeroll-flyer-jul31.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 31st' },
 ]
