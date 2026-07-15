@@ -27,91 +27,83 @@ function timeAgo(iso: string) {
 export default function WallPost({ post, index }: { post: WallPostType; index: number }) {
   const [isPending, startTransition] = useTransition()
 
-  const handleRate = (tier: number) => {
+  const handleRate = () => {
     startTransition(async () => {
-      await ratePost(post.id, tier)
+      await ratePost(post.id, 1)
     })
   }
 
   return (
     <div
-      className={`wall-card rise flex flex-col justify-between h-full`}
+      className={`wall-card rise flex flex-col justify-between h-full relative overflow-visible ${
+        post.is_bad_beat 
+          ? 'border-2 border-yellow/60 shadow-[0_0_15px_rgba(255,209,59,0.2)] bg-[#042112]' 
+          : ''
+      }`}
       style={{
-        background: post.bg_color,
+        background: post.is_bad_beat ? undefined : post.bg_color,
         transform: `rotate(${post.rotation}deg)`,
         animationDelay: `${Math.min(index * 0.06, 0.9)}s`,
       }}
     >
+      {/* Decorative Banana Splat in Top Right of Bad Beat Cards */}
+      {post.is_bad_beat && (
+        <div className="absolute -top-5 -right-5 w-14 h-14 pointer-events-none select-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] z-10">
+          <Image
+            src="/img/banana-splat.svg"
+            alt="Banana Splat!"
+            fill
+            className="object-contain animate-float"
+            priority
+          />
+        </div>
+      )}
+
       <div>
         <p
           className={`text-xl md:text-2xl leading-snug break-words ${FONT_CLASS[post.font_family]}`}
-          style={{ color: post.font_color }}
+          style={{ color: post.is_bad_beat ? '#ffd13b' : post.font_color }}
         >
           {post.message}
         </p>
       </div>
 
       <div className="mt-4">
-        {/* Interactive 5-Tier Banana Rating Panel (Only for Bad Beats) */}
-        {post.is_bad_beat && (
+        {/* Rating/Interactive Row (Only for Bad Beats) */}
+        {post.is_bad_beat ? (
           <div 
-            className="flex justify-between items-center gap-1 border-t border-dashed pt-2 mb-3"
-            style={{ borderColor: `${post.font_color}33` }}
+            className="flex justify-between items-center gap-3 border-t border-dashed pt-3 mb-3"
+            style={{ borderColor: `rgba(255,209,59,0.2)` }}
           >
-            {[1, 2, 3, 4, 5].map((tier) => {
-              const count = (post as any)[`banana_${tier}`] || 0
-              
-              // Text representation for accessibility/title
-              const tierNames = [
-                "Slipped & Fell (The Peel)",
-                "Mild Bruising (Double)",
-                "Serious Pain (Trio Bunch)",
-                "Table Flipped (Quad Cluster)",
-                "Absolute Rigged (Monster Bunch)"
-              ]
-              
-              return (
-                <button
-                  key={tier}
-                  onClick={() => handleRate(tier)}
-                  disabled={isPending}
-                  className="flex flex-col items-center gap-1 p-1 rounded hover:bg-black/10 active:scale-95 disabled:opacity-50 transition-all duration-150 group/btn"
-                  title={tierNames[tier - 1]}
-                >
-                  <Image
-                    src={`/img/banana-${tier}.png`}
-                    alt={tierNames[tier - 1]}
-                    width={40}
-                    height={40}
-                    className="w-8 h-8 object-contain transition-transform duration-200 group-hover/btn:scale-115 group-active/btn:scale-90"
-                    priority
-                  />
-                  <span 
-                    className="text-[0.7rem] font-bold opacity-80" 
-                    style={{ color: post.font_color }}
-                  >
-                    {count}
-                  </span>
-                </button>
-              )
-            })}
+            <button
+              onClick={handleRate}
+              disabled={isPending}
+              className="px-4 py-2 bg-yellow hover:bg-yellow-bright disabled:opacity-50 text-felt-deep font-bold rounded-lg text-xs uppercase tracking-widest transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
+            >
+              {isPending ? 'THROWING...' : 'Throw Banana'}
+            </button>
+            
+            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-felt-deep/60 rounded-full border border-yellow/30 shadow-inner">
+              <span className="text-xs">🍌</span>
+              <span className="text-xs font-bold text-yellow font-mono">{post.banana_count || 0}</span>
+            </div>
           </div>
-        )}
+        ) : null}
 
-        {/* Footer (Author & Time) */}
+        {/* Card Footer (Author & Date) */}
         <div
           className="flex items-baseline justify-between gap-3 border-t border-dashed pt-2"
-          style={{ borderColor: `${post.font_color}44` }}
+          style={{ borderColor: post.is_bad_beat ? 'rgba(255,209,59,0.2)' : `${post.font_color}44` }}
         >
           <span
             className="font-[family-name:var(--font-hand)] text-lg"
-            style={{ color: post.font_color }}
+            style={{ color: post.is_bad_beat ? '#ffd13b' : post.font_color }}
           >
             — {post.author}
           </span>
           <span
             className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-wider opacity-60"
-            style={{ color: post.font_color }}
+            style={{ color: post.is_bad_beat ? '#ffd13b' : post.font_color }}
           >
             {timeAgo(post.created_at)}
           </span>

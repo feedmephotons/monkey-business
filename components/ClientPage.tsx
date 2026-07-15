@@ -750,92 +750,114 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
       </section>
 
       {/* ─────────────────────────── THE WALL ─────────────────────────── */}
-      <section id="wall" className="relative py-24 px-5 sm:px-10">
+      <section id="wall" className="relative py-24 px-5 sm:px-10 bg-gradient-to-b from-navy-deep to-[#052112]">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-wall.png" alt="" fill className="object-cover opacity-25" />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/90 to-navy-deep" />
+          <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/90 to-[#052112]" />
         </div>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
-              Chapter Five
+          {/* HEADER BAR (FROM PHONE MOCKUP) */}
+          <div className="flex justify-between items-center pb-6 mb-8 border-b border-light-blue/20">
+            <span className="font-[family-name:var(--font-display)] text-banana text-lg sm:text-xl tracking-wider">
+              Monkey Biz Poker
             </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveWallTab('bad_beat');
+                  setTimeout(() => {
+                    document.getElementById('wall-form-container')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 50);
+                }}
+                className="px-4 py-1.5 rounded-full border border-yellow/40 hover:border-yellow text-yellow hover:bg-yellow/10 font-semibold text-xs transition duration-150 cursor-pointer shadow-md font-[family-name:var(--font-mono)] uppercase tracking-wider"
+              >
+                Splat a Bad Beat
+              </button>
+              <div className="w-8 h-8 rounded-full bg-yellow/10 border border-yellow/30 flex items-center justify-center font-bold text-sm text-yellow">
+                🐒
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mb-10">
+            <h2 className="font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
               The <em className="text-red">Wall</em>
             </h2>
             <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
               Brag, rib, propose a prop bet, or leave a love letter to your nut flush. Make it look
               however you want.
             </p>
-            <div className="mt-6 flex justify-center">
-              <a 
-                href="#splat" 
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-b from-banana-bright to-gold text-felt-deep rounded font-bold hover:scale-105 transition-all duration-150 shadow-md font-[family-name:var(--font-display)] text-sm tracking-wider"
+          </div>
+
+          {/* TAB BAR (FROM PHONE MOCKUP) */}
+          <div className="flex justify-center mb-12">
+            <div className="inline-flex rounded-full bg-navy-deep/80 p-1.5 border border-light-blue/20 shadow-lg">
+              <button
+                type="button"
+                onClick={() => setActiveWallTab('general')}
+                className={`px-6 py-2.5 rounded-full font-[family-name:var(--font-display)] text-sm tracking-wider transition-all duration-150 cursor-pointer ${
+                  activeWallTab === 'general'
+                    ? 'bg-red text-white shadow-md'
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                }`}
               >
-                SPLAT A BAD BEAT! 🍌💥
-              </a>
+                Chat & Brags
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveWallTab('bad_beat')}
+                className={`relative px-6 py-2.5 rounded-full font-[family-name:var(--font-display)] text-sm tracking-wider transition-all duration-150 cursor-pointer flex items-center gap-1.5 ${
+                  activeWallTab === 'bad_beat'
+                    ? 'bg-yellow text-felt-deep font-bold shadow-md'
+                    : 'text-banana/60 hover:text-banana hover:bg-white/5'
+                }`}
+              >
+                <span>Banana Splats</span>
+                <span>🍌</span>
+                
+                {posts.filter(p => p.is_bad_beat).length > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-yellow text-felt-deep text-[0.65rem] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-felt-deep shadow">
+                    {posts.filter(p => p.is_bad_beat).length}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
 
-          <div className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
-            <WallForm />
+          {/* FORM CONTAINER */}
+          <div id="wall-form-container" className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
+            <WallForm 
+              isBadBeat={activeWallTab === 'bad_beat'} 
+              placeholder={
+                activeWallTab === 'bad_beat' 
+                  ? "Paste your PokerBros hand link here (e.g. https://s.pokerbros.net/?t=...) along with your story!"
+                  : "Brag, rib, or leave a love letter..."
+              }
+            />
           </div>
 
-          {posts.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="font-[family-name:var(--font-hand)] text-3xl text-red/70">
-                Nothing on the wall yet. Be first.
-              </p>
-            </div>
-          ) : (
-            <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
-              {posts.filter(p => !p.is_bad_beat).map((p, i) => (
-                <div key={p.id} className="mb-6 break-inside-avoid">
-                  <WallPost post={p} index={i} />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ─────────────────────────── SPLAT A BAD BEAT ─────────────────────────── */}
-      <section id="splat" className="relative py-24 px-5 sm:px-10 bg-navy-deep/95">
-        <div className="absolute inset-0 -z-10">
-          <Image src="/img/bg-jungle.png" alt="" fill className="object-cover opacity-15" />
-          <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
-        </div>
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
-            <span className="text-[0.7rem] uppercase tracking-[0.3em] text-banana font-[family-name:var(--font-mono)]">
-              Splat Section
-            </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-              Splat a <em className="text-banana">Bad Beat</em> 🍌💥
-            </h2>
-            <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
-              Did your nut flush get cracked by runner-runner? Submit your horrible bad beats and PokerBros hand links here and rate them on the official Banana Scale!
-            </p>
-          </div>
-
-          <div className="rounded-sm border border-gold/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
-            <WallForm isBadBeat={true} placeholder="Paste your PokerBros hand link here (e.g. https://i.pokerbros.net/...) along with your story!" />
-          </div>
-
+          {/* CARDS LIST */}
           {(() => {
-            const badBeats = posts.filter((p) => p.is_bad_beat)
-            if (badBeats.length === 0) {
+            const filteredPosts = posts.filter((p) => 
+              activeWallTab === 'bad_beat' ? p.is_bad_beat : !p.is_bad_beat
+            )
+
+            if (filteredPosts.length === 0) {
               return (
                 <div className="text-center py-16">
                   <p className="font-[family-name:var(--font-hand)] text-3xl text-red/70">
-                    No bad beats posted yet. Slipped up?
+                    {activeWallTab === 'bad_beat' 
+                      ? 'No bad beats posted yet. Slipped up?'
+                      : 'Nothing on the wall yet. Be first.'}
                   </p>
                 </div>
               )
             }
+
             return (
               <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
-                {badBeats.map((p, i) => (
+                {filteredPosts.map((p, i) => (
                   <div key={p.id} className="mb-6 break-inside-avoid">
                     <WallPost post={p} index={i} />
                   </div>
