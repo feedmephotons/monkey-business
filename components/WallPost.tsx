@@ -24,6 +24,30 @@ function timeAgo(iso: string) {
   return `${d}d ago`
 }
 
+function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: boolean) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+  const parts = text.split(urlRegex)
+  
+  return parts.map((part, i) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a
+          key={i}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline font-bold transition duration-150 hover:opacity-80 break-all cursor-pointer relative z-30"
+          style={{ color: isBadBeat ? '#ffd13b' : defaultColor }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {part}
+        </a>
+      )
+    }
+    return <span key={i}>{part}</span>
+  })
+}
+
 export default function WallPost({ post, index }: { post: WallPostType; index: number }) {
   const [isPending, startTransition] = useTransition()
 
@@ -133,7 +157,7 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
           className={`text-xl md:text-2xl leading-snug break-words ${FONT_CLASS[post.font_family]}`}
           style={{ color: post.is_bad_beat ? '#ffffff' : post.font_color }}
         >
-          {post.message}
+          {renderMessageWithLinks(post.message, post.font_color, post.is_bad_beat)}
         </p>
       </div>
 
