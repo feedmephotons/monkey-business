@@ -102,28 +102,28 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
 
         {/* 3. STYLIZED POKER TABLE REPLAY GRAPHIC (FROM JOSH'S MOCKUP) */}
         {post.is_bad_beat && hasLink && (
-          <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] p-4 my-4 shadow-inner relative overflow-hidden flex flex-col items-center">
+          <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] p-2.5 my-2.5 shadow-inner relative overflow-hidden flex flex-col items-center scale-95 sm:scale-100">
             {/* The felt ring */}
-            <div className="w-full max-w-[280px] aspect-[2/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-2 relative">
+            <div className="w-full max-w-[210px] aspect-[2.1/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative">
               {/* Community Cards */}
-              <div className="flex gap-1 mb-1 scale-90 sm:scale-100">
-                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">A<span className="text-[0.65rem] text-red-600">♦</span></span>
-                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">K<span className="text-[0.65rem] text-red-600">♥</span></span>
-                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">10<span className="text-[0.65rem] text-red-600">♥</span></span>
-                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">9<span className="text-[0.65rem]">♠</span></span>
-                <span className="w-6 h-9 rounded bg-white text-black font-bold text-xs flex flex-col items-center justify-center shadow">Q<span className="text-[0.65rem]">♠</span></span>
+              <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
+                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">A<span className="text-[0.5rem] text-red-600">♦</span></span>
+                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">K<span className="text-[0.5rem] text-red-600">♥</span></span>
+                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">10<span className="text-[0.5rem] text-red-600">♥</span></span>
+                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">9<span className="text-[0.5rem]">♠</span></span>
+                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">Q<span className="text-[0.5rem]">♠</span></span>
               </div>
-              <span className="text-[0.55rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLIAN WINS (Straight Flush)</span>
+              <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLIAN WINS (Straight Flush)</span>
 
               {/* Hero Hand (A A) */}
-              <div className="absolute -bottom-2 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-1 flex gap-0.5 scale-75">
-                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">A<span className="text-[0.5rem]">♠</span></span>
-                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">A<span className="text-[0.5rem] text-red-600">♥</span></span>
+              <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem]">♠</span></span>
+                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem] text-red-600">♥</span></span>
               </div>
               {/* Villian Hand (10 J) */}
-              <div className="absolute -top-2 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-1 flex gap-0.5 scale-75">
-                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">10<span className="text-[0.5rem]">♠</span></span>
-                <span className="w-4 h-6 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center">J<span className="text-[0.5rem]">♠</span></span>
+              <div className="absolute -top-1 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">10<span className="text-[0.4rem]">♠</span></span>
+                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">J<span className="text-[0.4rem]">♠</span></span>
               </div>
             </div>
           </div>
