@@ -115,9 +115,6 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             <a href="#schedule" className="hover:text-red transition">
               Schedule
             </a>
-            <a href="#splat" className="hover:text-red transition">
-              Splat
-            </a>
             <a href="#wall" className="hover:text-red transition">
               Wall
             </a>
