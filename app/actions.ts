@@ -48,3 +48,39 @@ export async function postToWall(input: PostInput) {
   revalidatePath('/')
   return { ok: true as const }
 }
+
+export async function ratePost(postId: string, ratingTier: number) {
+  if (ratingTier < 1 || ratingTier > 5) {
+    return { ok: false as const, error: 'Invalid rating, champ.' }
+  }
+
+  const columnName = `banana_${ratingTier}`
+
+  // Fetch current value
+  const { data: post, error: fetchError } = await admin()
+    .from('mb_wall_posts')
+    .select(columnName)
+    .eq('id', postId)
+    .single()
+
+  if (fetchError || !post) {
+    console.error('fetch error during rating', fetchError)
+    return { ok: false as const, error: 'Post not found.' }
+  }
+
+  const currentCount = (post as any)[columnName] || 0
+
+  // Increment and update
+  const { error: updateError } = await admin()
+    .from('mb_wall_posts')
+    .update({ [columnName]: currentCount + 1 })
+    .eq('id', postId)
+
+  if (updateError) {
+    console.error('update error during rating', updateError)
+    return { ok: false as const, error: 'Could not submit rating.' }
+  }
+
+  revalidatePath('/')
+  return { ok: true as const }
+}

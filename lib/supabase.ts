@@ -16,6 +16,11 @@ export type WallPost = {
   font_family: 'display' | 'serif' | 'mono' | 'hand'
   rotation: number
   created_at: string
+  banana_1: number
+  banana_2: number
+  banana_3: number
+  banana_4: number
+  banana_5: number
 }
 
 export type BudgetRow = {
