@@ -118,8 +118,14 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
         {/* User avatar / header if Bad Beat */}
         {post.is_bad_beat && (
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-yellow/10 border border-yellow/30 flex items-center justify-center text-sm">
-              🤵
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-yellow/30 relative shrink-0">
+              <Image
+                src="/img/logo.png"
+                alt="Monkey Biz Poker Club Logo"
+                fill
+                sizes="32px"
+                className="object-cover"
+              />
             </div>
             <div className="flex-1">
               <div className="text-xs font-bold text-white/90">@Monkeybizpoker</div>
