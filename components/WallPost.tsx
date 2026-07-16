@@ -6,6 +6,18 @@ import type { WallPost as WallPostType } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 import { ratePost } from '@/app/actions'
 
+const SEAT_POSITIONS: Record<number, string> = {
+  0: 'bottom-[-16px] left-[50%] -translate-x-1/2',
+  1: 'bottom-[10%] left-[2%]',
+  2: 'top-[36%] left-[-22px]',
+  3: 'top-[10%] left-[2%]',
+  4: 'top-[-16px] left-[32%] -translate-x-1/2',
+  5: 'top-[-16px] left-[68%] -translate-x-1/2',
+  6: 'top-[10%] right-[2%]',
+  7: 'top-[36%] right-[-22px]',
+  8: 'bottom-[10%] right-[2%]'
+}
+
 function renderMiniCard(cardStr: string, isSmall = false) {
   // e.g. "10♥" or "A♠"
   const value = cardStr.slice(0, -1)
@@ -14,7 +26,7 @@ function renderMiniCard(cardStr: string, isSmall = false) {
   
   if (isSmall) {
     return (
-      <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center shadow select-none">
+      <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center shadow select-none leading-none">
         {value}
         <span className={`text-[0.4rem] leading-none ${isRed ? 'text-red-600' : ''}`}>{suit}</span>
       </span>
@@ -22,7 +34,7 @@ function renderMiniCard(cardStr: string, isSmall = false) {
   }
   
   return (
-    <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow select-none">
+    <span className="w-5.5 h-7.5 rounded bg-white text-black font-bold text-[0.7rem] flex flex-col items-center justify-center shadow select-none leading-none">
       {value}
       <span className={`text-[0.5rem] leading-none ${isRed ? 'text-red-600' : ''}`}>{suit}</span>
     </span>
@@ -160,44 +172,69 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
         {/* 3. STYLIZED POKER TABLE REPLAY GRAPHIC (FROM JOSH'S MOCKUP) */}
         {post.is_bad_beat && hasLink && (
-          <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] p-2.5 my-2.5 shadow-inner relative overflow-hidden flex flex-col items-center scale-95 sm:scale-100">
+          <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-3 py-5 my-4 shadow-inner relative overflow-visible flex flex-col items-center scale-95 sm:scale-100">
             {/* The felt ring */}
-            <div className="w-full max-w-[210px] aspect-[2.1/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative">
+            <div className="w-full max-w-[245px] aspect-[2.1/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
               {post.handData ? (
                 <>
-                  {/* Dynamic Community Cards */}
-                  <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
+                  {/* Dynamic Community Cards (centered, slightly larger) */}
+                  <div className="flex gap-0.5 mb-1 scale-90 sm:scale-100 relative z-20">
                     {post.handData.board.map((card, idx) => (
                       <span key={idx}>{renderMiniCard(card)}</span>
                     ))}
                   </div>
                   
-                  {post.handData.winner && (
-                    <>
-                      <span className="text-[0.43rem] font-bold text-yellow/80 uppercase tracking-wider font-mono text-center max-w-[130px] truncate leading-tight mt-0.5">
-                        {post.handData.winner.name} WINS
+                  {/* Text Details in Center */}
+                  {post.handData.seats.find(s => s.isWinner) && (
+                    <div className="flex flex-col items-center select-none relative z-20 bg-felt-deep/80 px-2 py-0.5 rounded border border-yellow/10">
+                      <span className="text-[0.43rem] font-bold text-yellow uppercase tracking-wider font-mono text-center">
+                        🏆 {post.handData.seats.find(s => s.isWinner)?.name} WINS
                       </span>
-                      <span className="text-[0.38rem] font-bold text-white/60 uppercase tracking-widest font-mono text-center">
-                        ({post.handData.winner.pattern})
+                      <span className="text-[0.35rem] font-semibold text-white/60 uppercase tracking-widest font-mono text-center leading-none mt-0.5">
+                        ({post.handData.seats.find(s => s.isWinner)?.pattern})
                       </span>
-
-                      {/* Winner's Hand (top right) */}
-                      <div className="absolute -top-1 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
-                        {post.handData.winner.cards.map((card, idx) => (
-                          <span key={idx}>{renderMiniCard(card, true)}</span>
-                        ))}
-                      </div>
-                    </>
-                  )}
-
-                  {/* Loser's Hand (bottom left) */}
-                  {post.handData.loser && (
-                    <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
-                      {post.handData.loser.cards.map((card, idx) => (
-                        <span key={idx}>{renderMiniCard(card, true)}</span>
-                      ))}
                     </div>
                   )}
+
+                  {/* 9 Seats Layout */}
+                  {post.handData.seats.map((s) => {
+                    const posClass = SEAT_POSITIONS[s.seat] || 'hidden'
+                    const displayName = s.name.length > 5 ? s.name.substring(0, 5) + '..' : s.name
+                    
+                    return (
+                      <div
+                        key={s.seat}
+                        className={`absolute flex flex-col items-center z-10 transition-all ${posClass} ${
+                          s.folded ? 'opacity-35 grayscale-[20%]' : 'opacity-100'
+                        }`}
+                      >
+                        {/* Player Pocket Cards (popup above name if showdown) */}
+                        {!s.folded && s.cards && s.cards.length > 0 && (
+                          <div className="flex gap-0.5 mb-0.5 scale-[0.6] origin-bottom -my-1 shadow-md relative z-30">
+                            {s.cards.map((c, idx) => (
+                              <span key={idx}>{renderMiniCard(c, true)}</span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Player Name Pill */}
+                        <div
+                          className={`px-1.5 py-0.5 rounded-full border text-[0.45rem] font-bold font-mono tracking-wide leading-none shadow-sm flex items-center gap-0.5 max-w-[62px] truncate ${
+                            s.isWinner
+                              ? 'bg-yellow text-felt-deep border-white shadow-[0_0_8px_rgba(255,209,59,0.5)] z-20'
+                              : s.isLoser
+                              ? 'bg-[#0a1f3d] text-white border-yellow/30 z-20'
+                              : s.folded
+                              ? 'bg-[#1a1a0f]/60 text-cream/40 border-gold/10'
+                              : 'bg-felt-deep text-white border-yellow/20'
+                          }`}
+                        >
+                          {s.isWinner && <span className="text-[0.4rem]">👑</span>}
+                          {displayName}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </>
               ) : (
                 <>
