@@ -304,7 +304,12 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                           >
                             {/* Player Pocket Cards (popup above name if showdown) */}
                             {!s.folded && s.cards && s.cards.length > 0 && (
-                              <div className="flex gap-0.5 mb-0.5 scale-[0.6] origin-bottom -my-1 shadow-md relative z-30">
+                              <div className="flex items-center gap-0.5 mb-0.5 scale-[0.6] origin-bottom -my-1 shadow-md relative z-30">
+                                {s.isWinner && (
+                                  <span className="text-[1.2rem] font-black text-[#ffd13b] animate-winning-W mr-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] select-none">
+                                    W
+                                  </span>
+                                )}
                                 {s.cards.map((c, idx) => (
                                   <span key={idx}>{renderMiniCard(c, true)}</span>
                                 ))}
@@ -323,11 +328,6 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                                   : 'bg-felt-deep text-white border-yellow/20'
                               }`}
                             >
-                              {s.isWinner && (
-                                <span className="text-[0.55rem] font-black text-felt-deep animate-winning-W mr-0.5">
-                                  W
-                                </span>
-                              )}
                               {displayName}
                             </div>
                           </div>
