@@ -261,7 +261,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
         {/* 3. POKER TABLE AREA OR COMMENT AREA */}
         {post.is_bad_beat && hasLink && (
-          <div className="relative w-full max-w-[290px] aspect-[2.1/1] my-4 overflow-visible">
+          <div className="relative w-full max-w-[245px] aspect-[2.1/1] my-4 overflow-visible">
             {/* Message Icon (💬) at the Top Center-Right of Table */}
             <button
               type="button"
@@ -286,8 +286,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
             {viewMode === 'table' ? (
               /* POKER TABLE FELT PREVIEW */
-              <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-5 py-7 w-full h-full shadow-inner relative overflow-visible flex flex-col items-center justify-center scale-95 sm:scale-100">
-                <div className="w-full h-full rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
+              <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-3 py-5 w-full h-full shadow-inner relative overflow-visible flex flex-col items-center justify-center scale-95 sm:scale-100">
+                <div className="w-full max-w-[245px] aspect-[2.1/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
                   {post.handData ? (
                     <>
                       {/* Dynamic Community Cards (centered, slightly larger) */}
