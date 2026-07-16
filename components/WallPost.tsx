@@ -189,8 +189,13 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
     }
   }
 
-  // Parse suffer, splats, ice, and comments from message field
-  const iceParts = post.message.split('|||ice|||')
+  // Parse source, suffer, splats, ice, and comments from message field
+  const sourceParts = post.message.split('|||source|||')
+  const isWebsiteSubmission = sourceParts.length > 1 && sourceParts[1].startsWith('website')
+  const messageWithoutSource = isWebsiteSubmission ? sourceParts[0] : post.message
+
+  // Parse suffer, splats, and ice from messageWithoutSource
+  const iceParts = messageWithoutSource.split('|||ice|||')
   const baseWithSuffer = iceParts[0]
   const databaseIceCount = iceParts[1] ? parseInt(iceParts[1], 10) || 0 : 0
 
@@ -384,7 +389,9 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
             </div>
             <div className="flex-1">
               <div className="text-sm font-bold text-white/90">@Monkeybizpoker</div>
-              <div className="text-[0.65rem] text-white/50 uppercase tracking-widest font-mono">User entry</div>
+              <div className="text-[0.65rem] text-white/50 uppercase tracking-widest font-mono">
+                {isWebsiteSubmission ? 'User entry' : 'Telegram submission'}
+              </div>
             </div>
           </div>
         )}

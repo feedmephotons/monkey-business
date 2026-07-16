@@ -29,12 +29,13 @@ export async function postToWall(input: PostInput) {
   }
 
   const rotation = Math.round((Math.random() * 8 - 4) * 10) / 10
+  const dbMessage = input.is_bad_beat ? `${message}|||source|||website` : message
 
   const { error } = await admin()
     .from('mb_wall_posts')
     .insert({
       author,
-      message,
+      message: dbMessage,
       font_color: input.font_color,
       bg_color: input.bg_color,
       font_family: input.font_family,
