@@ -122,10 +122,8 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
               🤵
             </div>
             <div className="flex-1">
-              <div className="text-xs font-bold text-white/90">
-                {post.author.startsWith('@') ? post.author : `@${post.author}`}
-              </div>
-              <div className="text-[0.6rem] text-white/50 uppercase tracking-widest font-mono">Monkey Biz Wall</div>
+              <div className="text-xs font-bold text-white/90">@Monkeybizpoker</div>
+              <div className="text-[0.6rem] text-white/50 uppercase tracking-widest font-mono">Telegram submission</div>
             </div>
           </div>
         )}
