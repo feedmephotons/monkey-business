@@ -237,9 +237,6 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 priority
               />
 
-              {/* Interactive Scratch-To-Reveal Card Overlay */}
-              <ScratchCard flyerIndex={activeFlyerIndex} />
-
               {/* Navigation Arrows */}
               <button
                 onClick={prevFlyer}
