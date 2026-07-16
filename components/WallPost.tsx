@@ -229,7 +229,11 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               : 'bg-felt-deep text-white border-yellow/20'
                           }`}
                         >
-                          {s.isWinner && <span className="text-[0.4rem]">👑</span>}
+                          {s.isWinner && (
+                            <span className="text-[0.55rem] font-black text-felt-deep animate-winning-W mr-0.5">
+                              W
+                            </span>
+                          )}
                           {displayName}
                         </div>
                       </div>
