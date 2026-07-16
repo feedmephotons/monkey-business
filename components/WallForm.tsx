@@ -248,11 +248,20 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
           disabled={pending || !message.trim()}
           className={`w-full relative overflow-hidden rounded bg-gradient-to-b text-felt-deep font-[family-name:var(--font-display)] text-xl py-3 tracking-wider shadow-[0_6px_0_rgba(0,0,0,0.35),0_14px_32px_-10px_rgba(244,196,48,0.55)] hover:translate-y-[1px] active:translate-y-[4px] active:shadow-[0_2px_0_rgba(0,0,0,0.35)] transition disabled:opacity-40 disabled:cursor-not-allowed ${
             isBadBeat 
-              ? 'from-[#ffd13b] to-yellow border-yellow shadow-[0_0_12px_rgba(255,209,59,0.3)]' 
+              ? 'from-[#fffb3b] to-[#ffd13b] border-2 border-[#fffb3b] shadow-[0_0_22px_rgba(255,251,59,0.65)]' 
               : 'from-banana-bright to-gold shadow-[0_6px_0_rgba(0,0,0,0.35)]'
           }`}
         >
-          {isBadBeat ? (pending ? 'SPLATTERING…' : 'SPLAT IT UP! 🍌') : (pending ? 'TACKING…' : 'TACK IT UP')}
+          {isBadBeat && (
+            <div className="absolute top-0 inset-x-0 h-4 z-10 pointer-events-none select-none">
+              <svg viewBox="0 0 100 10" width="100%" height="100%" preserveAspectRatio="none">
+                <path d="M 0,0 L 100,0 C 94,0 91,8 87,2 C 82,2 78,10 74,3 C 66,3 61,12 56,2 C 49,2 45,9 41,2 C 34,2 30,11 26,2 C 19,2 14,8 10,1 L 0,0 Z" fill="#fffb3b" />
+              </svg>
+            </div>
+          )}
+          <span className="relative z-20">
+            {isBadBeat ? (pending ? 'SPLATTERING…' : 'SPLAT IT UP! 🍌') : (pending ? 'TACKING…' : 'TACK IT UP')}
+          </span>
           <span className="shimmer absolute inset-0 pointer-events-none" />
         </button>
         {status && (
