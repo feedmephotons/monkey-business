@@ -306,21 +306,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
         {/* 3. POKER TABLE AREA OR COMMENT AREA */}
         {post.is_bad_beat && hasLink && (
           <div className="relative w-full max-w-[270px] aspect-[2.2/1] my-4 overflow-visible">
-            {/* Splat Icon (🫟) at the Top Left of Table (grows upwards) */}
-            <button
-              type="button"
-              onClick={handleSplat}
-              className="absolute top-[-22px] left-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
-              style={{
-                transform: `scale(${Math.min(1 + clientSplatCount * 0.04, 2.0)})`,
-                transformOrigin: 'bottom left',
-              }}
-              title="Splat a Banana! 🫟"
-            >
-              🫟
-            </button>
-
-            {/* Message Icon (💬) at the Top Right of Table */}
+            {/* Message Icon (💬) at the Top Left of Table */}
             <button
               type="button"
               onClick={() => {
@@ -332,7 +318,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   setViewMode('table')
                 }
               }}
-              className={`absolute top-[-22px] right-2 z-40 rounded-full w-8 h-8 flex items-center justify-center text-xs shadow-md transition-all duration-200 border cursor-pointer ${
+              className={`absolute top-[-22px] left-2 z-40 rounded-full w-8 h-8 flex items-center justify-center text-xs shadow-md transition-all duration-200 border cursor-pointer ${
                 viewMode !== 'table'
                   ? 'bg-yellow text-felt-deep border-white scale-110'
                   : 'bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border-yellow/40 hover:scale-105'
@@ -340,6 +326,20 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
               title="View or Add Comments"
             >
               💬
+            </button>
+
+            {/* Splat Icon (🫟) at the Top Right of Table (grows upwards and leftwards) */}
+            <button
+              type="button"
+              onClick={handleSplat}
+              className="absolute top-[-22px] right-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
+              style={{
+                transform: `scale(${Math.min(1 + clientSplatCount * 0.04, 2.0)})`,
+                transformOrigin: 'bottom right',
+              }}
+              title="Splat a Banana! 🫟"
+            >
+              🫟
             </button>
 
             {viewMode === 'table' ? (
