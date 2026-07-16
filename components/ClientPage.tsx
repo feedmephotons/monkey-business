@@ -5,6 +5,7 @@ import Image from 'next/image'
 import WallForm from '@/components/WallForm'
 import WallPost from '@/components/WallPost'
 import PokerBrosFAB from '@/components/PokerBrosFAB'
+import ScratchCard from '@/components/ScratchCard'
 import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 
@@ -235,6 +236,9 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 className="w-full h-auto transition-opacity duration-300 pointer-events-none select-none"
                 priority
               />
+
+              {/* Interactive Scratch-To-Reveal Card Overlay */}
+              <ScratchCard flyerIndex={activeFlyerIndex} />
 
               {/* Navigation Arrows */}
               <button
