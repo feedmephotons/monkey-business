@@ -112,7 +112,7 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
             {/* Faint footer signature */}
             <div className="mt-4 text-right">
               <span className="font-[family-name:var(--font-hand)] text-lg text-yellow opacity-80">
-                — {author || 'monkey'}
+                — {author || 'Monkey in the middle'}
               </span>
             </div>
           </div>
