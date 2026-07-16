@@ -141,6 +141,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const [commentError, setCommentError] = useState<string | null>(null)
   const [clientSplatCount, setClientSplatCount] = useState(post.banana_count || 0)
 
+  const [currentCommentIndex, setCurrentCommentIndex] = useState(0)
+
   // Sync clientSplatCount with server prop updates
   useEffect(() => {
     setClientSplatCount(post.banana_count || 0)
@@ -151,6 +153,16 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
     startTransition(async () => {
       await splatPost(post.id)
     })
+  }
+
+  const handleNextComment = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setCurrentCommentIndex((prev) => (prev + 1) % comments.length)
+  }
+
+  const handlePrevComment = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setCurrentCommentIndex((prev) => (prev - 1 + comments.length) % comments.length)
   }
 
   // Determine if winner is a female player for custom placeholder
@@ -190,6 +202,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
       if (res.ok) {
         setNewCommentName('')
         setNewCommentText('')
+        setCurrentCommentIndex(comments.length) // point to newly added comment
       } else {
         setCommentError(res.error || 'Failed to post comment.')
       }
@@ -326,23 +339,74 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                 )}
                 {post.handData ? (
                   <>
-                    {/* Dynamic Community Cards */}
-                    <div className="flex gap-0.5 mb-1 scale-90 sm:scale-100 relative z-20">
-                      {post.handData.board.map((card, idx) => (
-                        <span key={idx}>{renderMiniCard(card)}</span>
-                      ))}
-                    </div>
-                    
-                    {/* Text Details in Center */}
-                    {post.handData.seats.find(s => s.isWinner) && (
-                      <div className="flex flex-col items-center select-none relative z-20 bg-felt-deep/80 px-2 py-0.5 rounded border border-yellow/10">
-                        <span className="text-[0.43rem] font-bold text-yellow uppercase tracking-wider font-mono text-center">
-                          🏆 {post.handData.seats.find(s => s.isWinner)?.name} WINS
-                        </span>
-                        <span className="text-[0.35rem] font-semibold text-white/60 uppercase tracking-widest font-mono text-center leading-none mt-0.5">
-                          ({post.handData.seats.find(s => s.isWinner)?.pattern})
-                        </span>
+                    {showComments ? (
+                      /* Interactive Comments Slider inside Felt Center */
+                      <div className="flex flex-col items-center justify-center w-full max-w-[195px] px-1 select-none relative z-20 font-[family-name:var(--font-hand)]">
+                        {comments.length > 0 ? (
+                          <div className="flex items-center justify-between w-full gap-1">
+                            {/* Left Arrow (only if comments.length > 1) */}
+                            {comments.length > 1 ? (
+                              <button
+                                type="button"
+                                onClick={handlePrevComment}
+                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                              >
+                                ◀
+                              </button>
+                            ) : (
+                              <div className="w-4 shrink-0" />
+                            )}
+                            
+                            {/* Comment Text & Author */}
+                            <div className="flex-1 flex flex-col items-center justify-center text-center px-1 overflow-hidden min-h-[38px]">
+                              <p className="text-[0.58rem] sm:text-[0.62rem] text-white leading-tight font-black break-words max-h-[38px] overflow-y-auto leading-none w-full">
+                                &ldquo;{comments[currentCommentIndex].text}&rdquo;
+                              </p>
+                              <span className="text-[0.42rem] font-bold font-mono text-yellow/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[90px]">
+                                — {comments[currentCommentIndex].author}
+                              </span>
+                            </div>
+
+                            {/* Right Arrow (only if comments.length > 1) */}
+                            {comments.length > 1 ? (
+                              <button
+                                type="button"
+                                onClick={handleNextComment}
+                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                              >
+                                ▶
+                              </button>
+                            ) : (
+                              <div className="w-4 shrink-0" />
+                            )}
+                          </div>
+                        ) : (
+                          <p className="text-[0.52rem] text-cream/40 italic font-mono text-center">
+                            No comments yet. Leave one below!
+                          </p>
+                        )}
                       </div>
+                    ) : (
+                      <>
+                        {/* Dynamic Community Cards */}
+                        <div className="flex gap-0.5 mb-1 scale-90 sm:scale-100 relative z-20">
+                          {post.handData.board.map((card, idx) => (
+                            <span key={idx}>{renderMiniCard(card)}</span>
+                          ))}
+                        </div>
+                        
+                        {/* Text Details in Center */}
+                        {post.handData.seats.find(s => s.isWinner) && (
+                          <div className="flex flex-col items-center select-none relative z-20 bg-felt-deep/80 px-2 py-0.5 rounded border border-yellow/10">
+                            <span className="text-[0.43rem] font-bold text-yellow uppercase tracking-wider font-mono text-center">
+                              🏆 {post.handData.seats.find(s => s.isWinner)?.name} WINS
+                            </span>
+                            <span className="text-[0.35rem] font-semibold text-white/60 uppercase tracking-widest font-mono text-center leading-none mt-0.5">
+                              ({post.handData.seats.find(s => s.isWinner)?.pattern})
+                            </span>
+                          </div>
+                        )}
+                      </>
                     )}
 
                     {/* 9 Seats Layout */}
@@ -398,91 +462,118 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   </>
                 ) : (
                   <>
-                    {/* Static Mockup Fallback */}
-                    <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
-                      <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">A<span className="text-[0.5rem] text-red-600">♦</span></span>
-                      <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">K<span className="text-[0.5rem] text-red-600">♥</span></span>
-                      <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">10<span className="text-[0.5rem] text-red-600">♥</span></span>
-                      <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">9<span className="text-[0.5rem]">♠</span></span>
-                      <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">Q<span className="text-[0.5rem]">♠</span></span>
-                    </div>
-                    <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLAIN WINS (Straight Flush)</span>
+                    {showComments ? (
+                      /* Interactive Comments Slider inside Felt Center (Static Fallback Card) */
+                      <div className="flex flex-col items-center justify-center w-full max-w-[195px] px-1 select-none relative z-20 font-[family-name:var(--font-hand)]">
+                        {comments.length > 0 ? (
+                          <div className="flex items-center justify-between w-full gap-1">
+                            {/* Left Arrow (only if comments.length > 1) */}
+                            {comments.length > 1 ? (
+                              <button
+                                type="button"
+                                onClick={handlePrevComment}
+                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                              >
+                                ◀
+                              </button>
+                            ) : (
+                              <div className="w-4 shrink-0" />
+                            )}
+                            
+                            {/* Comment Text & Author */}
+                            <div className="flex-1 flex flex-col items-center justify-center text-center px-1 overflow-hidden min-h-[38px]">
+                              <p className="text-[0.58rem] sm:text-[0.62rem] text-white leading-tight font-black break-words max-h-[38px] overflow-y-auto leading-none w-full">
+                                &ldquo;{comments[currentCommentIndex].text}&rdquo;
+                              </p>
+                              <span className="text-[0.42rem] font-bold font-mono text-yellow/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[90px]">
+                                — {comments[currentCommentIndex].author}
+                              </span>
+                            </div>
 
-                    {/* Hero Hand (A A) */}
-                    <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
-                      <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem]">♠</span></span>
-                      <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem] text-red-600">♥</span></span>
-                    </div>
-                    {/* Villian Hand (10 J) */}
-                    <div className="absolute -top-1 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
-                      <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">10<span className="text-[0.4rem]">♠</span></span>
-                      <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">J<span className="text-[0.4rem]">♠</span></span>
-                    </div>
+                            {/* Right Arrow (only if comments.length > 1) */}
+                            {comments.length > 1 ? (
+                              <button
+                                type="button"
+                                onClick={handleNextComment}
+                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                              >
+                                ▶
+                              </button>
+                            ) : (
+                              <div className="w-4 shrink-0" />
+                            )}
+                          </div>
+                        ) : (
+                          <p className="text-[0.52rem] text-cream/40 italic font-mono text-center">
+                            No comments yet. Leave one below!
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <>
+                        {/* Static Mockup Fallback */}
+                        <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
+                          <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">A<span className="text-[0.5rem] text-red-600">♦</span></span>
+                          <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">K<span className="text-[0.5rem] text-red-600">♥</span></span>
+                          <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">10<span className="text-[0.5rem] text-red-600">♥</span></span>
+                          <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">9<span className="text-[0.5rem]">♠</span></span>
+                          <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">Q<span className="text-[0.5rem]">♠</span></span>
+                        </div>
+                        <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLAIN WINS (Straight Flush)</span>
+
+                        {/* Hero Hand (A A) */}
+                        <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                          <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem]">♠</span></span>
+                          <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem] text-red-600">♥</span></span>
+                        </div>
+                        {/* Villian Hand (10 J) */}
+                        <div className="absolute -top-1 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                          <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">10<span className="text-[0.4rem]">♠</span></span>
+                          <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">J<span className="text-[0.4rem]">♠</span></span>
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
               </div>
             </div>
 
-            {/* COLLAPSIBLE COMMENTS SECTION BELOW THE TABLE */}
+            {/* COLLAPSIBLE QUICK REPLY FORM BELOW THE TABLE */}
             {showComments && (
-              <div className="mt-3 bg-black/40 rounded-lg border border-yellow/10 p-2.5 w-full max-w-[270px] flex flex-col justify-between shadow-xl animate-fade-in relative z-30">
-                {/* Comments Header */}
-                <div className="flex justify-between items-center text-[0.6rem] font-bold font-mono tracking-widest text-yellow/80 uppercase border-b border-white/10 pb-1.5 mb-2">
-                  <span>Comments ({comments.length})</span>
+              <div className="mt-3 bg-black/45 rounded-lg border border-yellow/10 p-2.5 w-full max-w-[270px] flex flex-col gap-1 animate-fade-in relative z-30 shadow-lg">
+                <div className="flex gap-1.5 items-center">
+                  {/* Name Input */}
+                  <input
+                    type="text"
+                    placeholder="monkey"
+                    maxLength={15}
+                    value={newCommentName}
+                    onChange={(e) => setNewCommentName(e.target.value)}
+                    className="w-[28%] text-[0.6rem] font-mono bg-black/85 border border-yellow/20 rounded p-1.5 text-white outline-none focus:border-yellow transition shrink-0"
+                  />
+                  {/* Message Input */}
+                  <input
+                    type="text"
+                    placeholder={commentPlaceholder}
+                    maxLength={100}
+                    value={newCommentText}
+                    onChange={(e) => setNewCommentText(e.target.value)}
+                    className="flex-1 text-[0.6rem] bg-black/85 border border-yellow/20 rounded p-1.5 text-white outline-none focus:border-yellow transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddComment}
+                    disabled={isPending || !newCommentText.trim()}
+                    className="bg-yellow hover:bg-yellow-bright text-felt-deep font-black font-mono text-[0.55rem] uppercase px-3 py-1.5 rounded transition cursor-pointer disabled:opacity-40 shrink-0 shadow-sm"
+                  >
+                    {isPending ? '..' : 'SPLAT'}
+                  </button>
                 </div>
-
-                {/* Scrollable Comments Feed */}
-                {comments.length > 0 ? (
-                  <div className="max-h-[110px] overflow-y-auto space-y-1.5 pr-1 font-[family-name:var(--font-hand)] mb-2">
-                    {comments.map((c, idx) => (
-                      <div key={idx} className="text-xs text-white leading-tight bg-white/5 p-1.5 rounded border border-white/5">
-                        <span className="font-mono font-bold text-[0.6rem] text-yellow/90 block leading-none mb-0.5">
-                          {c.author}
-                        </span>
-                        <span className="break-words font-[family-name:var(--font-hand)]">{c.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[0.65rem] text-cream/40 italic text-center py-2 mb-2 font-mono">No comments yet. Be the first!</p>
+                {commentError && (
+                  <span className="text-[0.55rem] text-red-500 font-bold truncate">
+                    {commentError}
+                  </span>
                 )}
-
-                {/* Quick-Reply Form Inline at Bottom */}
-                <div className="border-t border-white/10 pt-2 flex flex-col gap-1">
-                  <div className="flex gap-1">
-                    {/* Name Input */}
-                    <input
-                      type="text"
-                      placeholder="monkey"
-                      maxLength={15}
-                      value={newCommentName}
-                      onChange={(e) => setNewCommentName(e.target.value)}
-                      className="w-16 text-[0.6rem] font-mono bg-black/80 border border-yellow/20 rounded p-1 text-white outline-none focus:border-yellow transition shrink-0"
-                    />
-                    {/* Message Input */}
-                    <input
-                      type="text"
-                      placeholder={commentPlaceholder}
-                      maxLength={100}
-                      value={newCommentText}
-                      onChange={(e) => setNewCommentText(e.target.value)}
-                      className="flex-1 text-[0.6rem] bg-black/80 border border-yellow/20 rounded p-1 text-white outline-none focus:border-yellow transition"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAddComment}
-                      disabled={isPending || !newCommentText.trim()}
-                      className="bg-yellow hover:bg-yellow-bright text-felt-deep font-bold font-mono text-[0.55rem] uppercase px-2.5 rounded transition cursor-pointer disabled:opacity-40 shrink-0"
-                    >
-                      {isPending ? '..' : 'SPLAT'}
-                    </button>
-                  </div>
-                  {commentError && (
-                    <span className="text-[0.55rem] text-red-500 font-bold truncate">
-                      {commentError}
-                    </span>
-                  )}
-                </div>
               </div>
             )}
           </div>
