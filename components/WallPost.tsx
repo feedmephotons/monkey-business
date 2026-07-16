@@ -133,6 +133,76 @@ function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: b
   })
 }
 
+function getDynamicHeader(post: EnrichedWallPost): string {
+  if (!post.is_bad_beat) return 'BAD BEAT!'
+
+  // 1. If we have parsed PokerBros hand details, evaluate the bad beat mathematically!
+  if (post.handData) {
+    const board = post.handData.board || []
+    const seats = post.handData.seats || []
+    const winner = seats.find((s) => s.isWinner)
+    const losers = seats.filter((s) => s.isLoser || (!s.isWinner && s.cards && s.cards.length > 0))
+
+    // Check if the winner won with a ridiculous runner-runner or crazy hand pattern
+    const pattern = winner?.pattern?.toLowerCase() || ''
+    
+    // Four of a Kind, Straight Flush, Royal Flush
+    if (pattern.includes('four of a kind') || pattern.includes('straight flush') || pattern.includes('royal flush')) {
+      return 'COOLER!'
+    }
+
+    // Full house cracking a flush or straight
+    if (pattern.includes('full house') && losers.some(l => l.pattern?.toLowerCase().includes('flush') || l.pattern?.toLowerCase().includes('straight'))) {
+      return 'HORSE 💩!'
+    }
+
+    // Trash hand winning (e.g. winner holds off-suit junk or low cards and hit a straight/flush)
+    const winnerCards = winner?.cards || []
+    if (winnerCards.length === 2) {
+      const isOffsuitJunk = winnerCards[0].slice(0, -1) !== winnerCards[1].slice(0, -1) && 
+                            parseInt(winnerCards[0].slice(0, -1)) < 10 && 
+                            parseInt(winnerCards[1].slice(0, -1)) < 10
+      if (isOffsuitJunk && (pattern.includes('straight') || pattern.includes('flush') || pattern.includes('two pair'))) {
+        return 'MONKEY PUNT 🐒'
+      }
+    }
+
+    // High pair (A A, K K) getting cracked by low trash cards
+    const premiumLoser = losers.some(l => {
+      const cards = l.cards || []
+      return cards.length === 2 && (cards[0].startsWith('A') || cards[0].startsWith('K')) && (cards[1].startsWith('A') || cards[1].startsWith('K'))
+    })
+    if (premiumLoser) {
+      return 'HORSE 💩!'
+    }
+
+    // Standard high flushes or straights getting cracked
+    if (pattern.includes('flush') || pattern.includes('straight') || pattern.includes('full house')) {
+      return 'SO SICK!'
+    }
+  }
+
+  // 2. If we don't have replayer hand data (standard picture or video upload, or fallback mockup),
+  // we use a stable, deterministic hash of the post ID to assign a hilarious, variety-rich header!
+  const HEADERS = [
+    'BAD BEAT!',
+    'COOLER!',
+    'SO SICK!',
+    'HORSE 💩!',
+    'MONKEY PUNT 🐒',
+    'DIRTY RUNNER!',
+    'COLD DECK!'
+  ]
+  
+  let hash = 0
+  const idStr = post.id || ''
+  for (let i = 0; i < idStr.length; i++) {
+    hash = idStr.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  const index = Math.abs(hash) % HEADERS.length
+  return HEADERS[index]
+}
+
 export default function WallPost({ post, index }: { post: EnrichedWallPost; index: number }) {
   const [isPending, startTransition] = useTransition()
   const [showComments, setShowComments] = useState(false)
@@ -338,23 +408,28 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
       }}
     >
       {/* 1. DRIPPING "BAD BEAT!" HEADER PUDDLE (FROM JOSH'S MOCKUP) */}
-      {post.is_bad_beat && (
-        <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-52 h-14 z-20 pointer-events-none select-none drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]">
-          <svg viewBox="0 0 120 30" width="100%" height="100%">
-            <path d="M 8,12 
-                     C 12,4 108,4 112,12 
-                     C 116,18 108,26 98,24 
-                     C 94,30 90,30 87,24 
-                     C 81,24 76,28 73,20
-                     C 67,29 55,29 49,20
-                     C 43,29 36,27 33,20
-                     C 27,27 18,23 8,12" 
-                  fill="#ffd13b" stroke="#000000" stroke-width="1.5" stroke-linejoin="round" />
-            <text x="60" y="19" fill="#000000" font-family="Impact, Arial Black, sans-serif" font-weight="900" font-size="8.5" text-anchor="middle" letter-spacing="0.3">BAD BEAT!</text>
-            <path d="M 80,10 C 76,8 70,11 68,13 C 70,12 73,10 80,10" stroke="#000000" stroke-width="1" fill="#ffd13b" />
-          </svg>
-        </div>
-      )}
+      {post.is_bad_beat && (() => {
+        const headerText = getDynamicHeader(post);
+        const headerFontSize = headerText.length > 10 ? '6.0' : headerText.length > 8 ? '7.2' : '8.5';
+        
+        return (
+          <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-52 h-14 z-20 pointer-events-none select-none drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]">
+            <svg viewBox="0 0 120 30" width="100%" height="100%">
+              <path d="M 8,12 
+                       C 12,4 108,4 112,12 
+                       C 116,18 108,26 98,24 
+                       C 94,30 90,30 87,24 
+                       C 81,24 76,28 73,20
+                       C 67,29 55,29 49,20
+                       C 43,29 36,27 33,20
+                       C 27,27 18,23 8,12" 
+                    fill="#ffd13b" stroke="#000000" stroke-width="1.5" stroke-linejoin="round" />
+              <text x="60" y="19" fill="#000000" font-family="Impact, Arial Black, sans-serif" font-weight="900" font-size={headerFontSize} text-anchor="middle" letter-spacing="0.2">{headerText}</text>
+              <path d="M 80,10 C 76,8 70,11 68,13 C 70,12 73,10 80,10" stroke="#000000" stroke-width="1" fill="#ffd13b" />
+            </svg>
+          </div>
+        );
+      })()}
 
       {/* 2. DRIPPING YELLOW BOTTOM BORDER (FROM JOSH'S MOCKUP) */}
       {post.is_bad_beat && (
