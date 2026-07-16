@@ -4,7 +4,7 @@ import { useTransition, useState, useEffect } from 'react'
 import Image from 'next/image'
 import type { WallPost as WallPostType } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
-import { ratePost, addCommentToPost, splatPost } from '@/app/actions'
+import { ratePost, addCommentToPost, splatPost, sufferPost } from '@/app/actions'
 
 const SEAT_POSITIONS: Record<number, string> = {
   0: 'bottom-[-10%] left-[50%] -translate-x-1/2',
@@ -140,8 +140,13 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const [newCommentText, setNewCommentText] = useState('')
   const [commentError, setCommentError] = useState<string | null>(null)
 
-  // Parse splats and comments from message field
-  const splatParts = post.message.split('|||splats|||')
+  // Parse suffer, splats, and comments from message field
+  const sufferParts = post.message.split('|||suffer|||')
+  const baseWithSplats = sufferParts[0]
+  const databaseSufferCount = sufferParts[1] ? parseInt(sufferParts[1], 10) || 0 : 0
+
+  // Parse splats from baseWithSplats
+  const splatParts = baseWithSplats.split('|||splats|||')
   const baseMessageStr = splatParts[0]
   const databaseSplatCount = splatParts[1] ? parseInt(splatParts[1], 10) || 0 : 0
 
@@ -157,18 +162,40 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   })
 
   const [clientSplatCount, setClientSplatCount] = useState(databaseSplatCount)
+  const [clientSufferCount, setClientSufferCount] = useState(databaseSufferCount)
   const [currentCommentIndex, setCurrentCommentIndex] = useState(0)
 
-  // Sync clientSplatCount with server prop updates
+  // Sync clientSplatCount and clientSufferCount with server prop updates
   useEffect(() => {
     setClientSplatCount(databaseSplatCount)
-  }, [databaseSplatCount])
+    setClientSufferCount(databaseSufferCount)
+  }, [databaseSplatCount, databaseSufferCount])
 
   const handleSplat = () => {
     setClientSplatCount((prev) => prev + 1)
     startTransition(async () => {
       await splatPost(post.id)
     })
+  }
+
+  const handleSuffer = () => {
+    setClientSufferCount((prev) => prev + 1)
+    startTransition(async () => {
+      await sufferPost(post.id)
+    })
+  }
+
+  const getSufferEmoji = (count: number) => {
+    if (count <= 1) return '🤕'
+    if (count === 2) return '🤢'
+    return '🤮'
+  }
+
+  const getSufferScale = (count: number) => {
+    if (count === 0) return 1.0
+    if (count === 1) return 1.2
+    if (count === 2) return 1.4
+    return Math.min(1.4 + Math.sqrt(count - 2) * 0.08, 1.8)
   }
 
   const handleNextComment = (e: React.MouseEvent) => {
@@ -216,6 +243,9 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
   // Check if message contains a link
   const hasLink = mainMessage.includes('http://') || mainMessage.includes('https://')
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+  const matches = mainMessage.match(urlRegex)
+  const mediaUrl = matches ? matches[0] : null
 
   return (
     <div
@@ -321,8 +351,14 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
               🫟
             </button>
 
-            {/* POKER TABLE FELT PREVIEW (ALWAYS VISIBLE!) */}
-            <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-3 py-5 w-full aspect-[2.2/1] shadow-inner relative overflow-visible flex flex-col items-center justify-center scale-95 sm:scale-100">
+            {/* POKER TABLE FELT PREVIEW (ALWAYS VISIBLE!) - CLICK TO PLAY MEDIA */}
+            <div 
+              onClick={() => {
+                if (mediaUrl) window.open(mediaUrl, '_blank')
+              }}
+              className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-3 py-5 w-full aspect-[2.2/1] shadow-inner relative overflow-visible flex flex-col items-center justify-center scale-95 sm:scale-100 cursor-pointer hover:border-yellow/70 active:scale-[0.99] transition-all duration-200 group/felt"
+              title={mediaUrl ? "Click to play/view replay! 🎬" : undefined}
+            >
               <div className="w-full h-full rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
                 {/* Growing Banana Splat Overlay */}
                 {clientSplatCount > 0 && (
@@ -542,6 +578,20 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                 )}
               </div>
             </div>
+
+            {/* Suffer Reaction Icon (🤕/🤢/🤮) at the Bottom Right of Table (grows upwards) */}
+            <button
+              type="button"
+              onClick={handleSuffer}
+              className="absolute bottom-[-18px] right-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
+              style={{
+                transform: `scale(${getSufferScale(clientSufferCount)})`,
+                transformOrigin: 'bottom right',
+              }}
+              title="Ouch! React with Suffer 🤕"
+            >
+              {getSufferEmoji(clientSufferCount)}
+            </button>
 
             {/* COLLAPSIBLE QUICK REPLY FORM BELOW THE TABLE */}
             {showComments && (

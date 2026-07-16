@@ -101,8 +101,13 @@ export async function addCommentToPost(postId: string, author: string, text: str
 
   if (fetchError || !post) return { ok: false as const, error: 'Post not found.' }
 
-  // Parse out splat count suffix if any
-  const splatParts = post.message.split('|||splats|||')
+  // Separate suffer first
+  const sufferParts = post.message.split('|||suffer|||')
+  const baseWithSplats = sufferParts[0]
+  const sufferSuffix = sufferParts[1] ? `|||suffer|||${sufferParts[1]}` : ''
+
+  // Parse out splat count suffix if any from baseWithSplats
+  const splatParts = baseWithSplats.split('|||splats|||')
   const baseMessage = splatParts[0]
   const splatSuffix = splatParts[1] ? `|||splats|||${splatParts[1]}` : ''
 
@@ -110,8 +115,8 @@ export async function addCommentToPost(postId: string, author: string, text: str
   const commentPayload = `${authorClean}: ${textClean}`
   const updatedBase = `${baseMessage}|||comment|||${commentPayload}`
 
-  // Re-assemble final message string
-  const updatedMessage = `${updatedBase}${splatSuffix}`
+  // Re-assemble final message string keeping splats and suffer at the end
+  const updatedMessage = `${updatedBase}${splatSuffix}${sufferSuffix}`
 
   // Update post
   const { error: updateError } = await admin()
@@ -142,12 +147,22 @@ export async function splatPost(postId: string) {
   }
 
   const messageStr = post.message || ''
-  const splatParts = messageStr.split('|||splats|||')
+
+  // Separate suffer first
+  const sufferParts = messageStr.split('|||suffer|||')
+  const baseWithSplats = sufferParts[0]
+  const sufferSuffix = sufferParts[1] ? `|||suffer|||${sufferParts[1]}` : ''
+
+  // Parse out splat count from baseWithSplats
+  const splatParts = baseWithSplats.split('|||splats|||')
   const baseMessage = splatParts[0]
   const currentSplatCount = splatParts[1] ? parseInt(splatParts[1], 10) || 0 : 0
 
-  // Increment and assemble final message string
-  const updatedMessage = `${baseMessage}|||splats|||${currentSplatCount + 1}`
+  // Increment and assemble base with splats
+  const updatedBase = `${baseMessage}|||splats|||${currentSplatCount + 1}`
+
+  // Re-assemble final message with suffer suffix
+  const updatedMessage = `${updatedBase}${sufferSuffix}`
 
   // Update post
   const { error: updateError } = await admin()
@@ -158,6 +173,44 @@ export async function splatPost(postId: string) {
   if (updateError) {
     console.error('update error during splatting', updateError)
     return { ok: false as const, error: 'Could not submit splat.' }
+  }
+
+  revalidatePath('/')
+  return { ok: true as const }
+}
+
+export async function sufferPost(postId: string) {
+  // Fetch current message
+  const { data: post, error: fetchError } = await admin()
+    .from('mb_wall_posts')
+    .select('message')
+    .eq('id', postId)
+    .single()
+
+  if (fetchError || !post) {
+    console.error('fetch error during suffering', fetchError)
+    return { ok: false as const, error: 'Post not found.' }
+  }
+
+  const messageStr = post.message || ''
+
+  // Parse out suffer count if any
+  const sufferParts = messageStr.split('|||suffer|||')
+  const baseWithSplats = sufferParts[0]
+  const currentSufferCount = sufferParts[1] ? parseInt(sufferParts[1], 10) || 0 : 0
+
+  // Increment and assemble final message string
+  const updatedMessage = `${baseWithSplats}|||suffer|||${currentSufferCount + 1}`
+
+  // Update post
+  const { error: updateError } = await admin()
+    .from('mb_wall_posts')
+    .update({ message: updatedMessage })
+    .eq('id', postId)
+
+  if (updateError) {
+    console.error('update error during suffering', updateError)
+    return { ok: false as const, error: 'Could not submit suffer.' }
   }
 
   revalidatePath('/')
