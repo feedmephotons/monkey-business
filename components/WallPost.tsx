@@ -205,7 +205,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                       <div
                         key={s.seat}
                         className={`absolute flex flex-col items-center z-10 transition-all ${posClass} ${
-                          s.folded ? 'opacity-35 grayscale-[20%]' : 'opacity-100'
+                          s.folded ? 'opacity-60' : 'opacity-100'
                         }`}
                       >
                         {/* Player Pocket Cards (popup above name if showdown) */}
@@ -225,7 +225,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               : s.isLoser
                               ? 'bg-[#0a1f3d] text-white border-yellow/30 z-20'
                               : s.folded
-                              ? 'bg-[#1a1a0f]/60 text-cream/40 border-gold/10'
+                              ? 'bg-[#1a1a0f]/90 text-white/50 border-white/10'
                               : 'bg-felt-deep text-white border-yellow/20'
                           }`}
                         >
