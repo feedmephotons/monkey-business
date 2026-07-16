@@ -306,8 +306,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
         {/* 3. POKER TABLE AREA OR COMMENT AREA */}
         {post.is_bad_beat && hasLink && (
           <div className="relative w-full max-w-[270px] aspect-[2.2/1] my-4 overflow-visible">
-            {/* Message Icon (💬) and Splat Icon (🫟) at the Top Right of Table */}
-            <div className="absolute top-[-22px] right-0 z-40 flex gap-1.5 items-center">
+            {/* Message Icon (💬) and Splat Icon (🫟) at the Top Corner of Table */}
+            <div className={`absolute top-[-22px] z-40 flex gap-1.5 items-center ${post.handData ? 'right-0' : 'left-0 flex-row-reverse'}`}>
               <button
                 type="button"
                 onClick={() => {
