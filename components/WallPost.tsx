@@ -7,15 +7,15 @@ import type { EnrichedWallPost } from '@/app/page'
 import { ratePost, addCommentToPost } from '@/app/actions'
 
 const SEAT_POSITIONS: Record<number, string> = {
-  0: 'bottom-[-16px] left-[50%] -translate-x-1/2',
-  1: 'bottom-[10%] left-[2%]',
-  2: 'top-[36%] left-[-22px]',
-  3: 'top-[10%] left-[2%]',
-  4: 'top-[-16px] left-[32%] -translate-x-1/2',
-  5: 'top-[-16px] left-[68%] -translate-x-1/2',
-  6: 'top-[10%] right-[2%]',
-  7: 'top-[36%] right-[-22px]',
-  8: 'bottom-[10%] right-[2%]'
+  0: 'bottom-[-10%] left-[50%] -translate-x-1/2',
+  1: 'bottom-[12%] left-[4%]',
+  2: 'top-[36%] left-[-9%]',
+  3: 'top-[12%] left-[4%]',
+  4: 'top-[-10%] left-[32%] -translate-x-1/2',
+  5: 'top-[-10%] left-[68%] -translate-x-1/2',
+  6: 'top-[12%] right-[4%]',
+  7: 'top-[36%] right-[-9%]',
+  8: 'bottom-[12%] right-[4%]'
 }
 
 function renderMiniCard(cardStr: string, isSmall = false) {
@@ -261,7 +261,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
         {/* 3. POKER TABLE AREA OR COMMENT AREA */}
         {post.is_bad_beat && hasLink && (
-          <div className="relative w-full max-w-[245px] aspect-[2.1/1] my-4 overflow-visible">
+          <div className="relative w-full max-w-[270px] aspect-[2.2/1] my-4 overflow-visible">
             {/* Message Icon (💬) at the Top Center-Right of Table */}
             <button
               type="button"
@@ -287,7 +287,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
             {viewMode === 'table' ? (
               /* POKER TABLE FELT PREVIEW */
               <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-3 py-5 w-full h-full shadow-inner relative overflow-visible flex flex-col items-center justify-center scale-95 sm:scale-100">
-                <div className="w-full max-w-[245px] aspect-[2.1/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
+                <div className="w-full max-w-[270px] aspect-[2.2/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
                   {post.handData ? (
                     <>
                       {/* Dynamic Community Cards (centered, slightly larger) */}
@@ -456,7 +456,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   {/* Name Input */}
                   <input
                     type="text"
-                    placeholder="Lucky Lou"
+                    placeholder="monkey"
                     maxLength={15}
                     value={newCommentName}
                     onChange={(e) => setNewCommentName(e.target.value)}
