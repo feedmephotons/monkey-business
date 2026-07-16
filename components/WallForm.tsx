@@ -246,10 +246,10 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
           type="button"
           onClick={submit}
           disabled={pending || !message.trim()}
-          className={`w-full relative overflow-hidden rounded bg-gradient-to-b text-felt-deep font-[family-name:var(--font-display)] text-xl py-3 tracking-wider shadow-[0_6px_0_rgba(0,0,0,0.35),0_14px_32px_-10px_rgba(244,196,48,0.55)] hover:translate-y-[1px] active:translate-y-[4px] active:shadow-[0_2px_0_rgba(0,0,0,0.35)] transition disabled:opacity-40 disabled:cursor-not-allowed ${
+          className={`w-full relative overflow-hidden rounded text-felt-deep font-[family-name:var(--font-display)] text-xl py-3 tracking-wider shadow-[0_6px_0_rgba(0,0,0,0.35),0_14px_32px_-10px_rgba(244,196,48,0.55)] hover:translate-y-[1px] active:translate-y-[4px] active:shadow-[0_2px_0_rgba(0,0,0,0.35)] transition disabled:opacity-40 disabled:cursor-not-allowed ${
             isBadBeat 
-              ? 'from-[#fffb3b] to-[#ffd13b] border-2 border-[#fffb3b] shadow-[0_0_22px_rgba(255,251,59,0.65)]' 
-              : 'from-banana-bright to-gold shadow-[0_6px_0_rgba(0,0,0,0.35)]'
+              ? 'bg-[linear-gradient(270deg,#fffb3b,#ffd13b,#ffea3b,#fffb3b)] animate-slime-melt border-2 border-[#fffb3b]' 
+              : 'bg-gradient-to-b from-banana-bright to-gold shadow-[0_6px_0_rgba(0,0,0,0.35)]'
           }`}
         >
           {isBadBeat && (

@@ -257,3 +257,19 @@ body::after {
   display: inline-block;
   transform-origin: center;
 }
+
+/* Liquid slime flowing gradient & glowing shadow pulse */
+@keyframes slime-melt {
+  0%, 100% {
+    background-position: 0% 50%;
+    box-shadow: 0 0 16px rgba(255,251,59,0.55), 0 6px 12px rgba(0,0,0,0.3);
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 0 0 30px rgba(255,251,59,0.9), 0 0 55px rgba(255,251,59,0.4), 0 6px 12px rgba(0,0,0,0.3);
+  }
+}
+.animate-slime-melt {
+  background-size: 200% 200% !important;
+  animation: slime-melt 3.5s ease infinite !important;
+}
