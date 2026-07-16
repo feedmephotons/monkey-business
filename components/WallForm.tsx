@@ -99,7 +99,7 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
                 </div>
                 <div className="flex-1">
                   <div className="text-sm font-bold text-white/90">@Monkeybizpoker</div>
-                  <div className="text-[0.65rem] text-white/50 uppercase tracking-widest font-mono">Telegram submission</div>
+                  <div className="text-[0.65rem] text-white/50 uppercase tracking-widest font-mono">User entry</div>
                 </div>
               </div>
 
