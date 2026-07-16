@@ -41,6 +41,25 @@ function renderMiniCard(cardStr: string, isSmall = false) {
   )
 }
 
+function renderCardBack(isSmall = false) {
+  if (isSmall) {
+    return (
+      <span className="w-3.5 h-5 rounded bg-[#1c2e4c] border border-white/10 shadow-sm select-none flex items-center justify-center">
+        <div className="w-[85%] h-[85%] border border-dashed border-white/10 rounded-[1px] flex items-center justify-center bg-[#152340]">
+          <span className="text-[0.35rem] font-bold text-white/30 leading-none">♣</span>
+        </div>
+      </span>
+    )
+  }
+  return (
+    <span className="w-5.5 h-7.5 rounded bg-[#1c2e4c] border border-white/10 shadow-sm select-none flex items-center justify-center">
+      <div className="w-[85%] h-[85%] border border-dashed border-white/10 rounded-[1px] flex items-center justify-center bg-[#152340]">
+        <span className="text-[0.45rem] font-bold text-white/30 leading-none">♣</span>
+      </div>
+    </span>
+  )
+}
+
 const FONT_CLASS: Record<WallPostType['font_family'], string> = {
   display: 'font-[family-name:var(--font-display)]',
   serif: 'font-[family-name:var(--font-headline)]',
@@ -299,21 +318,30 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                           <div
                             key={s.seat}
                             className={`absolute flex flex-col items-center z-10 transition-all ${posClass} ${
-                              s.folded ? 'opacity-60' : 'opacity-100'
+                              s.folded ? 'opacity-70' : 'opacity-100'
                             }`}
                           >
-                            {/* Player Pocket Cards (popup above name if showdown) */}
-                            {!s.folded && s.cards && s.cards.length > 0 && (
-                              <div className="flex items-center gap-0.5 mb-0.5 scale-[0.6] origin-bottom -my-1 shadow-md relative z-30">
-                                {s.isWinner && (
-                                  <span className="text-[1.2rem] font-black text-[#ffd13b] animate-winning-W mr-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] select-none">
-                                    W
-                                  </span>
-                                )}
-                                {s.cards.map((c, idx) => (
-                                  <span key={idx}>{renderMiniCard(c, true)}</span>
-                                ))}
+                            {/* Player Pocket Cards */}
+                            {s.folded ? (
+                              /* Facedown folded cards back (makes folded hands noticeable!) */
+                              <div className="flex gap-0.5 mb-0.5 scale-[0.6] origin-bottom -my-1 shadow-sm relative z-30 opacity-40">
+                                {renderCardBack(true)}
+                                {renderCardBack(true)}
                               </div>
+                            ) : (
+                              /* Face-up active cards */
+                              s.cards && s.cards.length > 0 && (
+                                <div className="flex items-center gap-0.5 mb-0.5 scale-[0.6] origin-bottom -my-1 shadow-md relative z-30">
+                                  {s.isWinner && (
+                                    <span className="text-[1.2rem] font-black text-[#ffd13b] animate-winning-W mr-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] select-none">
+                                      W
+                                    </span>
+                                  )}
+                                  {s.cards.map((c, idx) => (
+                                    <span key={idx}>{renderMiniCard(c, true)}</span>
+                                  ))}
+                                </div>
+                              )
                             )}
 
                             {/* Player Name Pill */}
@@ -324,7 +352,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                                   : s.isLoser
                                   ? 'bg-[#0a1f3d] text-white border-yellow/30 z-20'
                                   : s.folded
-                                  ? 'bg-[#1a1a0f]/90 text-white/50 border-white/10'
+                                  ? 'bg-[#1a1a0f]/90 text-white/65 border-white/15'
                                   : 'bg-felt-deep text-white border-yellow/20'
                               }`}
                             >
