@@ -163,6 +163,32 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
     }
   }
 
+  // Local storage banana vote limit helper (1 vote per 24 hours per submission!)
+  const checkAndRegisterBananaVote = (postId: string): boolean => {
+    try {
+      const key = 'mb_banana_votes'
+      const raw = localStorage.getItem(key)
+      const votes: Record<string, number> = raw ? JSON.parse(raw) : {}
+      const now = Date.now()
+      const lastVote = votes[postId]
+      
+      if (lastVote && now - lastVote < 24 * 60 * 60 * 1000) {
+        alert("You have already rated this bad beat submission! You can rate it again in 24 hours. 🍌")
+        return false
+      }
+      
+      // Also obey the general 20-votes-per-day cap!
+      if (!checkAndRegisterVote()) return false
+      
+      votes[postId] = now
+      localStorage.setItem(key, JSON.stringify(votes))
+      return true
+    } catch (e) {
+      console.error("Local storage error:", e)
+      return true
+    }
+  }
+
   // Parse suffer, splats, ice, and comments from message field
   const iceParts = post.message.split('|||ice|||')
   const baseWithSuffer = iceParts[0]
@@ -257,7 +283,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const commentPlaceholder = isFemaleWinner ? "Nice hand, ma'am! 🍌" : "Nice hand, sir! 🍌"
 
   const handleRate = (tier: number) => {
-    if (!checkAndRegisterVote()) return
+    if (!checkAndRegisterBananaVote(post.id)) return
     startTransition(async () => {
       await ratePost(post.id, tier)
     })
