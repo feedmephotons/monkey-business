@@ -165,6 +165,10 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const [clientSufferCount, setClientSufferCount] = useState(databaseSufferCount)
   const [currentCommentIndex, setCurrentCommentIndex] = useState(0)
 
+  // Clamp index to prevent any out-of-bounds rendering crashes
+  const safeIndex = Math.min(currentCommentIndex, Math.max(0, comments.length - 1))
+  const activeComment = comments[safeIndex]
+
   // Sync clientSplatCount and clientSufferCount with server prop updates
   useEffect(() => {
     setClientSplatCount(databaseSplatCount)
@@ -234,7 +238,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
       if (res.ok) {
         setNewCommentName('')
         setNewCommentText('')
-        setCurrentCommentIndex(comments.length) // point to newly added comment
+        // Point to newly added comment index (next index is current length before state re-evaluation)
+        setCurrentCommentIndex(comments.length) 
       } else {
         setCommentError(res.error || 'Failed to post comment.')
       }
@@ -416,17 +421,17 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                             <div 
                               className="flex-1 flex flex-col items-center justify-center text-center bg-white text-felt-deep rounded-xl shadow-md border border-yellow/30 p-2 relative transition-all duration-300 min-h-[46px]"
                               style={{
-                                transform: `scale(${Math.min(1.0 + comments[currentCommentIndex].text.length * 0.0015, 1.15)})`,
+                                transform: `scale(${Math.min(1.0 + (activeComment?.text?.length || 0) * 0.0015, 1.15)})`,
                               }}
                             >
                               {/* Comic Speech Bubble Triangle Tail */}
                               <div className="absolute top-[99%] left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent border-t-white z-10" />
 
                               <p className="text-[0.54rem] sm:text-[0.58rem] font-[family-name:var(--font-mono)] leading-snug break-words max-h-[38px] overflow-y-auto w-full pr-0.5 text-felt-deep">
-                                &ldquo;{comments[currentCommentIndex].text}&rdquo;
+                                &ldquo;{activeComment?.text}&rdquo;
                               </p>
                               <span className="text-[0.38rem] font-bold font-mono text-red/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[80px]">
-                                — {comments[currentCommentIndex].author}
+                                — {activeComment?.author}
                               </span>
                             </div>
 
@@ -547,17 +552,17 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                             <div 
                               className="flex-1 flex flex-col items-center justify-center text-center bg-white text-felt-deep rounded-xl shadow-md border border-yellow/30 p-2 relative transition-all duration-300 min-h-[46px]"
                               style={{
-                                transform: `scale(${Math.min(1.0 + comments[currentCommentIndex].text.length * 0.0015, 1.15)})`,
+                                transform: `scale(${Math.min(1.0 + (activeComment?.text?.length || 0) * 0.0015, 1.15)})`,
                               }}
                             >
                               {/* Comic Speech Bubble Triangle Tail */}
                               <div className="absolute top-[99%] left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent border-t-white z-10" />
 
                               <p className="text-[0.54rem] sm:text-[0.58rem] font-[family-name:var(--font-mono)] leading-snug break-words max-h-[38px] overflow-y-auto w-full pr-0.5 text-felt-deep">
-                                &ldquo;{comments[currentCommentIndex].text}&rdquo;
+                                &ldquo;{activeComment?.text}&rdquo;
                               </p>
                               <span className="text-[0.38rem] font-bold font-mono text-red/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[80px]">
-                                — {comments[currentCommentIndex].author}
+                                — {activeComment?.author}
                               </span>
                             </div>
 
