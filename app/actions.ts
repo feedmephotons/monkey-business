@@ -86,3 +86,36 @@ export async function ratePost(postId: string, ratingTier: number) {
   revalidatePath('/')
   return { ok: true as const }
 }
+
+export async function addCommentToPost(postId: string, author: string, text: string) {
+  const authorClean = (author || '').trim().slice(0, 40) || 'Anon Monkey'
+  const textClean = (text || '').trim().slice(0, 200)
+  if (!textClean) return { ok: false as const, error: 'Write something first!' }
+
+  // Fetch current post message
+  const { data: post, error: fetchError } = await admin()
+    .from('mb_wall_posts')
+    .select('message')
+    .eq('id', postId)
+    .single()
+
+  if (fetchError || !post) return { ok: false as const, error: 'Post not found.' }
+
+  // Append comment with delimiter
+  const commentPayload = `${authorClean}: ${textClean}`
+  const updatedMessage = `${post.message}|||comment|||${commentPayload}`
+
+  // Update post
+  const { error: updateError } = await admin()
+    .from('mb_wall_posts')
+    .update({ message: updatedMessage })
+    .eq('id', postId)
+
+  if (updateError) {
+    console.error('comment update error', updateError)
+    return { ok: false as const, error: 'Could not post comment.' }
+  }
+
+  revalidatePath('/')
+  return { ok: true as const }
+}
