@@ -18,6 +18,32 @@ const SEAT_POSITIONS: Record<number, string> = {
   8: 'bottom-[12%] right-[4%]'
 }
 
+const FEMALE_PLAYERS = [
+  'nitty',
+  'avymae',
+  'vudoo13',
+  '2pretty2call',
+  'chickdee',
+  'dragonqueen',
+  'mamasophat',
+  'queen1212',
+  'mermaidme',
+  'leelee1712',
+  'trump fan',
+  'joebizzle',
+  'annieoak'
+]
+
+function isFemalePlayer(name: string): boolean {
+  if (!name) return false
+  const clean = name
+    .toLowerCase()
+    .replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDFFF]/g, '')
+    .trim()
+  
+  return FEMALE_PLAYERS.some(f => clean.includes(f) || f.includes(clean))
+}
+
 function renderMiniCard(cardStr: string, isSmall = false) {
   // e.g. "10♥" or "A♠"
   const value = cardStr.slice(0, -1)
@@ -114,6 +140,11 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const [newCommentName, setNewCommentName] = useState('')
   const [newCommentText, setNewCommentText] = useState('')
   const [commentError, setCommentError] = useState<string | null>(null)
+
+  // Determine if winner is a female player for custom placeholder
+  const winnerSeat = post.handData?.seats.find((s) => s.isWinner)
+  const isFemaleWinner = winnerSeat ? isFemalePlayer(winnerSeat.name) : false
+  const commentPlaceholder = isFemaleWinner ? "Nice hand, ma'am! 🍌" : "Nice hand, sir! 🍌"
 
   const handleRate = (tier: number) => {
     startTransition(async () => {
@@ -465,7 +496,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   {/* Message Input */}
                   <input
                     type="text"
-                    placeholder="Nice hand, sir! 🍌"
+                    placeholder={commentPlaceholder}
                     maxLength={100}
                     value={newCommentText}
                     onChange={(e) => setNewCommentText(e.target.value)}
