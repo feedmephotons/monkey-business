@@ -4,7 +4,7 @@ import { useTransition, useState, useEffect } from 'react'
 import Image from 'next/image'
 import type { WallPost as WallPostType } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
-import { ratePost, addCommentToPost, splatPost, sufferPost } from '@/app/actions'
+import { ratePost, addCommentToPost, splatPost, sufferPost, icePost } from '@/app/actions'
 
 const SEAT_POSITIONS: Record<number, string> = {
   0: 'bottom-[-10%] left-[50%] -translate-x-1/2',
@@ -140,8 +140,35 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const [newCommentText, setNewCommentText] = useState('')
   const [commentError, setCommentError] = useState<string | null>(null)
 
-  // Parse suffer, splats, and comments from message field
-  const sufferParts = post.message.split('|||suffer|||')
+  // Local storage vote limit helper (20 votes per day max!)
+  const checkAndRegisterVote = (): boolean => {
+    try {
+      const key = 'mb_vote_timestamps'
+      const raw = localStorage.getItem(key)
+      const timestamps: number[] = raw ? JSON.parse(raw) : []
+      const now = Date.now()
+      const past24h = timestamps.filter(t => now - t < 24 * 60 * 60 * 1000)
+      
+      if (past24h.length >= 20) {
+        alert("Vote limit reached! You can only cast 20 votes every 24 hours. Keep splatting tomorrow! 🍌")
+        return false
+      }
+      
+      past24h.push(now)
+      localStorage.setItem(key, JSON.stringify(past24h))
+      return true
+    } catch (e) {
+      console.error("Local storage error:", e)
+      return true
+    }
+  }
+
+  // Parse suffer, splats, ice, and comments from message field
+  const iceParts = post.message.split('|||ice|||')
+  const baseWithSuffer = iceParts[0]
+  const databaseIceCount = iceParts[1] ? parseInt(iceParts[1], 10) || 0 : 0
+
+  const sufferParts = baseWithSuffer.split('|||suffer|||')
   const baseWithSplats = sufferParts[0]
   const databaseSufferCount = sufferParts[1] ? parseInt(sufferParts[1], 10) || 0 : 0
 
@@ -163,19 +190,22 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
   const [clientSplatCount, setClientSplatCount] = useState(databaseSplatCount)
   const [clientSufferCount, setClientSufferCount] = useState(databaseSufferCount)
+  const [clientIceCount, setClientIceCount] = useState(databaseIceCount)
   const [currentCommentIndex, setCurrentCommentIndex] = useState(0)
 
   // Clamp index to prevent any out-of-bounds rendering crashes
   const safeIndex = Math.min(currentCommentIndex, Math.max(0, comments.length - 1))
   const activeComment = comments[safeIndex]
 
-  // Sync clientSplatCount and clientSufferCount with server prop updates
+  // Sync state with server prop updates
   useEffect(() => {
     setClientSplatCount(databaseSplatCount)
     setClientSufferCount(databaseSufferCount)
-  }, [databaseSplatCount, databaseSufferCount])
+    setClientIceCount(databaseIceCount)
+  }, [databaseSplatCount, databaseSufferCount, databaseIceCount])
 
   const handleSplat = () => {
+    if (!checkAndRegisterVote()) return
     setClientSplatCount((prev) => prev + 1)
     startTransition(async () => {
       await splatPost(post.id)
@@ -183,9 +213,18 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   }
 
   const handleSuffer = () => {
+    if (!checkAndRegisterVote()) return
     setClientSufferCount((prev) => prev + 1)
     startTransition(async () => {
       await sufferPost(post.id)
+    })
+  }
+
+  const handleIce = () => {
+    if (!checkAndRegisterVote()) return
+    setClientIceCount((prev) => prev + 1)
+    startTransition(async () => {
+      await icePost(post.id)
     })
   }
 
@@ -218,6 +257,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const commentPlaceholder = isFemaleWinner ? "Nice hand, ma'am! 🍌" : "Nice hand, sir! 🍌"
 
   const handleRate = (tier: number) => {
+    if (!checkAndRegisterVote()) return
     startTransition(async () => {
       await ratePost(post.id, tier)
     })
@@ -225,6 +265,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
   // Submit comment action
   const handleAddComment = () => {
+    if (!checkAndRegisterVote()) return
     setCommentError(null)
     startTransition(async () => {
       const name = newCommentName.trim() || 'Anon Monkey'
@@ -346,28 +387,45 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
             <button
               type="button"
               onClick={handleSplat}
-              className="absolute top-[-22px] right-11 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
+              className="absolute top-[-22px] right-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full h-8 px-2 flex items-center justify-center gap-1 font-mono font-bold text-xs shadow-md transition-all duration-200 cursor-pointer"
               style={{
                 transform: `scale(${Math.min(1 + Math.sqrt(clientSplatCount) * 0.06, 1.8)})`,
                 transformOrigin: 'bottom right',
               }}
               title="Splat a Banana! 🫟"
             >
-              🫟
+              <span>🫟</span>
+              <span>{clientSplatCount}</span>
             </button>
 
-            {/* Suffer Reaction Icon (🤕/🤢/🤮) at the Top Right of Table (grows upwards and leftwards) */}
+            {/* Suffer Reaction Icon (🤕/🤢/🤮) at the Right End of Table (grows outwards) */}
             <button
               type="button"
               onClick={handleSuffer}
-              className="absolute top-[-22px] right-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
+              className="absolute right-[-14px] top-[50%] -translate-y-1/2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full h-8 px-2 flex items-center justify-center gap-1 font-mono font-bold text-xs shadow-md transition-all duration-200 cursor-pointer"
               style={{
                 transform: `scale(${getSufferScale(clientSufferCount)})`,
-                transformOrigin: 'bottom right',
+                transformOrigin: 'center right',
               }}
               title="Ouch! React with Suffer 🤕"
             >
-              {getSufferEmoji(clientSufferCount)}
+              <span>{getSufferEmoji(clientSufferCount)}</span>
+              <span>{clientSufferCount}</span>
+            </button>
+
+            {/* Ice Reaction Icon (🧊) at the Bottom Left of Table (grows upwards) */}
+            <button
+              type="button"
+              onClick={handleIce}
+              className="absolute bottom-[-18px] left-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full h-8 px-2 flex items-center justify-center gap-1 font-mono font-bold text-xs shadow-md transition-all duration-200 cursor-pointer"
+              style={{
+                transform: `scale(${Math.min(1.0 + Math.sqrt(clientIceCount) * 0.06, 1.8)})`,
+                transformOrigin: 'bottom left',
+              }}
+              title="Ice! Keep it Cool 🧊"
+            >
+              <span>🧊</span>
+              <span>{clientIceCount}</span>
             </button>
 
             {/* POKER TABLE FELT PREVIEW (ALWAYS VISIBLE!) - CLICK TO PLAY MEDIA */}
@@ -409,7 +467,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               <button
                                 type="button"
                                 onClick={handlePrevComment}
-                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                                className="text-yellow hover:text-white font-black text-lg px-1.5 py-0.5 cursor-pointer active:scale-75 transition shrink-0"
                               >
                                 ◀
                               </button>
@@ -440,7 +498,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               <button
                                 type="button"
                                 onClick={handleNextComment}
-                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                                className="text-yellow hover:text-white font-black text-lg px-1.5 py-0.5 cursor-pointer active:scale-75 transition shrink-0"
                               >
                                 ▶
                               </button>
@@ -540,7 +598,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               <button
                                 type="button"
                                 onClick={handlePrevComment}
-                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                                className="text-yellow hover:text-white font-black text-lg px-1.5 py-0.5 cursor-pointer active:scale-75 transition shrink-0"
                               >
                                 ◀
                               </button>
@@ -571,7 +629,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               <button
                                 type="button"
                                 onClick={handleNextComment}
-                                className="text-yellow hover:text-white font-black text-sm p-1 cursor-pointer active:scale-75 transition shrink-0"
+                                className="text-yellow hover:text-white font-black text-lg px-1.5 py-0.5 cursor-pointer active:scale-75 transition shrink-0"
                               >
                                 ▶
                               </button>

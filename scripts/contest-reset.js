@@ -51,8 +51,13 @@ async function runContestReset() {
   let maxScore = -1;
 
   for (const post of posts) {
+    // Parse ice count first
+    const iceParts = post.message.split('|||ice|||');
+    const baseWithSuffer = iceParts[0];
+    const iceCount = iceParts[1] ? parseInt(iceParts[1], 10) || 0 : 0;
+
     // Parse suffer count
-    const sufferParts = post.message.split('|||suffer|||');
+    const sufferParts = baseWithSuffer.split('|||suffer|||');
     const baseWithSplats = sufferParts[0];
     const sufferCount = sufferParts[1] ? parseInt(sufferParts[1], 10) || 0 : 0;
 
@@ -66,10 +71,13 @@ async function runContestReset() {
     const mainMessage = messageParts[0];
     const commentsCount = messageParts.length - 1;
 
-    // Total score is the sum of splats, suffer reactions, and comments
-    const totalScore = splatCount + sufferCount + commentsCount;
+    // Sum up the 5 tiers of banana ratings left on the card
+    const ratingsCount = (post.banana_1 || 0) + (post.banana_2 || 0) + (post.banana_3 || 0) + (post.banana_4 || 0) + (post.banana_5 || 0);
 
-    console.log(`Post by ${post.author}: Splats=${splatCount}, Suffer=${sufferCount}, Comments=${commentsCount}, Total Score=${totalScore}`);
+    // Total score is the sum of splats, suffer reactions, comments, ice clicks, and banana ratings (each counts as 1 vote!)
+    const totalScore = splatCount + sufferCount + iceCount + commentsCount + ratingsCount;
+
+    console.log(`Post by ${post.author}: Splats=${splatCount}, Suffer=${sufferCount}, Ice=${iceCount}, Comments=${commentsCount}, Ratings=${ratingsCount}, Total Score=${totalScore}`);
 
     if (totalScore > maxScore) {
       maxScore = totalScore;
@@ -79,7 +87,9 @@ async function runContestReset() {
         message: mainMessage,
         splatCount,
         sufferCount,
+        iceCount,
         commentsCount,
+        ratingsCount,
         score: totalScore,
         created_at: post.created_at
       };

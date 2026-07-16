@@ -61,7 +61,9 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
     score: number
     splatCount: number
     sufferCount: number
+    iceCount: number
     commentsCount: number
+    ratingsCount: number
   } | null>(null)
 
   useEffect(() => {
@@ -856,12 +858,16 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <p className="mt-2 text-xs italic text-cream/70 line-clamp-2 max-w-md mx-auto">
                 &ldquo;{weeklyWinner.message}&rdquo;
               </p>
-              <div className="mt-3 flex justify-center gap-4 text-[0.65rem] font-bold font-mono text-yellow/85">
-                <span>🫟 {weeklyWinner.splatCount} Splats</span>
+              <div className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[0.65rem] font-bold font-mono text-yellow/85">
+                <span>🫟 {weeklyWinner.splatCount || 0} Splats</span>
                 <span>•</span>
-                <span>🤢 {weeklyWinner.sufferCount} Suffers</span>
+                <span>🤢 {weeklyWinner.sufferCount || 0} Suffers</span>
                 <span>•</span>
-                <span>💬 {weeklyWinner.commentsCount} Comments</span>
+                <span>🧊 {weeklyWinner.iceCount || 0} Ice Clicks</span>
+                <span>•</span>
+                <span>💬 {weeklyWinner.commentsCount || 0} Comments</span>
+                <span>•</span>
+                <span>🍌 {weeklyWinner.ratingsCount || 0} Ratings</span>
               </div>
             </div>
           )}

@@ -101,8 +101,13 @@ export async function addCommentToPost(postId: string, author: string, text: str
 
   if (fetchError || !post) return { ok: false as const, error: 'Post not found.' }
 
-  // Separate suffer first
-  const sufferParts = post.message.split('|||suffer|||')
+  // Separate ice first
+  const iceParts = post.message.split('|||ice|||')
+  const baseWithSuffer = iceParts[0]
+  const iceSuffix = iceParts[1] ? `|||ice|||${iceParts[1]}` : ''
+
+  // Separate suffer
+  const sufferParts = baseWithSuffer.split('|||suffer|||')
   const baseWithSplats = sufferParts[0]
   const sufferSuffix = sufferParts[1] ? `|||suffer|||${sufferParts[1]}` : ''
 
@@ -115,8 +120,8 @@ export async function addCommentToPost(postId: string, author: string, text: str
   const commentPayload = `${authorClean}: ${textClean}`
   const updatedBase = `${baseMessage}|||comment|||${commentPayload}`
 
-  // Re-assemble final message string keeping splats and suffer at the end
-  const updatedMessage = `${updatedBase}${splatSuffix}${sufferSuffix}`
+  // Re-assemble final message string keeping splats, suffer, and ice at the end
+  const updatedMessage = `${updatedBase}${splatSuffix}${sufferSuffix}${iceSuffix}`
 
   // Update post
   const { error: updateError } = await admin()
@@ -148,8 +153,13 @@ export async function splatPost(postId: string) {
 
   const messageStr = post.message || ''
 
-  // Separate suffer first
-  const sufferParts = messageStr.split('|||suffer|||')
+  // Separate ice first
+  const iceParts = messageStr.split('|||ice|||')
+  const baseWithSuffer = iceParts[0]
+  const iceSuffix = iceParts[1] ? `|||ice|||${iceParts[1]}` : ''
+
+  // Separate suffer
+  const sufferParts = baseWithSuffer.split('|||suffer|||')
   const baseWithSplats = sufferParts[0]
   const sufferSuffix = sufferParts[1] ? `|||suffer|||${sufferParts[1]}` : ''
 
@@ -161,8 +171,8 @@ export async function splatPost(postId: string) {
   // Increment and assemble base with splats
   const updatedBase = `${baseMessage}|||splats|||${currentSplatCount + 1}`
 
-  // Re-assemble final message with suffer suffix
-  const updatedMessage = `${updatedBase}${sufferSuffix}`
+  // Re-assemble final message keeping suffixes intact
+  const updatedMessage = `${updatedBase}${sufferSuffix}${iceSuffix}`
 
   // Update post
   const { error: updateError } = await admin()
@@ -194,13 +204,19 @@ export async function sufferPost(postId: string) {
 
   const messageStr = post.message || ''
 
-  // Parse out suffer count if any
-  const sufferParts = messageStr.split('|||suffer|||')
+  // Separate ice first
+  const iceParts = messageStr.split('|||ice|||')
+  const baseWithSuffer = iceParts[0]
+  const iceSuffix = iceParts[1] ? `|||ice|||${iceParts[1]}` : ''
+
+  // Parse out suffer count if any from baseWithSuffer
+  const sufferParts = baseWithSuffer.split('|||suffer|||')
   const baseWithSplats = sufferParts[0]
   const currentSufferCount = sufferParts[1] ? parseInt(sufferParts[1], 10) || 0 : 0
 
   // Increment and assemble final message string
-  const updatedMessage = `${baseWithSplats}|||suffer|||${currentSufferCount + 1}`
+  const updatedBaseWithSuffer = `${baseWithSplats}|||suffer|||${currentSufferCount + 1}`
+  const updatedMessage = `${updatedBaseWithSuffer}${iceSuffix}`
 
   // Update post
   const { error: updateError } = await admin()
@@ -211,6 +227,44 @@ export async function sufferPost(postId: string) {
   if (updateError) {
     console.error('update error during suffering', updateError)
     return { ok: false as const, error: 'Could not submit suffer.' }
+  }
+
+  revalidatePath('/')
+  return { ok: true as const }
+}
+
+export async function icePost(postId: string) {
+  // Fetch current message
+  const { data: post, error: fetchError } = await admin()
+    .from('mb_wall_posts')
+    .select('message')
+    .eq('id', postId)
+    .single()
+
+  if (fetchError || !post) {
+    console.error('fetch error during icing', fetchError)
+    return { ok: false as const, error: 'Post not found.' }
+  }
+
+  const messageStr = post.message || ''
+
+  // Parse out ice count
+  const iceParts = messageStr.split('|||ice|||')
+  const baseWithSuffer = iceParts[0]
+  const currentIceCount = iceParts[1] ? parseInt(iceParts[1], 10) || 0 : 0
+
+  // Increment and assemble final message string
+  const updatedMessage = `${baseWithSuffer}|||ice|||${currentIceCount + 1}`
+
+  // Update post
+  const { error: updateError } = await admin()
+    .from('mb_wall_posts')
+    .update({ message: updatedMessage })
+    .eq('id', postId)
+
+  if (updateError) {
+    console.error('update error during icing', updateError)
+    return { ok: false as const, error: 'Could not submit ice.' }
   }
 
   revalidatePath('/')
