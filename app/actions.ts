@@ -101,9 +101,17 @@ export async function addCommentToPost(postId: string, author: string, text: str
 
   if (fetchError || !post) return { ok: false as const, error: 'Post not found.' }
 
-  // Append comment with delimiter
+  // Parse out splat count suffix if any
+  const splatParts = post.message.split('|||splats|||')
+  const baseMessage = splatParts[0]
+  const splatSuffix = splatParts[1] ? `|||splats|||${splatParts[1]}` : ''
+
+  // Append comment with delimiter to the base message
   const commentPayload = `${authorClean}: ${textClean}`
-  const updatedMessage = `${post.message}|||comment|||${commentPayload}`
+  const updatedBase = `${baseMessage}|||comment|||${commentPayload}`
+
+  // Re-assemble final message string
+  const updatedMessage = `${updatedBase}${splatSuffix}`
 
   // Update post
   const { error: updateError } = await admin()
@@ -121,10 +129,10 @@ export async function addCommentToPost(postId: string, author: string, text: str
 }
 
 export async function splatPost(postId: string) {
-  // Fetch current value
+  // Fetch current message
   const { data: post, error: fetchError } = await admin()
     .from('mb_wall_posts')
-    .select('banana_count')
+    .select('message')
     .eq('id', postId)
     .single()
 
@@ -133,12 +141,18 @@ export async function splatPost(postId: string) {
     return { ok: false as const, error: 'Post not found.' }
   }
 
-  const currentCount = post.banana_count || 0
+  const messageStr = post.message || ''
+  const splatParts = messageStr.split('|||splats|||')
+  const baseMessage = splatParts[0]
+  const currentSplatCount = splatParts[1] ? parseInt(splatParts[1], 10) || 0 : 0
 
-  // Increment and update
+  // Increment and assemble final message string
+  const updatedMessage = `${baseMessage}|||splats|||${currentSplatCount + 1}`
+
+  // Update post
   const { error: updateError } = await admin()
     .from('mb_wall_posts')
-    .update({ banana_count: currentCount + 1 })
+    .update({ message: updatedMessage })
     .eq('id', postId)
 
   if (updateError) {

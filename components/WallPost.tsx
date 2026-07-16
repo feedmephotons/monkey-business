@@ -139,14 +139,30 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const [newCommentName, setNewCommentName] = useState('')
   const [newCommentText, setNewCommentText] = useState('')
   const [commentError, setCommentError] = useState<string | null>(null)
-  const [clientSplatCount, setClientSplatCount] = useState(post.banana_count || 0)
 
+  // Parse splats and comments from message field
+  const splatParts = post.message.split('|||splats|||')
+  const baseMessageStr = splatParts[0]
+  const databaseSplatCount = splatParts[1] ? parseInt(splatParts[1], 10) || 0 : 0
+
+  // Parse comments from baseMessageStr
+  const messageParts = baseMessageStr.split('|||comment|||')
+  const mainMessage = messageParts[0]
+  const comments = messageParts.slice(1).map((c) => {
+    const idx = c.indexOf(': ')
+    if (idx !== -1) {
+      return { author: c.substring(0, idx), text: c.substring(idx + 2) }
+    }
+    return { author: 'Anon Monkey', text: c }
+  })
+
+  const [clientSplatCount, setClientSplatCount] = useState(databaseSplatCount)
   const [currentCommentIndex, setCurrentCommentIndex] = useState(0)
 
   // Sync clientSplatCount with server prop updates
   useEffect(() => {
-    setClientSplatCount(post.banana_count || 0)
-  }, [post.banana_count])
+    setClientSplatCount(databaseSplatCount)
+  }, [databaseSplatCount])
 
   const handleSplat = () => {
     setClientSplatCount((prev) => prev + 1)
@@ -175,17 +191,6 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
       await ratePost(post.id, tier)
     })
   }
-
-  // Parse comments from message field
-  const messageParts = post.message.split('|||comment|||')
-  const mainMessage = messageParts[0]
-  const comments = messageParts.slice(1).map((c) => {
-    const idx = c.indexOf(': ')
-    if (idx !== -1) {
-      return { author: c.substring(0, idx), text: c.substring(idx + 2) }
-    }
-    return { author: 'Anon Monkey', text: c }
-  })
 
   // Submit comment action
   const handleAddComment = () => {
