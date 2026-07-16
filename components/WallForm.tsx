@@ -112,7 +112,10 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
                     <p className="text-xl md:text-2xl uppercase font-black text-white/95 leading-tight">
                       Paste your PokerBros replay link <span className="text-yellow drop-shadow-[0_0_8px_rgba(255,209,59,0.7)] animate-pulse">above</span>…
                     </p>
-                    <div className="text-xl text-yellow drop-shadow-[0_0_12px_rgba(255,209,59,0.9)] font-black my-1 animate-bounce">
+                    <div 
+                      className="text-sm text-yellow drop-shadow-[0_0_6px_rgba(255,209,59,0.5)] font-black mt-3 mb-1 animate-bounce"
+                      style={{ animationDuration: '2.5s' }}
+                    >
                       ▲ ▲ ▲
                     </div>
                     <p className="text-xs uppercase tracking-widest text-banana/80 font-mono font-bold mt-1">
