@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import Image from 'next/image'
 import { postToWall } from '@/app/actions'
 
 const FONT_COLORS = [
@@ -49,15 +50,15 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
       const res = await postToWall({
         author,
         message,
-        font_color: fontColor,
-        bg_color: bgColor,
-        font_family: font,
+        font_color: isBadBeat ? '#ffffff' : fontColor,
+        bg_color: isBadBeat ? '#1a1a0f' : bgColor,
+        font_family: isBadBeat ? 'display' : font,
         is_bad_beat: isBadBeat,
       })
       if (res.ok) {
         setMessage('')
         setAuthor('')
-        setStatus('✓ tacked to the wall')
+        setStatus(isBadBeat ? '✓ splattered onto the wall' : '✓ tacked to the wall')
       } else {
         setStatus(res.error)
       }
@@ -68,26 +69,76 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
     <div className="grid gap-5 md:grid-cols-[1fr_minmax(260px,320px)]">
       {/* LIVE PREVIEW */}
       <div className="order-2 md:order-1">
-        <div
-          className="wall-card min-h-[180px]"
-          style={{
-            background: bgColor,
-            transform: 'rotate(-1deg)',
-          }}
-        >
-          <p
-            className={`text-xl md:text-2xl leading-snug break-words ${currentFont.className}`}
-            style={{ color: fontColor }}
+        {isBadBeat ? (
+          /* EXCLUSIVE DEDICATED BAD BEAT LIVE PREVIEW CARD */
+          <div
+            className="wall-card min-h-[220px] flex flex-col justify-between relative overflow-visible transition-all duration-200 border-2 border-yellow shadow-[0_0_20px_rgba(255,209,59,0.35)] bg-[#0f0f0f] rounded-xl pt-6 px-4 pb-4"
+            style={{ transform: 'rotate(-1deg)' }}
           >
-            {message || 'Your masterpiece appears here…'}
-          </p>
-          <p
-            className="mt-4 font-[family-name:var(--font-hand)] text-xl opacity-80"
-            style={{ color: fontColor }}
+            {/* Dripping puddle */}
+            <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-52 h-14 z-20 pointer-events-none select-none drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]">
+              <svg viewBox="0 0 120 30" width="100%" height="100%">
+                <path d="M 8,12 C 12,4 108,4 112,12 C 116,18 108,26 98,24 C 94,30 90,30 87,24 C 81,24 76,28 73,20 C 67,29 55,29 49,20 C 43,29 36,27 33,20 C 27,27 18,23 8,12" fill="#ffd13b" stroke="#000000" strokeWidth="1.5" strokeLinejoin="round" />
+                <text x="60" y="19" fill="#000000" fontFamily="Impact, Arial Black, sans-serif" fontWeight="900" fontSize="8.5" textAnchor="middle" letterSpacing="0.3">BAD BEAT!</text>
+                <path d="M 80,10 C 76,8 70,11 68,13 C 70,12 73,10 80,10" stroke="#000000" strokeWidth="1" fill="#ffd13b" />
+              </svg>
+            </div>
+
+            {/* Dripping bottom border */}
+            <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-[101.5%] h-6 z-20 pointer-events-none select-none">
+              <svg viewBox="0 0 100 10" width="100%" height="100%" preserveAspectRatio="none">
+                <path d="M 0,0 L 100,0 C 92,0 88,7 85,2 C 79,2 75,9 71,2 C 63,2 59,10 55,2 C 48,2 43,9 39,2 C 33,2 29,10 25,2 C 19,2 14,7 10,1 L 0,0 Z" fill="#ffd13b" stroke="#ffd13b" strokeWidth="0.3" />
+              </svg>
+            </div>
+
+            <div>
+              {/* Header with Circular Logo */}
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 rounded-full overflow-hidden border border-yellow/30 relative shrink-0">
+                  <Image src="/img/logo.png" alt="Logo" fill className="object-cover" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-sm font-bold text-white/90">@Monkeybizpoker</div>
+                  <div className="text-[0.65rem] text-white/50 uppercase tracking-widest font-mono">Telegram submission</div>
+                </div>
+              </div>
+
+              {/* Message */}
+              <p className="text-xl md:text-2xl leading-snug break-words font-[family-name:var(--font-display)] text-white">
+                {message || 'Paste your PokerBros replay link here…'}
+              </p>
+            </div>
+
+            {/* Faint footer signature */}
+            <div className="mt-4 text-right">
+              <span className="font-[family-name:var(--font-hand)] text-lg text-yellow opacity-80">
+                — {author || 'monkey'}
+              </span>
+            </div>
+          </div>
+        ) : (
+          /* STANDARD PAGE PREVIEW CARD */
+          <div
+            className="wall-card min-h-[180px]"
+            style={{
+              background: bgColor,
+              transform: 'rotate(-1deg)',
+            }}
           >
-            — {author || 'Anon Monkey'}
-          </p>
-        </div>
+            <p
+              className={`text-xl md:text-2xl leading-snug break-words ${currentFont.className}`}
+              style={{ color: fontColor }}
+            >
+              {message || 'Your masterpiece appears here…'}
+            </p>
+            <p
+              className="mt-4 font-[family-name:var(--font-hand)] text-xl opacity-80"
+              style={{ color: fontColor }}
+            >
+              — {author || 'Anon Monkey'}
+            </p>
+          </div>
+        )}
         <p className="mt-3 text-xs uppercase tracking-[0.2em] text-cream/50 font-[family-name:var(--font-mono)]">
           live preview
         </p>
@@ -96,7 +147,7 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
       {/* CONTROLS */}
       <div className="order-1 md:order-2 space-y-4">
         <div>
-          <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
+          <label className={`block text-[0.7rem] uppercase tracking-[0.18em] mb-1 font-[family-name:var(--font-mono)] ${isBadBeat ? 'text-yellow' : 'text-banana/80'}`}>
             Signed
           </label>
           <input
@@ -109,7 +160,7 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
         </div>
 
         <div>
-          <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
+          <label className={`block text-[0.7rem] uppercase tracking-[0.18em] mb-1 font-[family-name:var(--font-mono)] ${isBadBeat ? 'text-yellow' : 'text-banana/80'}`}>
             Message
           </label>
           <textarea
@@ -124,75 +175,84 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
           </div>
         </div>
 
-        <div>
-          <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
-            Font
-          </label>
-          <div className="grid grid-cols-4 gap-1.5">
-            {FONTS.map((f) => (
-              <button
-                key={f.key}
-                type="button"
-                onClick={() => setFont(f.key)}
-                className={`py-2 px-1 text-xs rounded border transition ${
-                  font === f.key
-                    ? 'bg-banana text-felt-deep border-banana'
-                    : 'bg-felt-deep/60 text-cream/70 border-gold/30 hover:border-gold'
-                } ${f.className}`}
-              >
-                {f.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* ONLY RENDER FONT / INK / PAPER SELECTORS FOR GENERAL CHAT POSTS */}
+        {!isBadBeat && (
+          <>
+            <div>
+              <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
+                Font
+              </label>
+              <div className="grid grid-cols-4 gap-1.5">
+                {FONTS.map((f) => (
+                  <button
+                    key={f.key}
+                    type="button"
+                    onClick={() => setFont(f.key)}
+                    className={`py-2 px-1 text-xs rounded border transition ${
+                      font === f.key
+                        ? 'bg-banana text-felt-deep border-banana'
+                        : 'bg-felt-deep/60 text-cream/70 border-gold/30 hover:border-gold'
+                    } ${f.className}`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        <div>
-          <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
-            Ink
-          </label>
-          <div className="flex flex-wrap gap-1.5">
-            {FONT_COLORS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setFontColor(c)}
-                className={`w-10 h-10 rounded-full border-2 transition touch-manipulation ${
-                  fontColor === c ? 'scale-110 border-cream' : 'border-gold/30'
-                }`}
-                style={{ background: c }}
-                aria-label={`ink ${c}`}
-              />
-            ))}
-          </div>
-        </div>
+            <div>
+              <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
+                Ink
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {FONT_COLORS.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setFontColor(c)}
+                    className={`w-10 h-10 rounded-full border-2 transition touch-manipulation ${
+                      fontColor === c ? 'scale-110 border-cream' : 'border-gold/30'
+                    }`}
+                    style={{ background: c }}
+                    aria-label={`ink ${c}`}
+                  />
+                ))}
+              </div>
+            </div>
 
-        <div>
-          <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
-            Paper
-          </label>
-          <div className="flex flex-wrap gap-1.5">
-            {BG_COLORS.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setBgColor(c)}
-                className={`w-10 h-10 rounded border-2 transition touch-manipulation ${
-                  bgColor === c ? 'scale-110 border-cream' : 'border-gold/30'
-                }`}
-                style={{ background: c }}
-                aria-label={`paper ${c}`}
-              />
-            ))}
-          </div>
-        </div>
+            <div>
+              <label className="block text-[0.7rem] uppercase tracking-[0.18em] text-banana/80 mb-1 font-[family-name:var(--font-mono)]">
+                Paper
+              </label>
+              <div className="flex flex-wrap gap-1.5">
+                {BG_COLORS.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() => setBgColor(c)}
+                    className={`w-10 h-10 rounded border-2 transition touch-manipulation ${
+                      bgColor === c ? 'scale-110 border-cream' : 'border-gold/30'
+                    }`}
+                    style={{ background: c }}
+                    aria-label={`paper ${c}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         <button
           type="button"
           onClick={submit}
           disabled={pending || !message.trim()}
-          className="w-full relative overflow-hidden rounded bg-gradient-to-b from-banana-bright to-gold text-felt-deep font-[family-name:var(--font-display)] text-xl py-3 tracking-wider shadow-[0_6px_0_rgba(0,0,0,0.35),0_14px_32px_-10px_rgba(244,196,48,0.55)] hover:translate-y-[1px] active:translate-y-[4px] active:shadow-[0_2px_0_rgba(0,0,0,0.35)] transition disabled:opacity-40 disabled:cursor-not-allowed"
+          className={`w-full relative overflow-hidden rounded bg-gradient-to-b text-felt-deep font-[family-name:var(--font-display)] text-xl py-3 tracking-wider shadow-[0_6px_0_rgba(0,0,0,0.35),0_14px_32px_-10px_rgba(244,196,48,0.55)] hover:translate-y-[1px] active:translate-y-[4px] active:shadow-[0_2px_0_rgba(0,0,0,0.35)] transition disabled:opacity-40 disabled:cursor-not-allowed ${
+            isBadBeat 
+              ? 'from-[#ffd13b] to-yellow border-yellow shadow-[0_0_12px_rgba(255,209,59,0.3)]' 
+              : 'from-banana-bright to-gold shadow-[0_6px_0_rgba(0,0,0,0.35)]'
+          }`}
         >
-          {pending ? 'TACKING…' : 'TACK IT UP'}
+          {isBadBeat ? (pending ? 'SPLATTERING…' : 'SPLAT IT UP! 🍌') : (pending ? 'TACKING…' : 'TACK IT UP')}
           <span className="shimmer absolute inset-0 pointer-events-none" />
         </button>
         {status && (
