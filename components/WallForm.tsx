@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useEffect } from 'react'
 import Image from 'next/image'
 import { postToWall } from '@/app/actions'
 
@@ -41,6 +41,41 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
   const [font, setFont] = useState<(typeof FONTS)[number]['key']>('display')
   const [status, setStatus] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
+
+  const [clipboardLink, setClipboardLink] = useState('')
+  const [showClipboardPrompt, setShowClipboardPrompt] = useState(false)
+
+  const checkClipboard = async () => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard) {
+        const text = await navigator.clipboard.readText()
+        if (text && text.includes('pokerbros.net') && text !== message) {
+          setClipboardLink(text)
+          setShowClipboardPrompt(true)
+        } else {
+          setShowClipboardPrompt(false)
+        }
+      }
+    } catch (e) {
+      // Ignore security errors
+    }
+  }
+
+  useEffect(() => {
+    // 1. Check PWA shared URL first
+    const sharedUrl = localStorage.getItem('mb_shared_pokerbros_url')
+    if (sharedUrl) {
+      setMessage(sharedUrl)
+      localStorage.removeItem('mb_shared_pokerbros_url')
+    }
+
+    // 2. Clipboard auto-detection
+    if (typeof window !== 'undefined' && navigator.clipboard) {
+      window.addEventListener('focus', checkClipboard)
+      checkClipboard()
+      return () => window.removeEventListener('focus', checkClipboard)
+    }
+  }, [message])
 
   const currentFont = FONTS.find((f) => f.key === font)!
 
@@ -163,6 +198,28 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
 
       {/* CONTROLS */}
       <div className="order-1 md:order-2 space-y-4">
+        {/* Glowing Clipboard Prompt Banner */}
+        {isBadBeat && showClipboardPrompt && (
+          <div 
+            onClick={() => {
+              if (clipboardLink) {
+                setMessage(clipboardLink)
+                setShowClipboardPrompt(false)
+              }
+            }}
+            className="bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 rounded-lg p-2.5 flex items-center justify-between gap-3 cursor-pointer transition-all duration-200 animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+          >
+            <div className="flex items-center gap-2 text-left">
+              <span className="text-sm">📋</span>
+              <div>
+                <span className="text-[0.65rem] font-bold font-mono text-emerald-400 uppercase tracking-widest block leading-none mb-0.5">Copied Link Detected!</span>
+                <span className="text-[0.7rem] text-white/80 line-clamp-1 break-all leading-tight">{clipboardLink}</span>
+              </div>
+            </div>
+            <span className="text-[0.55rem] font-black font-mono bg-emerald-500 text-black px-2 py-1 rounded uppercase tracking-wider leading-none shrink-0 shadow-sm">Tap to Paste</span>
+          </div>
+        )}
+
         <div>
           <label className={`block text-[0.7rem] uppercase tracking-[0.18em] mb-1 font-[family-name:var(--font-mono)] ${isBadBeat ? 'text-yellow' : 'text-banana/80'}`}>
             Signed

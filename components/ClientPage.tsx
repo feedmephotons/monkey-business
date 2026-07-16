@@ -78,6 +78,23 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
       .catch((err) => console.error("Error loading weekly winner:", err))
   }, [])
 
+  // PWA Share Target Detector
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const sharedUrl = params.get('url') || params.get('text') || params.get('title')
+      
+      if (sharedUrl && (sharedUrl.includes('pokerbros.net') || sharedUrl.includes('http'))) {
+        setActiveWallTab('bad_beat')
+        localStorage.setItem('mb_shared_pokerbros_url', sharedUrl)
+        
+        // Clean URL to prevent re-triggering
+        const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname
+        window.history.replaceState({ path: cleanUrl }, '', cleanUrl)
+      }
+    }
+  }, [])
+
   const nextFlyer = () => {
     setActiveFlyerIndex((prev) => (prev + 1) % FLYERS.length)
   }
