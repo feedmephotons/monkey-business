@@ -104,9 +104,23 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
               </div>
 
               {/* Message */}
-              <p className="text-xl md:text-2xl leading-snug break-words font-[family-name:var(--font-display)] text-white">
-                {message || 'Paste your PokerBros replay link here…'}
-              </p>
+              <div className="leading-snug break-words font-[family-name:var(--font-display)] text-white">
+                {message ? (
+                  <p className="text-xl md:text-2xl">{message}</p>
+                ) : (
+                  <div className="flex flex-col items-center text-center py-2">
+                    <p className="text-xl md:text-2xl uppercase font-black text-white/95 leading-tight">
+                      Paste your PokerBros replay link <span className="text-yellow drop-shadow-[0_0_8px_rgba(255,209,59,0.7)] animate-pulse">above</span>…
+                    </p>
+                    <div className="text-xl text-yellow drop-shadow-[0_0_12px_rgba(255,209,59,0.9)] font-black my-1 animate-bounce">
+                      ▲ ▲ ▲
+                    </div>
+                    <p className="text-xs uppercase tracking-widest text-banana/80 font-mono font-bold mt-1">
+                      This is a contest for $25 a week!
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Faint footer signature */}
