@@ -412,12 +412,20 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               <div className="w-4 shrink-0" />
                             )}
                             
-                            {/* Comment Text & Author */}
-                            <div className="flex-1 flex flex-col items-center justify-center text-center px-1 overflow-hidden min-h-[38px]">
-                              <p className="text-[0.58rem] sm:text-[0.62rem] text-white leading-tight font-black break-words max-h-[38px] overflow-y-auto leading-none w-full">
+                            {/* Comment Text & Author inside a Cartoonish White Speech Bubble 🗯️ */}
+                            <div 
+                              className="flex-1 flex flex-col items-center justify-center text-center bg-white text-felt-deep rounded-xl shadow-md border border-yellow/30 p-2 relative transition-all duration-300 min-h-[46px]"
+                              style={{
+                                transform: `scale(${Math.min(1.0 + comments[currentCommentIndex].text.length * 0.0015, 1.15)})`,
+                              }}
+                            >
+                              {/* Comic Speech Bubble Triangle Tail */}
+                              <div className="absolute top-[99%] left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent border-t-white z-10" />
+
+                              <p className="text-[0.54rem] sm:text-[0.58rem] font-[family-name:var(--font-mono)] leading-snug break-words max-h-[38px] overflow-y-auto w-full pr-0.5 text-felt-deep">
                                 &ldquo;{comments[currentCommentIndex].text}&rdquo;
                               </p>
-                              <span className="text-[0.42rem] font-bold font-mono text-yellow/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[90px]">
+                              <span className="text-[0.38rem] font-bold font-mono text-red/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[80px]">
                                 — {comments[currentCommentIndex].author}
                               </span>
                             </div>
@@ -535,12 +543,20 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                               <div className="w-4 shrink-0" />
                             )}
                             
-                            {/* Comment Text & Author */}
-                            <div className="flex-1 flex flex-col items-center justify-center text-center px-1 overflow-hidden min-h-[38px]">
-                              <p className="text-[0.58rem] sm:text-[0.62rem] text-white leading-tight font-black break-words max-h-[38px] overflow-y-auto leading-none w-full">
+                            {/* Comment Text & Author inside a Cartoonish White Speech Bubble 🗯️ */}
+                            <div 
+                              className="flex-1 flex flex-col items-center justify-center text-center bg-white text-felt-deep rounded-xl shadow-md border border-yellow/30 p-2 relative transition-all duration-300 min-h-[46px]"
+                              style={{
+                                transform: `scale(${Math.min(1.0 + comments[currentCommentIndex].text.length * 0.0015, 1.15)})`,
+                              }}
+                            >
+                              {/* Comic Speech Bubble Triangle Tail */}
+                              <div className="absolute top-[99%] left-1/2 -translate-x-1/2 w-0 h-0 border-4 border-transparent border-t-white z-10" />
+
+                              <p className="text-[0.54rem] sm:text-[0.58rem] font-[family-name:var(--font-mono)] leading-snug break-words max-h-[38px] overflow-y-auto w-full pr-0.5 text-felt-deep">
                                 &ldquo;{comments[currentCommentIndex].text}&rdquo;
                               </p>
-                              <span className="text-[0.42rem] font-bold font-mono text-yellow/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[90px]">
+                              <span className="text-[0.38rem] font-bold font-mono text-red/85 tracking-wider uppercase mt-1 leading-none block truncate max-w-[80px]">
                                 — {comments[currentCommentIndex].author}
                               </span>
                             </div>
@@ -621,7 +637,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     disabled={isPending || !newCommentText.trim()}
                     className="bg-yellow hover:bg-yellow-bright text-felt-deep font-black font-mono text-[0.55rem] uppercase px-3 py-1.5 rounded transition cursor-pointer disabled:opacity-40 shrink-0 shadow-sm"
                   >
-                    {isPending ? '..' : 'SPLAT'}
+                    {isPending ? '..' : 'POST'}
                   </button>
                 </div>
                 {commentError && (

@@ -55,6 +55,26 @@ interface ClientPageProps {
 export default function ClientPage({ posts, budget }: ClientPageProps) {
   const [activeFlyerIndex, setActiveFlyerIndex] = useState(0)
   const [activeWallTab, setActiveWallTab] = useState<'general' | 'bad_beat'>('general')
+  const [weeklyWinner, setWeeklyWinner] = useState<{
+    author: string
+    message: string
+    score: number
+    splatCount: number
+    sufferCount: number
+    commentsCount: number
+  } | null>(null)
+
+  useEffect(() => {
+    fetch('/data/weekly-winner.json')
+      .then((res) => {
+        if (res.ok) return res.json()
+        return null
+      })
+      .then((data) => {
+        if (data) setWeeklyWinner(data)
+      })
+      .catch((err) => console.error("Error loading weekly winner:", err))
+  }, [])
 
   const nextFlyer = () => {
     setActiveFlyerIndex((prev) => (prev + 1) % FLYERS.length)
@@ -825,6 +845,26 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </button>
             </div>
           </div>
+
+          {/* WEEKLY WINNER BANNER */}
+          {activeWallTab === 'bad_beat' && weeklyWinner && (
+            <div className="w-full max-w-xl mx-auto mb-10 bg-gradient-to-r from-yellow/20 via-gold/15 to-yellow/20 rounded-xl p-5 border border-yellow/30 shadow-lg text-center animate-pulse-slow">
+              <span className="text-xl sm:text-2xl block mb-1">🏆 WEEKLY BAD BEAT CHAMPION 🏆</span>
+              <div className="text-sm font-black text-yellow uppercase tracking-widest font-mono">
+                {weeklyWinner.author} — {weeklyWinner.score} Total Points
+              </div>
+              <p className="mt-2 text-xs italic text-cream/70 line-clamp-2 max-w-md mx-auto">
+                &ldquo;{weeklyWinner.message}&rdquo;
+              </p>
+              <div className="mt-3 flex justify-center gap-4 text-[0.65rem] font-bold font-mono text-yellow/85">
+                <span>🫟 {weeklyWinner.splatCount} Splats</span>
+                <span>•</span>
+                <span>🤢 {weeklyWinner.sufferCount} Suffers</span>
+                <span>•</span>
+                <span>💬 {weeklyWinner.commentsCount} Comments</span>
+              </div>
+            </div>
+          )}
 
           {/* FORM CONTAINER */}
           <div id="wall-form-container" className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
