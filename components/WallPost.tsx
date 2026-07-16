@@ -341,7 +341,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
             <button
               type="button"
               onClick={handleSplat}
-              className="absolute top-[-22px] right-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
+              className="absolute top-[-22px] right-11 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
               style={{
                 transform: `scale(${Math.min(1 + Math.sqrt(clientSplatCount) * 0.06, 1.8)})`,
                 transformOrigin: 'bottom right',
@@ -349,6 +349,20 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
               title="Splat a Banana! 🫟"
             >
               🫟
+            </button>
+
+            {/* Suffer Reaction Icon (🤕/🤢/🤮) at the Top Right of Table (grows upwards and leftwards) */}
+            <button
+              type="button"
+              onClick={handleSuffer}
+              className="absolute top-[-22px] right-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
+              style={{
+                transform: `scale(${getSufferScale(clientSufferCount)})`,
+                transformOrigin: 'bottom right',
+              }}
+              title="Ouch! React with Suffer 🤕"
+            >
+              {getSufferEmoji(clientSufferCount)}
             </button>
 
             {/* POKER TABLE FELT PREVIEW (ALWAYS VISIBLE!) - CLICK TO PLAY MEDIA */}
@@ -578,20 +592,6 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                 )}
               </div>
             </div>
-
-            {/* Suffer Reaction Icon (🤕/🤢/🤮) at the Bottom Right of Table (grows upwards) */}
-            <button
-              type="button"
-              onClick={handleSuffer}
-              className="absolute bottom-[-18px] right-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
-              style={{
-                transform: `scale(${getSufferScale(clientSufferCount)})`,
-                transformOrigin: 'bottom right',
-              }}
-              title="Ouch! React with Suffer 🤕"
-            >
-              {getSufferEmoji(clientSufferCount)}
-            </button>
 
             {/* COLLAPSIBLE QUICK REPLY FORM BELOW THE TABLE */}
             {showComments && (
