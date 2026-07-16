@@ -3,7 +3,31 @@
 import { useTransition } from 'react'
 import Image from 'next/image'
 import type { WallPost as WallPostType } from '@/lib/supabase'
+import type { EnrichedWallPost } from '@/app/page'
 import { ratePost } from '@/app/actions'
+
+function renderMiniCard(cardStr: string, isSmall = false) {
+  // e.g. "10♥" or "A♠"
+  const value = cardStr.slice(0, -1)
+  const suit = cardStr.slice(-1)
+  const isRed = suit === '♥' || suit === '♦'
+  
+  if (isSmall) {
+    return (
+      <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center shadow select-none">
+        {value}
+        <span className={`text-[0.4rem] leading-none ${isRed ? 'text-red-600' : ''}`}>{suit}</span>
+      </span>
+    )
+  }
+  
+  return (
+    <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow select-none">
+      {value}
+      <span className={`text-[0.5rem] leading-none ${isRed ? 'text-red-600' : ''}`}>{suit}</span>
+    </span>
+  )
+}
 
 const FONT_CLASS: Record<WallPostType['font_family'], string> = {
   display: 'font-[family-name:var(--font-display)]',
@@ -52,7 +76,7 @@ function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: b
   })
 }
 
-export default function WallPost({ post, index }: { post: WallPostType; index: number }) {
+export default function WallPost({ post, index }: { post: EnrichedWallPost; index: number }) {
   const [isPending, startTransition] = useTransition()
 
   const handleRate = (tier: number) => {
@@ -139,26 +163,66 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
           <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] p-2.5 my-2.5 shadow-inner relative overflow-hidden flex flex-col items-center scale-95 sm:scale-100">
             {/* The felt ring */}
             <div className="w-full max-w-[210px] aspect-[2.1/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative">
-              {/* Community Cards */}
-              <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
-                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">A<span className="text-[0.5rem] text-red-600">♦</span></span>
-                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">K<span className="text-[0.5rem] text-red-600">♥</span></span>
-                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">10<span className="text-[0.5rem] text-red-600">♥</span></span>
-                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">9<span className="text-[0.5rem]">♠</span></span>
-                <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">Q<span className="text-[0.5rem]">♠</span></span>
-              </div>
-              <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLAIN WINS (Straight Flush)</span>
+              {post.handData ? (
+                <>
+                  {/* Dynamic Community Cards */}
+                  <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
+                    {post.handData.board.map((card, idx) => (
+                      <span key={idx}>{renderMiniCard(card)}</span>
+                    ))}
+                  </div>
+                  
+                  {post.handData.winner && (
+                    <>
+                      <span className="text-[0.43rem] font-bold text-yellow/80 uppercase tracking-wider font-mono text-center max-w-[130px] truncate leading-tight mt-0.5">
+                        {post.handData.winner.name} WINS
+                      </span>
+                      <span className="text-[0.38rem] font-bold text-white/60 uppercase tracking-widest font-mono text-center">
+                        ({post.handData.winner.pattern})
+                      </span>
 
-              {/* Hero Hand (A A) */}
-              <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
-                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem]">♠</span></span>
-                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem] text-red-600">♥</span></span>
-              </div>
-              {/* Villian Hand (10 J) */}
-              <div className="absolute -top-1 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
-                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">10<span className="text-[0.4rem]">♠</span></span>
-                <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">J<span className="text-[0.4rem]">♠</span></span>
-              </div>
+                      {/* Winner's Hand (top right) */}
+                      <div className="absolute -top-1 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                        {post.handData.winner.cards.map((card, idx) => (
+                          <span key={idx}>{renderMiniCard(card, true)}</span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Loser's Hand (bottom left) */}
+                  {post.handData.loser && (
+                    <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                      {post.handData.loser.cards.map((card, idx) => (
+                        <span key={idx}>{renderMiniCard(card, true)}</span>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* Static Mockup Fallback */}
+                  <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
+                    <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">A<span className="text-[0.5rem] text-red-600">♦</span></span>
+                    <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">K<span className="text-[0.5rem] text-red-600">♥</span></span>
+                    <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">10<span className="text-[0.5rem] text-red-600">♥</span></span>
+                    <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">9<span className="text-[0.5rem]">♠</span></span>
+                    <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">Q<span className="text-[0.5rem]">♠</span></span>
+                  </div>
+                  <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLAIN WINS (Straight Flush)</span>
+
+                  {/* Hero Hand (A A) */}
+                  <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                    <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem]">♠</span></span>
+                    <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">A<span className="text-[0.4rem] text-red-600">♥</span></span>
+                  </div>
+                  {/* Villian Hand (10 J) */}
+                  <div className="absolute -top-1 -right-2 bg-[#8a0000] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
+                    <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">10<span className="text-[0.4rem]">♠</span></span>
+                    <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">J<span className="text-[0.4rem]">♠</span></span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}

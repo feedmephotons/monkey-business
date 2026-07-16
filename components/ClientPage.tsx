@@ -6,6 +6,7 @@ import WallForm from '@/components/WallForm'
 import WallPost from '@/components/WallPost'
 import PokerBrosFAB from '@/components/PokerBrosFAB'
 import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
+import type { EnrichedWallPost } from '@/app/page'
 
 const FLYERS = [
   { src: '/img/hero-freeroll-flyer-jul25.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 25th' },
@@ -47,7 +48,7 @@ function dollars(cents: number) {
 }
 
 interface ClientPageProps {
-  posts: WallPostType[]
+  posts: EnrichedWallPost[]
   budget: BudgetRow[]
 }
 
