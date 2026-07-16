@@ -117,19 +117,19 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
       <div className={post.is_bad_beat ? 'pt-6' : ''}>
         {/* User avatar / header if Bad Beat */}
         {post.is_bad_beat && (
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-yellow/30 relative shrink-0">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 rounded-full overflow-hidden border border-yellow/30 relative shrink-0">
               <Image
                 src="/img/logo.png"
                 alt="Monkey Biz Poker Club Logo"
                 fill
-                sizes="32px"
+                sizes="48px"
                 className="object-cover"
               />
             </div>
             <div className="flex-1">
-              <div className="text-xs font-bold text-white/90">@Monkeybizpoker</div>
-              <div className="text-[0.6rem] text-white/50 uppercase tracking-widest font-mono">Telegram submission</div>
+              <div className="text-sm font-bold text-white/90">@Monkeybizpoker</div>
+              <div className="text-[0.65rem] text-white/50 uppercase tracking-widest font-mono">Telegram submission</div>
             </div>
           </div>
         )}
