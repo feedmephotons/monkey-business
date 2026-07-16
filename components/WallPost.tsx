@@ -306,38 +306,41 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
         {/* 3. POKER TABLE AREA OR COMMENT AREA */}
         {post.is_bad_beat && hasLink && (
           <div className="relative w-full max-w-[270px] aspect-[2.2/1] my-4 overflow-visible">
-            {/* Message Icon (💬) and Splat Icon (🫟) at the Top Corner of Table */}
-            <div className={`absolute top-[-22px] z-40 flex gap-1.5 items-center ${post.handData ? 'right-0' : 'left-0 flex-row-reverse'}`}>
-              <button
-                type="button"
-                onClick={() => {
-                  setCommentError(null)
-                  if (viewMode === 'table') {
-                    setViewMode(comments.length > 0 ? 'comments' : 'add_comment')
-                    setCurrentCommentIndex(0)
-                  } else {
-                    setViewMode('table')
-                  }
-                }}
-                className={`rounded-full w-8 h-8 flex items-center justify-center text-xs shadow-md transition-all duration-200 border cursor-pointer ${
-                  viewMode !== 'table'
-                    ? 'bg-yellow text-felt-deep border-white scale-110'
-                    : 'bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border-yellow/40 hover:scale-105'
-                }`}
-                title="View or Add Comments"
-              >
-                💬
-              </button>
-              
-              <button
-                type="button"
-                onClick={handleSplat}
-                className="rounded-full w-8 h-8 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 flex items-center justify-center text-sm shadow-md transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer"
-                title="Splat a Banana! 🫟"
-              >
-                🫟
-              </button>
-            </div>
+            {/* Splat Icon (🫟) at the Top Left of Table (grows upwards) */}
+            <button
+              type="button"
+              onClick={handleSplat}
+              className="absolute top-[-22px] left-2 z-40 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 cursor-pointer"
+              style={{
+                transform: `scale(${Math.min(1 + clientSplatCount * 0.04, 2.0)})`,
+                transformOrigin: 'bottom left',
+              }}
+              title="Splat a Banana! 🫟"
+            >
+              🫟
+            </button>
+
+            {/* Message Icon (💬) at the Top Right of Table */}
+            <button
+              type="button"
+              onClick={() => {
+                setCommentError(null)
+                if (viewMode === 'table') {
+                  setViewMode(comments.length > 0 ? 'comments' : 'add_comment')
+                  setCurrentCommentIndex(0)
+                } else {
+                  setViewMode('table')
+                }
+              }}
+              className={`absolute top-[-22px] right-2 z-40 rounded-full w-8 h-8 flex items-center justify-center text-xs shadow-md transition-all duration-200 border cursor-pointer ${
+                viewMode !== 'table'
+                  ? 'bg-yellow text-felt-deep border-white scale-110'
+                  : 'bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border-yellow/40 hover:scale-105'
+              }`}
+              title="View or Add Comments"
+            >
+              💬
+            </button>
 
             {viewMode === 'table' ? (
               /* POKER TABLE FELT PREVIEW */
