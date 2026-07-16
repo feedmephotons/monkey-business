@@ -4,7 +4,7 @@ import { useTransition, useState, useEffect } from 'react'
 import Image from 'next/image'
 import type { WallPost as WallPostType } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
-import { ratePost, addCommentToPost } from '@/app/actions'
+import { ratePost, addCommentToPost, splatPost } from '@/app/actions'
 
 const SEAT_POSITIONS: Record<number, string> = {
   0: 'bottom-[-10%] left-[50%] -translate-x-1/2',
@@ -140,6 +140,19 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const [newCommentName, setNewCommentName] = useState('')
   const [newCommentText, setNewCommentText] = useState('')
   const [commentError, setCommentError] = useState<string | null>(null)
+  const [clientSplatCount, setClientSplatCount] = useState(post.banana_count || 0)
+
+  // Sync clientSplatCount with server prop updates
+  useEffect(() => {
+    setClientSplatCount(post.banana_count || 0)
+  }, [post.banana_count])
+
+  const handleSplat = () => {
+    setClientSplatCount((prev) => prev + 1)
+    startTransition(async () => {
+      await splatPost(post.id)
+    })
+  }
 
   // Determine if winner is a female player for custom placeholder
   const winnerSeat = post.handData?.seats.find((s) => s.isWinner)
@@ -293,32 +306,61 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
         {/* 3. POKER TABLE AREA OR COMMENT AREA */}
         {post.is_bad_beat && hasLink && (
           <div className="relative w-full max-w-[270px] aspect-[2.2/1] my-4 overflow-visible">
-            {/* Message Icon (💬) at the Top Center-Right of Table */}
-            <button
-              type="button"
-              onClick={() => {
-                setCommentError(null)
-                if (viewMode === 'table') {
-                  setViewMode(comments.length > 0 ? 'comments' : 'add_comment')
-                  setCurrentCommentIndex(0)
-                } else {
-                  setViewMode('table')
-                }
-              }}
-              className={`absolute top-[-18px] right-2 z-40 rounded-full w-8 h-8 flex items-center justify-center text-sm shadow-md transition-all duration-200 border cursor-pointer ${
-                viewMode !== 'table'
-                  ? 'bg-yellow text-felt-deep border-white scale-110'
-                  : 'bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border-yellow/40 hover:scale-105'
-              }`}
-              title="View or Add Comments"
-            >
-              💬
-            </button>
+            {/* Message Icon (💬) and Splat Icon (🫟) at the Top Right of Table */}
+            <div className="absolute top-[-22px] right-0 z-40 flex gap-1.5 items-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setCommentError(null)
+                  if (viewMode === 'table') {
+                    setViewMode(comments.length > 0 ? 'comments' : 'add_comment')
+                    setCurrentCommentIndex(0)
+                  } else {
+                    setViewMode('table')
+                  }
+                }}
+                className={`rounded-full w-8 h-8 flex items-center justify-center text-xs shadow-md transition-all duration-200 border cursor-pointer ${
+                  viewMode !== 'table'
+                    ? 'bg-yellow text-felt-deep border-white scale-110'
+                    : 'bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border-yellow/40 hover:scale-105'
+                }`}
+                title="View or Add Comments"
+              >
+                💬
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleSplat}
+                className="rounded-full w-8 h-8 bg-black/60 hover:bg-yellow hover:text-felt-deep text-yellow border border-yellow/40 flex items-center justify-center text-sm shadow-md transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer"
+                title="Splat a Banana! 🫟"
+              >
+                🫟
+              </button>
+            </div>
 
             {viewMode === 'table' ? (
               /* POKER TABLE FELT PREVIEW */
               <div className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-3 py-5 w-full h-full shadow-inner relative overflow-visible flex flex-col items-center justify-center scale-95 sm:scale-100">
                 <div className="w-full max-w-[270px] aspect-[2.2/1] rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
+                  {/* Growing Banana Splat Overlay */}
+                  {clientSplatCount > 0 && (
+                    <div 
+                      className="absolute bottom-[5%] right-[12%] w-16 h-16 pointer-events-none select-none z-10 transition-transform duration-200 ease-out"
+                      style={{
+                        transform: `scale(${Math.min(0.4 + clientSplatCount * 0.04, 1.8)})`,
+                        transformOrigin: 'bottom right',
+                      }}
+                    >
+                      <Image
+                        src="/img/banana-splat.png"
+                        alt="Splat!"
+                        fill
+                        sizes="64px"
+                        className="object-contain opacity-80"
+                      />
+                    </div>
+                  )}
                   {post.handData ? (
                     <>
                       {/* Dynamic Community Cards (centered, slightly larger) */}

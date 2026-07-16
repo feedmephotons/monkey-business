@@ -119,3 +119,33 @@ export async function addCommentToPost(postId: string, author: string, text: str
   revalidatePath('/')
   return { ok: true as const }
 }
+
+export async function splatPost(postId: string) {
+  // Fetch current value
+  const { data: post, error: fetchError } = await admin()
+    .from('mb_wall_posts')
+    .select('banana_count')
+    .eq('id', postId)
+    .single()
+
+  if (fetchError || !post) {
+    console.error('fetch error during splatting', fetchError)
+    return { ok: false as const, error: 'Post not found.' }
+  }
+
+  const currentCount = post.banana_count || 0
+
+  // Increment and update
+  const { error: updateError } = await admin()
+    .from('mb_wall_posts')
+    .update({ banana_count: currentCount + 1 })
+    .eq('id', postId)
+
+  if (updateError) {
+    console.error('update error during splatting', updateError)
+    return { ok: false as const, error: 'Could not submit splat.' }
+  }
+
+  revalidatePath('/')
+  return { ok: true as const }
+}
