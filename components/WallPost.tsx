@@ -122,7 +122,9 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
               🤵
             </div>
             <div className="flex-1">
-              <div className="text-xs font-bold text-white/90">@poker_mike</div>
+              <div className="text-xs font-bold text-white/90">
+                {post.author.startsWith('@') ? post.author : `@${post.author}`}
+              </div>
               <div className="text-[0.6rem] text-white/50 uppercase tracking-widest font-mono">Monkey Biz Wall</div>
             </div>
           </div>
@@ -141,7 +143,7 @@ export default function WallPost({ post, index }: { post: WallPostType; index: n
                 <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">9<span className="text-[0.5rem]">♠</span></span>
                 <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">Q<span className="text-[0.5rem]">♠</span></span>
               </div>
-              <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLIAN WINS (Straight Flush)</span>
+              <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLAIN WINS (Straight Flush)</span>
 
               {/* Hero Hand (A A) */}
               <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
