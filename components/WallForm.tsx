@@ -101,7 +101,7 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
           </label>
           <input
             className="jungle-input w-full"
-            placeholder="Lucky Lou"
+            placeholder={isBadBeat ? "Screen name here" : "Lucky Lou"}
             maxLength={40}
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
