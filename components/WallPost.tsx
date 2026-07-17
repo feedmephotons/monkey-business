@@ -547,7 +547,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
               className="rounded-lg border-2 border-yellow/40 bg-[#063c23] px-3 py-5 w-full aspect-[2.2/1] shadow-inner relative overflow-visible flex flex-col items-center justify-center scale-95 sm:scale-100 cursor-pointer hover:border-yellow/70 active:scale-[0.99] transition-all duration-200 group/felt"
               title={mediaUrl ? "Click to play/view replay! 🎬" : undefined}
             >
-              <div className="w-full h-full rounded-full border-4 border-yellow/20 bg-[#072a1a] flex flex-col justify-center items-center p-1.5 relative overflow-visible">
+              <div className="w-full h-full rounded-full border-4 border-yellow/20 bg-[#072a1a] relative overflow-visible">
                 {/* Growing Banana Splat Overlay */}
                 {clientSplatCount > 0 && (
                   <div 
@@ -570,7 +570,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   <>
                     {showComments ? (
                       /* Interactive Comments Slider inside Felt Center */
-                      <div className="flex flex-col items-center justify-center w-full max-w-[195px] px-1 select-none relative z-20 font-[family-name:var(--font-hand)]">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center w-full max-w-[195px] px-1 select-none font-[family-name:var(--font-hand)]">
                         {comments.length > 0 ? (
                           <div className="flex items-center justify-between w-full gap-1">
                             {/* Left Arrow (only if comments.length > 1) */}
@@ -624,9 +624,9 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                         )}
                       </div>
                     ) : (
-                      <>
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center w-full max-w-[195px]">
                         {/* Dynamic Community Cards */}
-                        <div className="flex gap-0.5 mb-1 scale-90 sm:scale-100 relative z-20">
+                        <div className="flex gap-0.5 mb-1 scale-90 sm:scale-100">
                           {post.handData.board.map((card, idx) => (
                             <span key={idx}>{renderMiniCard(card)}</span>
                           ))}
@@ -634,7 +634,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                         
                         {/* Text Details in Center */}
                         {post.handData.seats.find(s => s.isWinner) && (
-                          <div className="flex flex-col items-center select-none relative z-20 bg-felt-deep/80 px-2 py-0.5 rounded border border-yellow/10">
+                          <div className="flex flex-col items-center select-none bg-felt-deep/80 px-2 py-0.5 rounded border border-yellow/10">
                             <span className="text-[0.43rem] font-bold text-yellow uppercase tracking-wider font-mono text-center">
                               🏆 {post.handData.seats.find(s => s.isWinner)?.name} WINS
                             </span>
@@ -643,7 +643,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                             </span>
                           </div>
                         )}
-                      </>
+                      </div>
                     )}
 
                     {/* 9 Seats Layout */}
@@ -701,7 +701,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   <>
                     {showComments ? (
                       /* Interactive Comments Slider inside Felt Center (Static Fallback Card) */
-                      <div className="flex flex-col items-center justify-center w-full max-w-[195px] px-1 select-none relative z-20 font-[family-name:var(--font-hand)]">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center w-full max-w-[195px] px-1 select-none font-[family-name:var(--font-hand)]">
                         {comments.length > 0 ? (
                           <div className="flex items-center justify-between w-full gap-1">
                             {/* Left Arrow (only if comments.length > 1) */}
@@ -755,7 +755,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                         )}
                       </div>
                     ) : (
-                      <>
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center w-full max-w-[195px]">
                         {/* Static Mockup Fallback */}
                         <div className="flex gap-0.5 mb-0.5 scale-75 sm:scale-85">
                           <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">A<span className="text-[0.5rem] text-red-600">♦</span></span>
@@ -764,7 +764,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                           <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">9<span className="text-[0.5rem]">♠</span></span>
                           <span className="w-5 h-7 rounded bg-white text-black font-bold text-[0.6rem] flex flex-col items-center justify-center shadow">Q<span className="text-[0.5rem]">♠</span></span>
                         </div>
-                        <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono">VILLAIN WINS (Straight Flush)</span>
+                        <span className="text-[0.45rem] font-bold text-yellow/80 uppercase tracking-widest font-mono text-center">VILLAIN WINS (Straight Flush)</span>
 
                         {/* Hero Hand (A A) */}
                         <div className="absolute -bottom-1 -left-2 bg-[#0a1f3d] border border-yellow/30 rounded p-0.5 flex gap-0.5 scale-60">
@@ -776,7 +776,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                           <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">10<span className="text-[0.4rem]">♠</span></span>
                           <span className="w-3.5 h-5 rounded bg-white text-black font-bold text-[0.5rem] flex flex-col items-center justify-center">J<span className="text-[0.4rem]">♠</span></span>
                         </div>
-                      </>
+                      </div>
                     )}
                   </>
                 )}
