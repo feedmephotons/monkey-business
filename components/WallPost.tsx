@@ -45,6 +45,9 @@ function isFemalePlayer(name: string): boolean {
 }
 
 function renderMiniCard(cardStr: string, isSmall = false) {
+  if (!cardStr || cardStr.trim() === '' || cardStr.length < 2) {
+    return renderCardBack(isSmall)
+  }
   // e.g. "10♥" or "A♠"
   const value = cardStr.slice(0, -1)
   const suit = cardStr.slice(-1)
