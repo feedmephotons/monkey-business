@@ -114,6 +114,9 @@ function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: b
   
   return parts.map((part, i) => {
     if (part.match(urlRegex)) {
+      if (isBadBeat) {
+        return null
+      }
       return (
         <a
           key={i}

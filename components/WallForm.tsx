@@ -141,7 +141,18 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
               {/* Message */}
               <div className="leading-snug break-words font-[family-name:var(--font-display)] text-white">
                 {message ? (
-                  <p className="text-xl md:text-2xl">{message}</p>
+                  <p className="text-xl md:text-2xl">
+                    {(() => {
+                      const urlRegex = /(https?:\/\/[^\s]+)/g
+                      const parts = message.split(urlRegex)
+                      return parts.map((part, i) => {
+                        if (part.match(urlRegex)) {
+                          return null
+                        }
+                        return <span key={i}>{part}</span>
+                      })
+                    })()}
+                  </p>
                 ) : (
                   <div className="flex flex-col items-center text-center py-2">
                     <p className="text-xl md:text-2xl uppercase font-black text-white/95 leading-tight">
