@@ -115,7 +115,7 @@ function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: b
   return parts.map((part, i) => {
     if (part.match(urlRegex)) {
       if (isBadBeat) {
-        return null
+        return <span key={i}>Thank You for entering our bad beat weekly contest</span>
       }
       return (
         <a

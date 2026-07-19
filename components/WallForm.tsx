@@ -147,7 +147,7 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
                       const parts = message.split(urlRegex)
                       return parts.map((part, i) => {
                         if (part.match(urlRegex)) {
-                          return null
+                          return <span key={i}>Thank You for entering our bad beat weekly contest</span>
                         }
                         return <span key={i}>{part}</span>
                       })
