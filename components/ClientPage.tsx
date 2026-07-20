@@ -811,9 +811,10 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                     document.getElementById('wall-form-container')?.scrollIntoView({ behavior: 'smooth' });
                   }, 50);
                 }}
-                className="px-4 py-1.5 rounded-full border border-yellow/40 hover:border-yellow text-yellow hover:bg-yellow/10 font-semibold text-xs transition duration-150 cursor-pointer shadow-md font-[family-name:var(--font-mono)] uppercase tracking-wider"
+                className="relative px-5 py-2 rounded-full bg-gradient-to-r from-yellow via-amber-400 to-yellow text-black font-extrabold text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_12px_rgba(250,204,21,0.5)] hover:shadow-[0_0_22px_rgba(250,204,21,0.85)] border-2 border-white/20 flex items-center gap-1.5 font-[family-name:var(--font-mono)]"
               >
-                Splat a Bad Beat
+                <span className="text-sm select-none animate-bounce">🍌</span>
+                <span>Splat a Bad Beat</span>
               </button>
               <div className="w-8 h-8 rounded-full bg-yellow/10 border border-yellow/30 flex items-center justify-center font-bold text-sm text-yellow">
                 🐒
@@ -848,10 +849,10 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <button
                 type="button"
                 onClick={() => setActiveWallTab('bad_beat')}
-                className={`relative px-6 py-2.5 rounded-full font-[family-name:var(--font-display)] text-sm tracking-wider transition-all duration-150 cursor-pointer flex items-center gap-1.5 ${
+                className={`relative px-6 py-2.5 rounded-full font-[family-name:var(--font-display)] text-sm tracking-wider transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
                   activeWallTab === 'bad_beat'
-                    ? 'bg-yellow text-felt-deep font-bold shadow-md'
-                    : 'text-banana/60 hover:text-banana hover:bg-white/5'
+                    ? 'bg-yellow text-felt-deep font-black shadow-[0_0_15px_rgba(250,204,21,0.6)]'
+                    : 'text-yellow/80 hover:text-yellow hover:bg-yellow/10'
                 }`}
               >
                 <span>Banana Splats</span>
