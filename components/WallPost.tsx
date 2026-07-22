@@ -266,9 +266,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   }
 
   // Parse source, suffer, splats, ice, and comments from message field
-  const sourceParts = post.message.split('|||source|||')
-  const isWebsiteSubmission = sourceParts.length > 1 && sourceParts[1].startsWith('website')
-  const messageWithoutSource = isWebsiteSubmission ? sourceParts[0] : post.message
+  const isWebsiteSubmission = post.message.includes('|||source|||website')
+  const messageWithoutSource = post.message.replace('|||source|||website', '')
 
   // Parse suffer, splats, and ice from messageWithoutSource
   const iceParts = messageWithoutSource.split('|||ice|||')
