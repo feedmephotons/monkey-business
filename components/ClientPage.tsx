@@ -132,7 +132,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveFlyerIndex((prev) => (prev + 1) % FLYERS.length)
-    }, 3500) // Changes every 3.5 seconds
+    }, 5500) // Changes every 5.5 seconds
 
     return () => clearInterval(timer)
   }, [activeFlyerIndex])
