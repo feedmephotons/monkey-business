@@ -231,12 +231,12 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
           </div>
         )}
 
-        <div>
+        <div className="shrink-0">
           <label className={`block text-[0.7rem] uppercase tracking-[0.18em] mb-1 font-[family-name:var(--font-mono)] ${isBadBeat ? 'text-yellow' : 'text-banana/80'}`}>
             Signed
           </label>
           <input
-            className="jungle-input w-full"
+            className="jungle-input w-full shrink-0"
             placeholder={isBadBeat ? "Screen name here" : "Lucky Lou"}
             maxLength={40}
             value={author}
@@ -244,12 +244,12 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
           />
         </div>
 
-        <div>
+        <div className="flex flex-col shrink-0">
           <label className={`block text-[0.7rem] uppercase tracking-[0.18em] mb-1 font-[family-name:var(--font-mono)] ${isBadBeat ? 'text-yellow' : 'text-banana/80'}`}>
             Message
           </label>
           <textarea
-            className="jungle-input w-full min-h-[96px] resize-none"
+            className="jungle-input w-full h-28 resize-none shrink-0"
             placeholder={placeholder || "How's the air up there, Mr. High Hand?"}
             maxLength={500}
             value={message}
