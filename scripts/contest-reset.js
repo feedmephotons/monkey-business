@@ -108,6 +108,32 @@ async function runContestReset() {
     const winnerPath = path.join(dataDir, 'weekly-winner.json');
     fs.writeFileSync(winnerPath, JSON.stringify(winner, null, 2));
     console.log(`Saved weekly winner to ${winnerPath}`);
+
+    // 3b. Insert Announcement Post to the General Wall!
+    try {
+      console.log("Inserting Weekly Champion announcement to General Wall...");
+      const announcementText = `🏆 WEEKLY BAD BEAT CHAMPION: Congrats to ${winner.author} for winning the river-splat crown with ${winner.score} points! 🍌\n\nTheir legendary beat: "${winner.message}"`;
+      
+      const { error: announceError } = await supabase
+        .from('mb_wall_posts')
+        .insert({
+          author: "Astra 👑",
+          message: announcementText,
+          font_color: "#f4c430", // banana yellow
+          bg_color: "#0a1f3d", // felt
+          font_family: "display",
+          rotation: 0,
+          is_bad_beat: false // general wall
+        });
+
+      if (announceError) {
+        console.error("Failed to insert wall announcement:", announceError);
+      } else {
+        console.log("Wall announcement inserted successfully!");
+      }
+    } catch (announceErr) {
+      console.error("Error inserting announcement:", announceErr);
+    }
   } else {
     console.log("No winning post with an active score found.");
   }
