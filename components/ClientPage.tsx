@@ -874,7 +874,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-yellow via-gold to-yellow" />
               
               <span className="text-2xl sm:text-3xl block mb-2 font-[family-name:var(--font-display)] tracking-wider text-yellow neon-green">
-                👑 REIGNING BAD BEAT CHAMP 👑
+                👑 LAST WEEK'S SPLAT A BAD BEAT WINNER 👑
               </span>
               
               <div className="mt-1 bg-yellow/10 border border-yellow/30 rounded-lg py-2 px-4 inline-block mx-auto mb-4">
