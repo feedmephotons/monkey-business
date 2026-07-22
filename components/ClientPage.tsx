@@ -669,7 +669,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <span className="font-[family-name:var(--font-headline)] text-xl text-white">Or Join Manually</span>
                 </div>
                 <p className="font-[family-name:var(--font-body)] text-white/70">
-                  Open PokerBros, tap &ldquo;Search Club,&rdquo; and enter Club ID <strong className="text-red">1670819</strong>.
+                  Open PokerBros, tap the <span className="text-red font-bold">magnifying glass icon</span> on the right, enter Club ID <strong className="text-red">1670819</strong>, and apply.
                 </p>
               </div>
             </div>
