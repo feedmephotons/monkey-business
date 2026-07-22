@@ -10,9 +10,9 @@ import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 
 const FLYERS = [
-  { src: '/img/hero-freeroll-flyer-jul25.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 25th' },
-  { src: '/img/hero-freeroll-flyer-jul31.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 31st' },
-  { src: '/img/hero-contest-flyer.png', alt: 'Enter our weekly contest - SPLAT A Bad Beat!', scrollTo: '#wall-tab-section' },
+  { src: '/img/hero-freeroll-flyer-jul25.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 25th', scrollTo: '#schedule-july-25' },
+  { src: '/img/hero-freeroll-flyer-jul31.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 31st', scrollTo: '#schedule-july-31' },
+  { src: '/img/hero-contest-flyer.png', alt: 'Enter our weekly contest - SPLAT A Bad Beat!', scrollTo: '#wall-tab-section', isContest: true },
 ]
 
 type ScheduleNight = {
@@ -230,9 +230,12 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               onClick={() => {
                 const currentFlyer = FLYERS[activeFlyerIndex];
                 if (currentFlyer.scrollTo) {
-                  setActiveWallTab('bad_beat');
+                  if (currentFlyer.isContest) {
+                    setActiveWallTab('bad_beat');
+                  }
                   setTimeout(() => {
-                    document.getElementById('wall-tab-section')?.scrollIntoView({ behavior: 'smooth' });
+                    const id = currentFlyer.scrollTo.replace('#', '');
+                    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
                   }, 50);
                 }
               }}
@@ -379,6 +382,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             {SCHEDULE.map((night, idx) => (
               <article
                 key={night.day}
+                id={`schedule-${night.date.toLowerCase().replace(' ', '-')}`}
                 className={`relative rise group ${night.headline ? 'md:col-span-2' : ''}`}
                 style={{ animationDelay: `${0.1 + idx * 0.08}s` }}
               >
