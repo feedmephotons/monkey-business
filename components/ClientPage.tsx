@@ -808,7 +808,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 onClick={() => {
                   setActiveWallTab('bad_beat');
                   setTimeout(() => {
-                    document.getElementById('wall-form-container')?.scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('wall-tab-section')?.scrollIntoView({ behavior: 'smooth' });
                   }, 50);
                 }}
                 className="relative px-5 py-2 rounded-full bg-gradient-to-r from-yellow via-amber-400 to-yellow text-black font-extrabold text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_12px_rgba(250,204,21,0.5)] hover:shadow-[0_0_22px_rgba(250,204,21,0.85)] border-2 border-white/20 flex items-center gap-1.5 font-[family-name:var(--font-mono)]"
@@ -833,7 +833,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
           </div>
 
           {/* TAB BAR (FROM PHONE MOCKUP) */}
-          <div className="flex justify-center mb-12">
+          <div id="wall-tab-section" className="flex justify-center mb-12">
             <div className="inline-flex rounded-full bg-navy-deep/80 p-1.5 border border-light-blue/20 shadow-lg">
               <button
                 type="button"
