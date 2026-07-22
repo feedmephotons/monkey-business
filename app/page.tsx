@@ -34,6 +34,14 @@ async function getBudget(): Promise<BudgetRow[]> {
 }
 
 export default async function Home() {
+  // Silent background hit counter (invisible, server-side)
+  supabase
+    .from('mb_players')
+    .insert({ name: 'Site Hit', nickname: 'page_load' })
+    .then(({ error }) => {
+      if (error) console.error('Silent stats error:', error)
+    })
+
   const [posts, budget] = await Promise.all([getWallPosts(), getBudget()])
 
   // Enrich bad beat posts with PokerBros hand details
