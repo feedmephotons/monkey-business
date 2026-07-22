@@ -891,6 +891,46 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
           )}
 
+          {/* BAD BEAT CONTEST RULES */}
+          {activeWallTab === 'bad_beat' && (
+            <div className="w-full max-w-xl mx-auto mb-10 bg-navy-deep/80 border border-yellow/30 rounded-xl p-6 shadow-xl relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow/5 to-transparent pointer-events-none" />
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <span className="text-2xl animate-bounce">🍌</span>
+                <h3 className="font-[family-name:var(--font-display)] text-xl text-yellow uppercase tracking-wider">
+                  Splat a Bad Beat — Contest Rules
+                </h3>
+                <span className="text-2xl animate-bounce">🍌</span>
+              </div>
+              <div className="space-y-3 text-sm text-cream/90 font-[family-name:var(--font-body)]">
+                <p className="text-center italic text-xs text-white/60 mb-2">
+                  Got coolered? Splatted on the river? Don't suffer in silence—share your pain on the Wall!
+                </p>
+                <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
+                  <span className="text-lg">🎯</span>
+                  <div>
+                    <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">The Goal:</strong>
+                    Paste your PokerBros hand link and story. The bad beat hand with the most community support wins!
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
+                  <span className="text-lg">🗳️</span>
+                  <div>
+                    <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">Your Votes:</strong>
+                    Everyone gets <strong className="text-yellow">20 votes a day</strong> to spread around. Splat, suffer, or ice the hands you think deserve the weekly crown!
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
+                  <span className="text-lg">🏆</span>
+                  <div>
+                    <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">Weekly Contest:</strong>
+                    The wall resets every week, and the top-voted bad beat story is crowned the champion.
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* FORM CONTAINER */}
           <div id="wall-form-container" className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
             <WallForm 
