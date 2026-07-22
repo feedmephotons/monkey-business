@@ -796,7 +796,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     maxLength={15}
                     value={newCommentName}
                     onChange={(e) => setNewCommentName(e.target.value)}
-                    className="w-[28%] text-[0.6rem] font-mono bg-black/85 border border-yellow/20 rounded p-1.5 text-white outline-none focus:border-yellow transition shrink-0"
+                    className="w-[28%] text-base md:text-xs font-mono bg-black/85 border border-yellow/20 rounded p-2 text-white outline-none focus:border-yellow transition shrink-0"
                   />
                   {/* Message Input */}
                   <input
@@ -805,7 +805,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     maxLength={100}
                     value={newCommentText}
                     onChange={(e) => setNewCommentText(e.target.value)}
-                    className="flex-1 text-[0.6rem] bg-black/85 border border-yellow/20 rounded p-1.5 text-white outline-none focus:border-yellow transition"
+                    className="flex-1 text-base md:text-xs bg-black/85 border border-yellow/20 rounded p-2 text-white outline-none focus:border-yellow transition"
                   />
                   <button
                     type="button"
