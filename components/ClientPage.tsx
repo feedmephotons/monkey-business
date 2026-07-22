@@ -12,6 +12,7 @@ import type { EnrichedWallPost } from '@/app/page'
 const FLYERS = [
   { src: '/img/hero-freeroll-flyer-jul25.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 25th' },
   { src: '/img/hero-freeroll-flyer-jul31.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 31st' },
+  { src: '/img/hero-contest-flyer.png', alt: 'Enter our weekly contest - SPLAT A Bad Beat!', scrollTo: '#wall-tab-section' },
 ]
 
 type ScheduleNight = {
@@ -226,7 +227,18 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
-              className="relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] group cursor-grab active:cursor-grabbing"
+              onClick={() => {
+                const currentFlyer = FLYERS[activeFlyerIndex];
+                if (currentFlyer.scrollTo) {
+                  setActiveWallTab('bad_beat');
+                  setTimeout(() => {
+                    document.getElementById('wall-tab-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 50);
+                }
+              }}
+              className={`relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] group transition-all ${
+                FLYERS[activeFlyerIndex].scrollTo ? 'cursor-pointer hover:ring-yellow hover:scale-[1.01]' : 'cursor-grab active:cursor-grabbing'
+              }`}
             >
               <Image
                 src={FLYERS[activeFlyerIndex].src}
