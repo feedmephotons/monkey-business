@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useEffect } from 'react'
+import { useState, useTransition, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { postToWall } from '@/app/actions'
 
@@ -45,11 +45,16 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
   const [clipboardLink, setClipboardLink] = useState('')
   const [showClipboardPrompt, setShowClipboardPrompt] = useState(false)
 
+  const messageRef = useRef(message)
+  useEffect(() => {
+    messageRef.current = message
+  }, [message])
+
   const checkClipboard = async () => {
     try {
       if (typeof navigator !== 'undefined' && navigator.clipboard) {
         const text = await navigator.clipboard.readText()
-        if (text && text.includes('pokerbros.net') && text !== message) {
+        if (text && text.includes('pokerbros.net') && text !== messageRef.current) {
           setClipboardLink(text)
           setShowClipboardPrompt(true)
         } else {
@@ -75,7 +80,7 @@ export default function WallForm({ isBadBeat = false, placeholder }: { isBadBeat
       checkClipboard()
       return () => window.removeEventListener('focus', checkClipboard)
     }
-  }, [message])
+  }, [])
 
   const currentFont = FONTS.find((f) => f.key === font)!
 
