@@ -851,8 +851,8 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 onClick={() => setActiveWallTab('bad_beat')}
                 className={`relative px-6 py-2.5 rounded-full font-[family-name:var(--font-display)] text-sm tracking-wider transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
                   activeWallTab === 'bad_beat'
-                    ? 'bg-yellow text-felt-deep font-black shadow-[0_0_15px_rgba(250,204,21,0.6)]'
-                    : 'text-yellow/80 hover:text-yellow hover:bg-yellow/10'
+                    ? 'bg-red text-white shadow-md'
+                    : 'text-white/60 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <span>Banana Splats</span>
