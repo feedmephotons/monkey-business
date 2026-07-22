@@ -869,24 +869,60 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
           {/* WEEKLY WINNER BANNER */}
           {activeWallTab === 'bad_beat' && weeklyWinner && (
-            <div className="w-full max-w-xl mx-auto mb-10 bg-gradient-to-r from-yellow/20 via-gold/15 to-yellow/20 rounded-xl p-5 border border-yellow/30 shadow-lg text-center animate-pulse-slow">
-              <span className="text-xl sm:text-2xl block mb-1">🏆 WEEKLY BAD BEAT CHAMPION 🏆</span>
-              <div className="text-sm font-black text-yellow uppercase tracking-widest font-mono">
-                {weeklyWinner.author} — {weeklyWinner.score} Total Points
+            <div className="w-full max-w-xl mx-auto mb-10 bg-navy-deep/90 border-2 border-yellow rounded-2xl p-6 shadow-[0_0_25px_rgba(250,204,21,0.3)] text-center relative overflow-hidden float">
+              {/* Decorative top gold crown glow */}
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-yellow via-gold to-yellow" />
+              
+              <span className="text-2xl sm:text-3xl block mb-2 font-[family-name:var(--font-display)] tracking-wider text-yellow neon-green">
+                👑 REIGNING BAD BEAT CHAMP 👑
+              </span>
+              
+              <div className="mt-1 bg-yellow/10 border border-yellow/30 rounded-lg py-2 px-4 inline-block mx-auto mb-4">
+                <span className="text-xs font-mono font-bold uppercase tracking-widest text-cream/70 block">Crowned To:</span>
+                <span className="text-lg font-black text-yellow font-mono tracking-wider">{weeklyWinner.author}</span>
               </div>
-              <p className="mt-2 text-xs italic text-cream/70 line-clamp-2 max-w-md mx-auto">
-                &ldquo;{weeklyWinner.message}&rdquo;
-              </p>
-              <div className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-1 text-[0.65rem] font-bold font-mono text-yellow/85">
-                <span>🫟 {weeklyWinner.splatCount || 0} Splats</span>
-                <span>•</span>
-                <span>🤢 {weeklyWinner.sufferCount || 0} Suffers</span>
-                <span>•</span>
-                <span>🧊 {weeklyWinner.iceCount || 0} Ice Clicks</span>
-                <span>•</span>
-                <span>💬 {weeklyWinner.commentsCount || 0} Comments</span>
-                <span>•</span>
-                <span>🍌 {weeklyWinner.ratingsCount || 0} Ratings</span>
+
+              <div className="relative my-4 px-4 py-2 border-l-2 border-yellow/50 bg-white/5 rounded-r-lg max-w-md mx-auto text-left">
+                <span className="absolute -top-3 left-2 text-3xl text-yellow/20 select-none font-serif">&ldquo;</span>
+                <p className="text-xs sm:text-sm text-cream/90 font-[family-name:var(--font-body)] italic line-clamp-3 leading-relaxed">
+                  {weeklyWinner.message}
+                </p>
+                <span className="absolute -bottom-6 right-2 text-3xl text-yellow/20 select-none font-serif">&rdquo;</span>
+              </div>
+
+              {/* WATCH HAND REPLAY BUTTON FOR THE CHAMPION */}
+              {(() => {
+                const linkMatch = weeklyWinner.message.match(/https?:\/\/[^\s]+/);
+                if (linkMatch) {
+                  const url = linkMatch[0];
+                  return (
+                    <div className="mt-6 mb-4">
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-yellow via-gold to-yellow text-felt-deep font-black rounded-full hover:scale-105 hover:shadow-[0_0_20px_rgba(250,204,21,0.6)] transition-all duration-200 text-xs sm:text-sm shadow-md cursor-pointer select-none"
+                      >
+                        <span>🎬 WATCH WINNING REPLAY</span>
+                        <span>🃏</span>
+                      </a>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
+
+              <div className="mt-6 pt-4 border-t border-yellow/10">
+                <div className="text-[0.6rem] font-black font-mono text-yellow uppercase tracking-widest mb-3">
+                  🔥 CHAMPION STATS ({weeklyWinner.score} Total Votes) 🔥
+                </div>
+                <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[0.65rem] font-bold font-mono">
+                  <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🫟 {weeklyWinner.splatCount || 0} Splats</span>
+                  <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🤢 {weeklyWinner.sufferCount || 0} Suffers</span>
+                  <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🧊 {weeklyWinner.iceCount || 0} Ice Clicks</span>
+                  <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">💬 {weeklyWinner.commentsCount || 0} Comments</span>
+                  <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🍌 {weeklyWinner.ratingsCount || 0} Ratings</span>
+                </div>
               </div>
             </div>
           )}
