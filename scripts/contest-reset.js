@@ -124,6 +124,22 @@ async function runContestReset() {
     process.exit(1);
   }
 
+  // 5. Commit, Push and Redeploy to Vercel so the live site updates!
+  try {
+    const { execSync } = require('child_process');
+    console.log("Git adding and committing new weekly-winner.json...");
+    execSync('git add public/data/weekly-winner.json', { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+    execSync('git commit -m "chore: update weekly bad beat winner [auto]"', { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+    execSync('git push', { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+    console.log("Successfully pushed to GitHub!");
+
+    console.log("Deploying updated winner to Vercel...");
+    execSync('vercel --prod --token 4nVrxOV0Z9l8FIW9SALGauGt --yes', { cwd: path.join(__dirname, '..'), stdio: 'inherit' });
+    console.log("Vercel deployment completed successfully!");
+  } catch (deployError) {
+    console.error("Error during Git/Vercel deployment:", deployError);
+  }
+
   console.log("Contest reset completed successfully!");
 }
 
