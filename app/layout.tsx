@@ -37,7 +37,7 @@ const caveat = Caveat({
 export const metadata: Metadata = {
   title: 'Monkey Business — A Private Poker Lounge',
   description:
-    "Monkey Mania Week. Freerolls, splash pots, high hands and the wildest wall in poker. Last week in May.",
+    "Monkey Mania Week. Freerolls, splash pots, high hands and the wildest wall in poker.",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
