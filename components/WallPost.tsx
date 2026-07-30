@@ -117,6 +117,17 @@ function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: b
       if (isBadBeat) {
         return <span key={i}>Thank You for entering our bad beat weekly contest</span>
       }
+      let linkText = part
+      if (part.includes('pokerbros.net')) {
+        linkText = '[Watch Replay 🎥]'
+      } else {
+        try {
+          const urlObj = new URL(part)
+          linkText = `[Link: ${urlObj.hostname}]`
+        } catch (e) {
+          linkText = '[Link 🔗]'
+        }
+      }
       return (
         <a
           key={i}
@@ -131,7 +142,7 @@ function renderMessageWithLinks(text: string, defaultColor: string, isBadBeat: b
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {part}
+          {linkText}
         </a>
       )
     }
