@@ -10,7 +10,7 @@ import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 
 const FLYERS = [
-  { src: '/img/hero-freeroll-flyer-jul31.png', alt: 'Monkey Biz Poker Freeroll Flyer - July 31st', scrollTo: '#schedule-july-31' },
+  { src: '/img/hero-freeroll-flyer-august.png', alt: 'Monkey Biz Poker August Heat Flyer', scrollTo: '#schedule-aug-31' },
   { src: '/img/hero-contest-flyer.png', alt: 'Enter our weekly contest - SPLAT A Bad Beat!', scrollTo: '#wall-tab-section', isContest: true },
 ]
 
@@ -25,10 +25,10 @@ type ScheduleNight = {
 }
 
 const SCHEDULE: ScheduleNight[] = [
-    { day: 'SUN', date: 'July 5', title: 'Freeroll', pool: '250', detail: 'Kick off the month with free money. No better way to end the weekend.', accent: 'var(--color-light-blue)' },
-    { day: 'MON', date: 'July 13', title: 'Freeroll', pool: '250', detail: 'Your case of the Mondays just got cured. Free chips to start the week.', accent: 'var(--color-red)' },
-    { day: 'SAT', date: 'July 25', title: 'Freeroll', pool: '250', detail: "Saturday Night Stacks. The weekend's in full swing and so are the cards. Ante up.", accent: 'var(--color-red-bright)' },
-    { day: 'FRI', date: 'July 31', title: 'Freeroll', pool: '250', detail: 'FREEROLL FRIDAY! End the month on a high note. Nothing beats a winning hand you didn’t have to pay for.', accent: 'var(--color-light-blue)' },
+    { day: 'SUN', date: 'Aug 2', title: 'Freeroll', pool: '250', detail: 'Kick off the month with free money. No better way to end the weekend.', accent: 'var(--color-light-blue)' },
+    { day: 'MON', date: 'Aug 10', title: 'Freeroll', pool: '250', detail: 'Your case of the Mondays just got cured. Free chips to start the week.', accent: 'var(--color-red)' },
+    { day: 'SAT', date: 'Aug 22', title: 'Freeroll', pool: '250', detail: "Saturday Night Stacks. The weekend's in full swing and so are the cards. Ante up.", accent: 'var(--color-red-bright)' },
+    { day: 'MON', date: 'Aug 31', title: 'Freeroll', pool: '250', detail: 'August Heat Finale! End the month on a high note. Nothing beats a winning hand you didn’t have to pay for.', accent: 'var(--color-light-blue)' },
 ]
 
 const BUDGET_TOTAL_CENTS = 121000 // $1,210
@@ -369,7 +369,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               This Month
             </span>
             <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-              Jamming in <em className="text-red">July</em>
+              August <em className="text-red">Heat</em>
             </h2>
             <div className="deco-divider mt-6 max-w-sm mx-auto" />
             <p className="mt-4 font-[family-name:var(--font-body)] text-white/70 italic max-w-xl mx-auto">

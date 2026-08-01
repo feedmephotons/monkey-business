@@ -1,28 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-navy-deep: #001C4A;
-  --color-navy: #002868;
-  --color-red: #BF0A30;
-  --color-red-bright: #E50000;
-  --color-white: #F5F5F5;
-  --color-light-blue: #6495ED;
-  --color-smoke: #0f1a1a;
-  --color-oak: #382058;
+  --color-navy-deep: #050505;
+  --color-navy: #121212;
+  --color-red: #FFCC00;
+  --color-red-bright: #FFE500;
+  --color-white: #FFFFFF;
+  --color-light-blue: #F5F5F5;
+  --color-smoke: #080808;
+  --color-oak: #1C1C1C;
 
   /* Legacy for now */
   --color-felt: var(--color-navy);
   --color-felt-deep: var(--color-navy-deep);
-  --color-felt-light: #122a4c;
-  --color-jungle: #1e3b6b;
-  --color-moss: #2d4a7d;
+  --color-felt-light: #1A1A1A;
+  --color-jungle: #151515;
+  --color-moss: #222222;
   --color-banana: var(--color-red);
   --color-banana-bright: var(--color-red-bright);
-  --color-gold: var(--color-light-blue);
-  --color-brass: #b8860b;
-  --color-cream: var(--color-white);
-  --color-bone: #e8dcb3;
-  --color-neon-green: var(--color-light-blue);
+  --color-gold: var(--color-red);
+  --color-brass: #D4A017;
+  --color-cream: #F5F5F5;
+  --color-bone: #E5E5E5;
+  --color-neon-green: var(--color-red-bright);
 
   --font-display: var(--font-display), 'Impact', sans-serif;
   --font-headline: var(--font-headline), 'Georgia', serif;
@@ -44,8 +44,8 @@ body {
 
 body {
   background-image:
-    radial-gradient(ellipse at top, rgba(100, 149, 237, 0.1), transparent 55%),
-    radial-gradient(ellipse at bottom, rgba(191, 10, 48, 0.08), transparent 60%);
+    radial-gradient(ellipse at top, rgba(255, 204, 0, 0.08), transparent 55%),
+    radial-gradient(ellipse at bottom, rgba(255, 255, 255, 0.03), transparent 60%);
 }
 
 /* Film grain overlay — rendered above everything, purely decorative */
