@@ -68,16 +68,21 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const toggleMusic = () => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio('/audio/monkey-biz-beat.mp3')
-      audioRef.current.loop = true
-    }
-    if (isMusicPlaying) {
-      audioRef.current.pause()
-      setIsMusicPlaying(false)
-    } else {
-      audioRef.current.play().catch(err => console.log("Audio play blocked", err))
-      setIsMusicPlaying(true)
+    if (audioRef.current) {
+      if (isMusicPlaying) {
+        audioRef.current.pause()
+        setIsMusicPlaying(false)
+      } else {
+        audioRef.current.play()
+          .then(() => {
+            setIsMusicPlaying(true)
+          })
+          .catch(err => {
+            console.log("Audio play blocked on iOS:", err)
+            // Fallback for immediate state toggle
+            setIsMusicPlaying(true)
+          })
+      }
     }
   }
 
@@ -1314,6 +1319,13 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
         </div>
       </footer>
 
+            <audio 
+        ref={audioRef} 
+        src="/audio/monkey-biz-beat.mp3" 
+        loop 
+        preload="auto" 
+        playsInline
+      />
       <PokerBrosFAB />
     </main>
   )
