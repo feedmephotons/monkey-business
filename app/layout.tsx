@@ -45,6 +45,28 @@ export const metadata: Metadata = {
   title: 'Monkey Business — A Private Poker Lounge',
   description:
     "Monkey Mania Week. Freerolls, splash pots, high hands and the wildest wall in poker.",
+  openGraph: {
+    title: 'Monkey Business — A Private Poker Lounge',
+    description: "Monkey Mania Week. Freerolls, splash pots, high hands and the wildest wall in poker.",
+    url: 'https://monkeybizpoker.com',
+    siteName: 'Monkey Business',
+    images: [
+      {
+        url: 'https://monkeybizpoker.com/img/hero-contest-flyer.png',
+        width: 1376,
+        height: 768,
+        alt: 'Splat a Bad Beat Contest - Monkey Business Poker',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Monkey Business — A Private Poker Lounge',
+    description: "Monkey Mania Week. Freerolls, splash pots, high hands and the wildest wall in poker.",
+    images: ['https://monkeybizpoker.com/img/hero-contest-flyer.png'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
