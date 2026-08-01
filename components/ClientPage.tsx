@@ -337,10 +337,10 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 Ladies Night
               </h3>
               <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
-                Get ready for a night dedicated to the queens of the felt. Date is pending for next week, stay tuned for the final call!
+                Get ready for a night dedicated to the queens of the felt. Enjoy half off for verified ladies as we crown this month's champion!
               </p>
               <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60">
-                <span className="font-bold text-white">Date:</span> Next Week (TBA)
+                <span className="font-bold text-white">Date:</span> August 29th @ 9 PM Eastern
               </div>
             </div>
 
