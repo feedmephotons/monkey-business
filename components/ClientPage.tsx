@@ -1175,6 +1175,24 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                     </>
                   )}
                 </button>
+
+                {/* Native Browser Player Fallback for iOS/iPadOS */}
+                <div className="w-full mt-5 p-3 rounded-md bg-neutral-900/60 border border-yellow/15">
+                  <div className="text-[10px] text-yellow/70 font-mono uppercase tracking-wider mb-2 text-left">
+                    📱 Direct Mobile Playbar:
+                  </div>
+                  <audio
+                    ref={audioRef}
+                    src="/audio/monkey-biz-beat.mp3"
+                    loop
+                    preload="auto"
+                    playsInline
+                    controls
+                    className="w-full h-8 accent-yellow"
+                    onPlay={() => setIsMusicPlaying(true)}
+                    onPause={() => setIsMusicPlaying(false)}
+                  />
+                </div>
               </div>
             </div>
 
@@ -1319,13 +1337,6 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
         </div>
       </footer>
 
-            <audio 
-        ref={audioRef} 
-        src="/audio/monkey-biz-beat.mp3" 
-        loop 
-        preload="auto" 
-        playsInline
-      />
       <PokerBrosFAB />
     </main>
   )
