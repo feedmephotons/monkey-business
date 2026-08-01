@@ -345,8 +345,8 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
 
             {/* Event 2: Heads Up Tournament 2 */}
-            <div className="rounded-sm border border-light-blue/40 bg-navy-deep/75 backdrop-blur p-6 sm:p-8">
-              <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-white mb-3">
+            <div className="rounded-sm border-2 border-[#ff0000]/60 bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_0_20px_rgba(255,0,0,0.35)]">
+              <h3 className="font-[family-name:var(--font-scary)] text-3xl sm:text-4xl text-[#ff0000] mb-3 tracking-wider leading-relaxed" style={{ textShadow: '0 0 15px rgba(255,0,0,0.95), 0 0 5px rgba(255,0,0,0.6)' }}>
                 The Heads Up Tournament 2
               </h3>
               <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">

@@ -1,11 +1,18 @@
 import type { Metadata } from 'next'
-import { Monoton, Rozha_One, EB_Garamond, JetBrains_Mono, Caveat } from 'next/font/google'
+import { Monoton, Rozha_One, EB_Garamond, JetBrains_Mono, Caveat, Eater } from 'next/font/google'
 import './globals.css'
 
 const monoton = Monoton({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-display',
+  display: 'swap',
+})
+
+const eater = Eater({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-scary',
   display: 'swap',
 })
 
@@ -44,7 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${monoton.variable} ${rozha.variable} ${garamond.variable} ${mono.variable} ${caveat.variable}`}
+      className={`${monoton.variable} ${rozha.variable} ${garamond.variable} ${mono.variable} ${caveat.variable} ${eater.variable}`}
     >
       <body className="min-h-screen">{children}</body>
     </html>
