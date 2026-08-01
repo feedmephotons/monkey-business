@@ -105,6 +105,8 @@ function renderDays() {
     { day: 27, type: 'bomb-pot', text: 'Bomb\nPot\nNight\n💣🔥' },
     { day: 28, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
     { day: 29, type: 'ladies-night', text: 'Ladies\nNight\nTournament' },
+    { day: 30, type: 'heads-up', text: 'Heads Up\nTournament' },
+    { day: 31, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   ];
 
   return days.map((d) => {
