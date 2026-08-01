@@ -332,8 +332,8 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Event 1: Ladies Night */}
-            <div className="rounded-sm border-2 border-[#ff007f] bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_20px_60px_-20px_rgba(255,0,127,0.25)]">
-              <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-[#bd00ff] mb-3" style={{ textShadow: '0 0 10px rgba(189,0,255,0.4)' }}>
+            <div className="rounded-sm border-2 border-[#ff007f] bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_0_20px_rgba(255,0,127,0.65)]" style={{ boxShadow: '0 0 20px rgba(255,0,127,0.55)' }}>
+              <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-[#bd00ff] mb-3" style={{ textShadow: '0 0 15px rgba(189,0,255,0.95), 0 0 5px rgba(189,0,255,0.6)' }}>
                 Ladies Night
               </h3>
               <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
