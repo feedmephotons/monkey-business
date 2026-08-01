@@ -378,7 +378,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 1-2 Cash Game
               </h3>
               <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
-                The massive cash action kicks off. Fast-paced play, huge high hands, and double splash pots. Secure your seat at the table now!
+                Let's go bananas, dial up the blinds. Secure your seat at the table now!
               </p>
               <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60 mb-6">
                 <span className="font-bold text-white">Date:</span> August 3rd @ 8 PM Eastern
