@@ -59,6 +59,21 @@ interface ClientPageProps {
 
 export default function ClientPage({ posts, budget }: ClientPageProps) {
   const [activeFlyerIndex, setActiveFlyerIndex] = useState(0)
+  const [rsvpName, setRsvpName] = useState('')
+  const [isRsvped, setIsRsvped] = useState(false)
+  const [showRsvpInput, setShowRsvpInput] = useState(false)
+
+  // Load RSVP state on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('mb_rsvp_name_aug3')
+      if (saved) {
+        setRsvpName(saved)
+        setIsRsvped(true)
+      }
+    }
+  }, [])
+
   const [activeWallTab, setActiveWallTab] = useState<'general' | 'bad_beat'>('general')
   const [weeklyWinner, setWeeklyWinner] = useState<{
     author: string
@@ -330,7 +345,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             <div className="deco-divider mt-6 max-w-sm mx-auto" />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Event 1: Ladies Night */}
             <div className="rounded-sm border-2 border-[#ff007f] bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_0_20px_rgba(255,0,127,0.65)]" style={{ boxShadow: '0 0 20px rgba(255,0,127,0.55)' }}>
               <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-[#bd00ff] mb-3" style={{ textShadow: '0 0 15px rgba(189,0,255,0.95), 0 0 5px rgba(189,0,255,0.6)' }}>
@@ -354,6 +369,83 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </p>
               <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60">
                 <span className="font-bold text-white">Requirement:</span> 16 Confirmed & Paid Players to Start
+              </div>
+            </div>
+
+            {/* Event 3: 1-2 Cash Game RSVP */}
+            <div className="rounded-sm border-2 border-[#39ff14] bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_0_20px_rgba(57,255,20,0.45)]" style={{ boxShadow: '0 0 20px rgba(57,255,20,0.35)' }}>
+              <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-[#39ff14] mb-3" style={{ textShadow: '0 0 15px rgba(57,255,20,0.95), 0 0 5px rgba(57,255,20,0.6)' }}>
+                1-2 Cash Game
+              </h3>
+              <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
+                The massive cash action kicks off. Fast-paced play, huge high hands, and double splash pots. Secure your seat at the table now!
+              </p>
+              <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60 mb-6">
+                <span className="font-bold text-white">Date:</span> August 3rd @ 8 PM Eastern
+              </div>
+
+              {/* RSVP Form */}
+              <div className="mt-4">
+                {!showRsvpInput && !isRsvped && (
+                  <button
+                    onClick={() => setShowRsvpInput(true)}
+                    className="w-full py-3 px-4 rounded border-2 border-[#39ff14] bg-[#39ff14]/10 text-[#39ff14] font-[family-name:var(--font-mono)] font-bold text-sm tracking-widest uppercase hover:bg-[#39ff14] hover:text-black transition-all duration-300 shadow-[0_0_10px_rgba(57,255,20,0.2)] hover:shadow-[0_0_20px_rgba(57,255,20,0.5)] active:scale-95"
+                  >
+                    RSVP SEAT 💸
+                  </button>
+                )}
+
+                {showRsvpInput && (
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      placeholder="Enter Screen Name..."
+                      value={rsvpName}
+                      onChange={(e) => setRsvpName(e.target.value)}
+                      className="w-full bg-navy-deep/90 border border-[#39ff14]/40 text-white placeholder-white/30 rounded py-2.5 px-4 font-[family-name:var(--font-body)] text-sm focus:outline-none focus:border-[#39ff14] focus:ring-1 focus:ring-[#39ff14] transition-all"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          if (rsvpName.trim()) {
+                            setIsRsvped(true)
+                            setShowRsvpInput(false)
+                            localStorage.setItem('mb_rsvp_name_aug3', rsvpName.trim())
+                          }
+                        }}
+                        className="flex-1 py-2 px-3 rounded bg-[#39ff14] text-black font-[family-name:var(--font-mono)] font-bold text-xs tracking-wider uppercase hover:opacity-90 active:scale-95 transition-all"
+                      >
+                        Confirm RSVP
+                      </button>
+                      <button
+                        onClick={() => setShowRsvpInput(false)}
+                        className="py-2 px-3 rounded border border-white/20 text-white/60 font-[family-name:var(--font-mono)] text-xs tracking-wider uppercase hover:text-white transition-all"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {isRsvped && (
+                  <div className="rounded border border-[#39ff14]/30 bg-[#39ff14]/5 p-4 text-center">
+                    <div className="text-[#39ff14] font-[family-name:var(--font-mono)] font-bold text-sm tracking-wider mb-1">
+                      ✓ SEAT RESERVED!
+                    </div>
+                    <div className="text-white/80 font-[family-name:var(--font-body)] text-xs mb-3">
+                      Screen Name: <span className="text-[#39ff14] font-semibold">{rsvpName}</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setIsRsvped(false)
+                        setShowRsvpInput(true)
+                      }}
+                      className="text-[10px] font-[family-name:var(--font-mono)] text-white/40 uppercase tracking-widest hover:text-white underline decoration-dotted transition-all"
+                    >
+                      Change Name
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
