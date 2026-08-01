@@ -1108,14 +1108,22 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               
               <div className="flex flex-col items-center text-center">
                 {/* Visualizer Cassette Graphic */}
-                <div className="relative w-36 h-36 bg-neutral-900 border-4 border-yellow rounded-xl flex items-center justify-center overflow-hidden shadow-2xl mb-6">
-                  <div className="text-yellow text-5xl animate-pulse">📻</div>
+                <div 
+                  onClick={toggleMusic}
+                  className="relative w-36 h-36 bg-neutral-900 border-4 border-yellow hover:border-yellow/80 rounded-xl flex items-center justify-center overflow-hidden shadow-2xl mb-6 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200"
+                  title="Click to play/pause"
+                >
+                  <div className={"text-yellow text-5xl " + (isMusicPlaying ? "animate-spin" : "animate-pulse")}>📻</div>
                 </div>
 
                 <div className="inline-block px-3 py-1 bg-yellow/10 border border-yellow/30 rounded-full text-[0.65rem] text-yellow font-mono mb-3">
                   🔥 TOP CLUB HIT
                 </div>
-                <h3 className="font-[family-name:var(--font-headline)] text-3xl text-white tracking-wide">
+                <h3 
+                  onClick={toggleMusic}
+                  className="font-[family-name:var(--font-headline)] text-3xl text-white hover:text-yellow tracking-wide cursor-pointer transition-colors"
+                  title="Click to play/pause"
+                >
                   Great Apes
                 </h3>
                 <p className="font-[family-name:var(--font-body)] text-white/50 text-xs mt-1 mb-6">
@@ -1210,7 +1218,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <p className="text-yellow font-bold">{"Play with the beasts or get felted instead!"}</p>
                   <p className="text-yellow font-bold">{"Monkey Biz *(Biz!)*, yeah we build the pots high,"}</p>
                   <p className="text-yellow font-bold">{"Slamming down the chips, hear the savages cry!"}</p>
-                  <p className="text-yellow font-bold">{"Go to MONKEYBIZPOKER.COM on the double,"}</p>
+                  <p className="text-yellow font-bold">{"Go to "}<a href="#music" className="text-yellow hover:underline font-bold">MONKEYBIZPOKER.COM</a>{" on the double,"}</p>
                   <p className="text-yellow font-bold">{"Welcome to the jungle, you don't want no trouble!"}</p>
                 </div>
 
@@ -1244,7 +1252,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <p className="text-yellow font-bold">{"Play with the beasts or get felted instead!"}</p>
                   <p className="text-yellow font-bold">{"Monkey Biz *(Biz!)*, yeah we build the pots high,"}</p>
                   <p className="text-yellow font-bold">{"Slamming down the chips, hear the savages cry!"}</p>
-                  <p className="text-yellow font-bold">{"Go to MONKEYBIZPOKER.COM on the double,"}</p>
+                  <p className="text-yellow font-bold">{"Go to "}<a href="#music" className="text-yellow hover:underline font-bold">MONKEYBIZPOKER.COM</a>{" on the double,"}</p>
                   <p className="text-yellow font-bold">{"Welcome to the jungle, you don't want no trouble!"}</p>
                 </div>
 
@@ -1274,7 +1282,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <p>{"Chuckee is out."}</p>
                   <p>{"But the Monkey Biz never stops."}</p>
                   <p>{"Get your chips, refer your friends, hit the wall."}</p>
-                  <p>{"MONKEYBIZPOKER.COM."}</p>
+                  <p><a href="#music" className="text-yellow hover:underline font-bold">MONKEYBIZPOKER.COM</a></p>
                   <p>{"Private Club Code: 1670819."}</p>
                   <p>{"Are you an ape or are you bait?"}</p>
                   <p>{"Felted."}</p>
