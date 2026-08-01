@@ -6,6 +6,7 @@ import WallForm from '@/components/WallForm'
 import WallPost from '@/components/WallPost'
 import PokerBrosFAB from '@/components/PokerBrosFAB'
 import ScratchCard from '@/components/ScratchCard'
+import Calendar from '@/components/Calendar'
 import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 
@@ -370,79 +371,15 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               This Month
             </span>
             <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-              August <em className="text-red">Heat</em>
+              August <em className="text-red">Schedule</em>
             </h2>
             <div className="deco-divider mt-6 max-w-sm mx-auto" />
-            <p className="mt-4 font-[family-name:var(--font-body)] text-white/70 italic max-w-xl mx-auto">
-              4 hot FREEROLLS. Don’t Monkey Around & Miss Out
+            <p className="mt-4 font-[family-name:var(--font-body)] text-white/70 italic max-w-xl mx-auto mb-10">
+              Interactive Club Calendar. Tap or hover on dates to plan your games.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {SCHEDULE.map((night, idx) => (
-              <article
-                key={night.day}
-                id={`schedule-${night.date.toLowerCase().replace(' ', '-')}`}
-                className={`relative rise group ${night.headline ? 'md:col-span-2' : ''}`}
-                style={{ animationDelay: `${0.1 + idx * 0.08}s` }}
-              >
-                <div
-                  className={`relative h-full rounded-sm border border-light-blue/30 bg-navy-deep/80 backdrop-blur p-6 overflow-hidden transition ${
-                    night.headline ? 'md:p-10' : ''
-                  } group-hover:border-red/80`}
-                >
-                  <span className="absolute top-2 left-2 text-light-blue/40 text-xs">✦</span>
-                  <span className="absolute top-2 right-2 text-light-blue/40 text-xs">✦</span>
-                  <span className="absolute bottom-2 left-2 text-light-blue/40 text-xs">✦</span>
-                  <span className="absolute bottom-2 right-2 text-light-blue/40 text-xs">✦</span>
-
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span
-                          className="font-[family-name:var(--font-display)] text-xl neon"
-                          style={{ color: night.accent }}
-                        >
-                          {night.day}
-                        </span>
-                        <span className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-widest text-white/50">
-                          {night.date}
-                        </span>
-                      </div>
-                      <h3 className="mt-1 font-[family-name:var(--font-headline)] text-3xl md:text-4xl text-white">
-                        {night.title}
-                      </h3>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-widest text-white/50">
-                        Prize Pool
-                      </div>
-                      <div
-                        className="font-[family-name:var(--font-display)] text-3xl md:text-4xl"
-                        style={{ color: night.accent }}
-                      >
-                        {night.pool}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="deco-divider my-5" />
-
-                  <p className="font-[family-name:var(--font-body)] text-white/80 leading-relaxed">
-                    {night.detail}
-                  </p>
-
-                  {night.headline && (
-                    <div className="mt-6 flex flex-wrap gap-4 text-xs uppercase tracking-widest text-red/80 font-[family-name:var(--font-mono)]">
-                      <span>✦ The Main Event</span>
-                      <span>✦ Sat Winner Plays Free</span>
-                      <span>✦ Winner Takes All</span>
-                    </div>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
+          <Calendar />
         </div>
       </section>
 
