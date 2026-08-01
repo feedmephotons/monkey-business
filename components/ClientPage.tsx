@@ -11,7 +11,6 @@ import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 
 const FLYERS = [
-  { src: '/img/hero-game-bananas.png', alt: "Card Game Bananas - Join our Private Club on Poker Bros - Club Code 1670819", scrollTo: '#schedule' },
   { src: '/img/hero-10-spot-flyer.png', alt: "Monkey's 10 Spot Tournament - Every Saturday at Noon Eastern", scrollTo: '#schedule' },
   { src: '/img/hero-heads-up-flyer.png', alt: "Heads Up Tournament - 1 Round Elimination All Month Long", scrollTo: '#schedule' },
   { src: '/img/hero-august-calendar.png', alt: "August 2026 Club Schedule - Full Month Calendar", scrollTo: '#schedule' },
