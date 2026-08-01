@@ -10,7 +10,7 @@ import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 
 const FLYERS = [
-  { src: '/img/hero-freeroll-flyer-august.png', alt: 'Monkey Biz Poker August Heat Flyer', scrollTo: '#schedule-aug-31' },
+  { src: '/img/hero-10-spot-flyer.png', alt: "Monkey's 10 Spot Tournament - Every Saturday at Noon Eastern", scrollTo: '#schedule' },
   { src: '/img/hero-contest-flyer.png', alt: 'Enter our weekly contest - SPLAT A Bad Beat!', scrollTo: '#wall-tab-section', isContest: true },
 ]
 
