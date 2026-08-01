@@ -365,7 +365,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 The Heads Up Tournament 2
               </h3>
               <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
-                The ultimate test of skill is back. Go one-on-one for the crown. The tournament kicks off as soon as we have 16 players locked in.
+                Head 2 Head tournament is back! 1 round elimination. Looking for the 4 players to reach the top of the bracket. The tournament will kick off as soon as we have 16 players locked in.
               </p>
               <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60">
                 <span className="font-bold text-white">Requirement:</span> 16 Confirmed & Paid Players to Start
