@@ -1,7 +1,108 @@
 import React from 'react';
 import Image from 'next/image';
 
+interface CalendarDay {
+  day: number;
+  weekday: string;
+  type: 'default' | 'heads-up' | 'cash-loud' | 'seven-deuce' | 'special-event' | 'bomb-pot' | 'high-hand' | 'freeroll' | 'ladies-night';
+  text: string;
+}
+
+const CALENDAR_DAYS: CalendarDay[] = [
+  { day: 1, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
+  { day: 2, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
+  { day: 3, weekday: 'Mon', type: 'cash-loud', text: '🔥 1-2 CASH 🔥\nGAME NIGHT!\n💰♠️💸' },
+  { day: 4, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 5, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
+  { day: 6, weekday: 'Thu', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 7, weekday: 'Fri', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 8, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
+  { day: 9, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
+  { day: 10, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 11, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 12, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
+  { day: 13, weekday: 'Thu', type: 'bomb-pot', text: 'Bomb\nPot\nNight\n💣🔥' },
+  { day: 14, weekday: 'Fri', type: 'high-hand', text: 'HIGHEST\nHAND\nOF THE\nNIGHT' },
+  { day: 15, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
+  { day: 16, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
+  { day: 17, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 18, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 19, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
+  { day: 20, weekday: 'Thu', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 21, weekday: 'Fri', type: 'high-hand', text: 'HIGHEST\nHAND\nOF THE\nNIGHT' },
+  { day: 22, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
+  { day: 23, weekday: 'Sun', type: 'freeroll', text: 'Freeroll\nTournament\nNoon\nEastern' },
+  { day: 24, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 25, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 26, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
+  { day: 27, weekday: 'Thu', type: 'bomb-pot', text: 'Bomb\nPot\nNight\n💣🔥' },
+  { day: 28, weekday: 'Fri', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+  { day: 29, weekday: 'Sat', type: 'ladies-night', text: 'Ladies\nNight\nTournament' },
+  { day: 30, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
+  { day: 31, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
+];
+
 export default function Calendar() {
+  const getEventStyle = (type: string) => {
+    let borderClass = 'border-[#00c6ff]/30';
+    let bgGradient = 'from-[#111] to-[#222]';
+    let textClass = 'text-[#e2e8f0]';
+    let badgeBg = 'bg-[#1e293b]';
+    let badgeText = 'text-white/60';
+
+    if (type === 'heads-up') {
+      borderClass = 'border-[#00c6ff]';
+      bgGradient = 'from-[#051a2e] to-[#0a2f4d]';
+      textClass = 'text-white font-extrabold';
+      badgeBg = 'bg-[#00c6ff]/20';
+      badgeText = 'text-[#00c6ff]';
+    } else if (type === 'cash-loud') {
+      borderClass = 'border-[#39ff14] border-2 sm:border-4 shadow-[0_0_15px_rgba(57,255,20,0.5)] scale-[1.01] sm:scale-[1.02] z-10';
+      bgGradient = 'from-[#000] via-[#051c02] to-[#000]';
+      textClass = 'text-[#39ff14] font-black';
+      badgeBg = 'bg-[#39ff14]/20';
+      badgeText = 'text-[#39ff14]';
+    } else if (type === 'seven-deuce') {
+      borderClass = 'border-[#00ffcc]';
+      bgGradient = 'from-[#022119] to-[#053d2f]';
+      textClass = 'text-[#00ffcc] font-black';
+      badgeBg = 'bg-[#00ffcc]/20';
+      badgeText = 'text-[#00ffcc]';
+    } else if (type === 'special-event') {
+      borderClass = 'border-[#ffd13b]';
+      bgGradient = 'from-[#1a1505] to-[#332a0a]';
+      textClass = 'text-[#ffd13b] font-black';
+      badgeBg = 'bg-[#ffd13b]/20';
+      badgeText = 'text-[#ffd13b]';
+    } else if (type === 'bomb-pot') {
+      borderClass = 'border-[#ff9900]';
+      bgGradient = 'from-[#2e1d05] to-[#4d2f0a]';
+      textClass = 'text-[#ff9900] font-black';
+      badgeBg = 'bg-[#ff9900]/20';
+      badgeText = 'text-[#ff9900]';
+    } else if (type === 'high-hand') {
+      borderClass = 'border-[#ffea00]';
+      bgGradient = 'from-[#2b2703] to-[#474105]';
+      textClass = 'text-[#ffea00] font-black';
+      badgeBg = 'bg-[#ffea00]/20';
+      badgeText = 'text-[#ffea00]';
+    } else if (type === 'freeroll') {
+      borderClass = 'border-[#ff3b30]';
+      bgGradient = 'from-[#2e0505] to-[#4d0a0a]';
+      textClass = 'text-[#ff3b30] font-black';
+      badgeBg = 'bg-[#ff3b30]/20';
+      badgeText = 'text-[#ff3b30]';
+    } else if (type === 'ladies-night') {
+      borderClass = 'border-[#ff007f]';
+      bgGradient = 'from-[#2e0018] to-[#4d0028]';
+      textClass = 'text-[#ff007f] font-black';
+      badgeBg = 'bg-[#ff007f]/20';
+      badgeText = 'text-[#ff007f]';
+    }
+
+    return { borderClass, bgGradient, textClass, badgeBg, badgeText };
+  };
+
   return (
     <div className="w-full max-w-[1000px] mx-auto p-4 sm:p-6 rounded-3xl border-4 border-[#ffd13b] bg-[#0c162d]/95 text-white font-sans relative overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.85)]">
       {/* Decorative corners */}
@@ -16,147 +117,104 @@ export default function Calendar() {
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between border-b-4 border-[#00c6ff] pb-5 mb-5 px-4 sm:px-6">
-        <div className="flex items-center gap-4">
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-[#ffd13b] shadow-lg">
+      <div className="flex items-center justify-between border-b-4 border-[#00c6ff] pb-5 mb-5 px-2 sm:px-6">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-[#ffd13b] shadow-lg flex-shrink-0">
             <Image src="/logo.png" alt="Mascot Logo" fill className="object-cover" />
           </div>
           <div className="text-left">
-            <h1 className="font-black text-2xl sm:text-4xl tracking-wider text-[#ffd13b] uppercase leading-none">
+            <h1 className="font-black text-xl sm:text-4xl tracking-wider text-[#ffd13b] uppercase leading-none">
               Monkey Biz Poker
             </h1>
-            <p className="font-extrabold text-[#ffd13b] text-xs sm:text-sm tracking-[0.25em] mt-1.5 uppercase opacity-90">
+            <p className="font-extrabold text-[#ffd13b] text-[10px] sm:text-sm tracking-[0.15em] sm:tracking-[0.25em] mt-1.5 uppercase opacity-90">
               August 2026 Club Schedule
             </p>
           </div>
         </div>
-        <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-[#ffd13b] shadow-lg hidden xs:block">
+        <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-[#ffd13b] shadow-lg hidden xs:block flex-shrink-0">
           <Image src="/mascot-dealer.png" alt="Mascot Dealer" fill className="object-cover" />
         </div>
       </div>
 
-      {/* Weekday Headers */}
-      <div className="grid grid-cols-7 gap-2 mb-3 text-center">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <div
-            key={day}
-            className="py-1.5 rounded-md font-black text-xs sm:text-sm uppercase tracking-wider text-white bg-gradient-to-b from-[#bf0a30] to-[#800720] shadow-md border border-[#ff3b69]/20"
-          >
-            {day}
+      {/* ─────────────────────────── DESKTOP VIEW ─────────────────────────── */}
+      <div className="hidden sm:block">
+        {/* Weekday Headers */}
+        <div className="grid grid-cols-7 gap-2 mb-3 text-center">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+            <div
+              key={day}
+              className="py-1.5 rounded-md font-black text-xs sm:text-sm uppercase tracking-wider text-white bg-gradient-to-b from-[#bf0a30] to-[#800720] shadow-md border border-[#ff3b69]/20"
+            >
+              {day}
+            </div>
+          ))}
+        </div>
+
+        {/* Calendar Grid */}
+        <div className="grid grid-cols-7 gap-2.5">
+          {/* Week 1 empty cell block / Widescreen custom banner */}
+          <div className="col-span-6 relative rounded-2xl overflow-hidden border border-[#00c6ff]/20 bg-black shadow-inner h-[150px]">
+            <Image
+              src="/monkey_eyes_clean.png"
+              alt="Mascot Eyes"
+              fill
+              className="object-cover object-center"
+            />
           </div>
-        ))}
+
+          {/* Days 1 - 31 */}
+          {CALENDAR_DAYS.map((d) => {
+            const { borderClass, bgGradient, textClass } = getEventStyle(d.type);
+
+            return (
+              <div
+                key={d.day}
+                className={`rounded-2xl border-2 ${borderClass} bg-gradient-to-b ${bgGradient} p-2 relative h-[150px] shadow-lg flex flex-col justify-between overflow-hidden`}
+              >
+                <span className="font-black text-xs sm:text-sm text-white/40">{d.day}</span>
+                <div className={`font-black text-[10px] sm:text-[11px] leading-tight text-center ${textClass} uppercase pb-2 whitespace-pre-line`}>
+                  {d.text}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-2.5">
-        {/* Week 1 empty cell block / Widescreen custom banner */}
-        <div className="col-span-6 relative rounded-2xl overflow-hidden border border-[#00c6ff]/20 bg-black shadow-inner h-[130px] sm:h-[150px]">
-          <Image
-            src="/monkey_eyes_clean.png"
-            alt="Mascot Eyes"
-            fill
-            className="object-cover object-center"
-          />
-        </div>
+      {/* ─────────────────────────── MOBILE AGENDA LIST VIEW ─────────────────────────── */}
+      <div className="sm:hidden space-y-3 max-h-[550px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
+        <p className="text-center text-[10px] uppercase tracking-widest text-[#00c6ff] mb-4 font-bold animate-pulse">
+          ⚡ Scroll down to browse full month ⚡
+        </p>
+        
+        {CALENDAR_DAYS.map((d) => {
+          const { borderClass, bgGradient, textClass, badgeBg, badgeText } = getEventStyle(d.type);
 
-        {/* Saturday 1st */}
-        <div className="rounded-2xl border-2 border-[#ffd13b] bg-gradient-to-b from-[#111] to-[#222] p-2 relative h-[130px] sm:h-[150px] shadow-lg flex flex-col justify-between overflow-hidden">
-          <span className="font-black text-xs sm:text-sm text-[#ffd13b]">1</span>
-          <div className="font-black text-[10px] sm:text-[11px] leading-tight text-center text-[#ffd13b] uppercase pb-2">
-            Monkey's 10 Spot<br />Tourney at<br />Noon Eastern
-          </div>
-        </div>
+          return (
+            <div
+              key={d.day}
+              className={`rounded-xl border-2 ${borderClass} bg-gradient-to-r ${bgGradient} p-3 shadow-md flex items-center gap-4 relative overflow-hidden`}
+            >
+              {/* Date Badge */}
+              <div className={`w-14 h-14 rounded-xl ${badgeBg} flex flex-col items-center justify-center border border-white/5 flex-shrink-0`}>
+                <span className={`text-xl font-black ${badgeText} leading-none`}>
+                  {d.day}
+                </span>
+                <span className="text-[9px] uppercase font-bold tracking-wider text-white/40 mt-0.5">
+                  {d.weekday}
+                </span>
+              </div>
 
-        {/* Days 2 - 29 */}
-        {renderDays()}
+              {/* Event Content */}
+              <div className="flex-1 text-left min-w-0">
+                <div className={`font-extrabold text-xs tracking-wider uppercase ${textClass} whitespace-pre-line leading-tight`}>
+                  {d.text}
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
-}
-
-// Simple logic helper to render remaining calendar cards matching the style
-function renderDays() {
-  const days = [
-    { day: 2, type: 'heads-up', text: 'Heads Up\nTournament' },
-    { day: 3, type: 'cash-loud', text: '🔥 1-2 CASH 🔥\nGAME NIGHT!\n💰♠️💸' },
-    { day: 4, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 5, type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
-    { day: 6, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 7, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 8, type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
-    { day: 9, type: 'heads-up', text: 'Heads Up\nTournament' },
-    { day: 10, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 11, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 12, type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
-    { day: 13, type: 'bomb-pot', text: 'Bomb\nPot\nNight\n💣🔥' },
-    { day: 14, type: 'high-hand', text: 'HIGHEST\nHAND\nOF THE\nNIGHT' },
-    { day: 15, type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
-    { day: 16, type: 'heads-up', text: 'Heads Up\nTournament' },
-    { day: 17, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 18, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 19, type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
-    { day: 20, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 21, type: 'high-hand', text: 'HIGHEST\nHAND\nOF THE\nNIGHT' },
-    { day: 22, type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
-    { day: 23, type: 'freeroll', text: 'Freeroll\nTournament\nNoon\nEastern' },
-    { day: 24, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 25, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 26, type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
-    { day: 27, type: 'bomb-pot', text: 'Bomb\nPot\nNight\n💣🔥' },
-    { day: 28, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-    { day: 29, type: 'ladies-night', text: 'Ladies\nNight\nTournament' },
-    { day: 30, type: 'heads-up', text: 'Heads Up\nTournament' },
-    { day: 31, type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-  ];
-
-  return days.map((d) => {
-    let borderClass = 'border-[#00c6ff]/30';
-    let bgGradient = 'from-[#111] to-[#222]';
-    let textClass = 'text-[#e2e8f0]';
-
-    if (d.type === 'heads-up') {
-      borderClass = 'border-[#00c6ff]';
-      bgGradient = 'from-[#051a2e] to-[#0a2f4d]';
-      textClass = 'text-white font-extrabold';
-    } else if (d.type === 'cash-loud') {
-      borderClass = 'border-[#39ff14] border-4 shadow-[0_0_15px_rgba(57,255,20,0.5)] scale-[1.02] z-10';
-      bgGradient = 'from-[#000] via-[#051c02] to-[#000]';
-      textClass = 'text-[#39ff14] font-black';
-    } else if (d.type === 'seven-deuce') {
-      borderClass = 'border-[#00ffcc]';
-      bgGradient = 'from-[#022119] to-[#053d2f]';
-      textClass = 'text-[#00ffcc] font-black';
-    } else if (d.type === 'special-event') {
-      borderClass = 'border-[#ffd13b]';
-      textClass = 'text-[#ffd13b] font-black';
-    } else if (d.type === 'bomb-pot') {
-      borderClass = 'border-[#ff9900]';
-      bgGradient = 'from-[#2e1d05] to-[#4d2f0a]';
-      textClass = 'text-[#ff9900] font-black';
-    } else if (d.type === 'high-hand') {
-      borderClass = 'border-[#ffea00]';
-      bgGradient = 'from-[#2b2703] to-[#474105]';
-      textClass = 'text-[#ffea00] font-black';
-    } else if (d.type === 'freeroll') {
-      borderClass = 'border-[#ff3b30]';
-      bgGradient = 'from-[#2e0505] to-[#4d0a0a]';
-      textClass = 'text-[#ff3b30] font-black';
-    } else if (d.type === 'ladies-night') {
-      borderClass = 'border-[#ff007f]';
-      bgGradient = 'from-[#2e0018] to-[#4d0028]';
-      textClass = 'text-[#ff007f] font-black';
-    }
-
-    return (
-      <div
-        key={d.day}
-        className={`rounded-2xl border-2 ${borderClass} bg-gradient-to-b ${bgGradient} p-2 relative h-[130px] sm:h-[150px] shadow-lg flex flex-col justify-between overflow-hidden`}
-      >
-        <span className="font-black text-xs sm:text-sm text-white/40">{d.day}</span>
-        <div className={`font-black text-[10px] sm:text-[11px] leading-tight text-center ${textClass} uppercase pb-2 whitespace-pre-line`}>
-          {d.text}
-        </div>
-      </div>
-    );
-  });
 }
