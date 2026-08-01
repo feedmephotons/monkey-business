@@ -11,6 +11,7 @@ import type { EnrichedWallPost } from '@/app/page'
 
 const FLYERS = [
   { src: '/img/hero-10-spot-flyer.png', alt: "Monkey's 10 Spot Tournament - Every Saturday at Noon Eastern", scrollTo: '#schedule' },
+  { src: '/img/hero-heads-up-flyer.png', alt: "Heads Up Tournament - 1 Round Elimination All Month Long", scrollTo: '#schedule' },
   { src: '/img/hero-contest-flyer.png', alt: 'Enter our weekly contest - SPLAT A Bad Beat!', scrollTo: '#wall-tab-section', isContest: true },
 ]
 
