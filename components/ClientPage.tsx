@@ -1261,10 +1261,13 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                     <div className="absolute inset-10 rounded-full border border-neutral-800/15" />
                     <div className="absolute inset-13 rounded-full border border-neutral-800/10" />
 
-                    {/* Central Sticker */}
-                    <div className="w-12 h-12 rounded-full bg-yellow border-4 border-black flex flex-col items-center justify-center shadow-inner select-none pointer-events-none">
-                      <span className="text-[5px] font-mono text-black font-extrabold uppercase tracking-tighter leading-none">MONKEY</span>
-                      <span className="text-[5px] font-mono text-black font-extrabold uppercase tracking-tighter leading-none">BIZ</span>
+                    {/* Central Sticker (Using Circular Club Logo) */}
+                    <div className="w-14 h-14 rounded-full bg-black border-2 border-yellow/60 overflow-hidden flex items-center justify-center shadow-inner select-none pointer-events-none">
+                      <img 
+                        src="/img/logo.png" 
+                        alt="Monkey Biz Logo" 
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
 
