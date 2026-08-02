@@ -1337,10 +1337,34 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 </div>
                 <h3 
                   onClick={toggleMusic}
-                  className="font-[family-name:var(--font-headline)] text-3xl text-white hover:text-yellow tracking-wide cursor-pointer transition-colors"
+                  className={`font-[family-name:var(--font-headline)] text-3xl tracking-wide cursor-pointer transition-colors duration-300 ${
+                    isMusicPlaying ? 'animate-[musicColorShift_6s_linear_infinite]' : 'text-white hover:text-yellow'
+                  }`}
                   title="Click to play/pause"
                 >
                   Great Apes
+
+                  {/* Color-shifting styles specifically for "Great Apes" title while music plays */}
+                  <style jsx>{`
+                    @keyframes musicColorShift {
+                      0%, 100% {
+                        color: #ffffff; /* white */
+                        text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+                      }
+                      33% {
+                        color: #00d2ff; /* neon electron blue */
+                        text-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
+                      }
+                      66% {
+                        color: #ffd13b; /* neon yellow */
+                        text-shadow: 0 0 15px rgba(255, 209, 59, 0.6);
+                      }
+                      85% {
+                        color: #39ff14; /* neon lime green */
+                        text-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+                      }
+                    }
+                  `}</style>
                 </h3>
                 <p className="font-[family-name:var(--font-body)] text-white/50 text-xs mt-1 mb-6">
                   The Official Monkey Biz Poker Anthem
@@ -1414,7 +1438,6 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <audio
                     ref={audioRef}
                     src="/audio/monkey-biz-poker-2.mp3"
-                    loop
                     preload="auto"
                     playsInline
                     controls
