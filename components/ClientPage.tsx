@@ -1148,13 +1148,39 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <div className="absolute top-0 right-0 w-24 h-24 bg-yellow/5 rounded-full blur-2xl -z-10" />
               
               <div className="flex flex-col items-center text-center">
-                {/* Visualizer Cassette Graphic */}
+                {/* Spinning Vinyl Record Player Device */}
                 <div 
                   onClick={toggleMusic}
-                  className="relative w-36 h-36 bg-neutral-900 border-4 border-yellow hover:border-yellow/80 rounded-xl flex items-center justify-center overflow-hidden shadow-2xl mb-6 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200"
+                  className="relative w-36 h-36 bg-neutral-950 border-4 border-yellow hover:border-yellow/80 rounded-full flex items-center justify-center overflow-hidden shadow-2xl mb-6 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300"
                   title="Click to play/pause"
                 >
-                  <div className={"text-yellow text-5xl " + (isMusicPlaying ? "animate-spin" : "animate-pulse")}>📻</div>
+                  {/* Outer Vinyl grooves */}
+                  <div className={`absolute inset-1 rounded-full bg-black border border-neutral-800 flex items-center justify-center ${
+                    isMusicPlaying ? 'animate-[spin_4s_linear_infinite]' : ''
+                  }`}>
+                    <div className="absolute inset-2.5 rounded-full border border-neutral-800/40" />
+                    <div className="absolute inset-6 rounded-full border border-neutral-800/30" />
+                    <div className="absolute inset-9 rounded-full border border-neutral-800/25" />
+                    <div className="absolute inset-12 rounded-full border border-neutral-800/10" />
+
+                    {/* Central Sticker */}
+                    <div className="w-12 h-12 rounded-full bg-yellow border-4 border-black flex flex-col items-center justify-center shadow-inner">
+                      <span className="text-[5px] font-mono text-black font-extrabold uppercase tracking-tighter leading-none">MONKEY</span>
+                      <span className="text-[5px] font-mono text-black font-extrabold uppercase tracking-tighter leading-none">BIZ</span>
+                    </div>
+                  </div>
+
+                  {/* Tiny Tone Arm Needle Overlay */}
+                  <svg 
+                    className={`absolute top-1 right-3 w-10 h-16 origin-[30px_5px] transition-transform duration-700 pointer-events-none z-10 ${
+                      isMusicPlaying ? 'rotate-[20deg]' : 'rotate-0'
+                    }`}
+                    viewBox="0 0 40 60"
+                  >
+                    <circle cx="30" cy="5" r="5" fill="#52525b" />
+                    <path d="M30 5 L12 45 L6 45" stroke="#d4d4d8" strokeWidth="2" fill="none" strokeLinecap="round" />
+                    <rect x="4" y="42" width="3" height="6" fill="#3f3f46" transform="rotate(15, 6, 45)" />
+                  </svg>
                 </div>
 
                 <div className="inline-block px-3 py-1 bg-yellow/10 border border-yellow/30 rounded-full text-[0.65rem] text-yellow font-mono mb-3">
