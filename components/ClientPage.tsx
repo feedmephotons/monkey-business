@@ -364,11 +364,11 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </a>
             </div>
 
-            {/* Listen to Club Anthem Link (Upgraded High-Impact Neon Button) */}
+            {/* Listen to Club Anthem Link (Upgraded High-Impact Attention-Grabbing Wiggle Button) */}
             <div className="pt-4 pl-1">
               <a
                 href="#music"
-                className="group relative inline-flex items-center gap-3 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 border-2 border-yellow/40 hover:border-yellow text-yellow rounded font-mono text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(255,209,59,0.15)] hover:shadow-[0_0_25px_rgba(255,209,59,0.3)] hover:-translate-y-[1px] active:translate-y-[1px] transition-all duration-300"
+                className="group relative inline-flex items-center gap-3 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 border-2 border-yellow/40 hover:border-yellow text-yellow rounded font-mono text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(255,209,59,0.15)] hover:shadow-[0_0_25px_rgba(255,209,59,0.3)] hover:-translate-y-[1px] active:translate-y-[1px] transition-all duration-300 animate-[bounce_3s_infinite]"
               >
                 {/* Pulsing Neon Radar Indicator */}
                 <span className="relative flex h-2.5 w-2.5">
