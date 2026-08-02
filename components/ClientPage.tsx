@@ -364,16 +364,42 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </a>
             </div>
 
-            {/* Listen to Club Anthem Link (Upgraded High-Impact Attention-Grabbing Wiggle Button) */}
+            {/* Listen to Club Anthem Link (Upgraded High-Impact Attention-Grabbing Wiggle Button with Dynamic Neon Color Shift) */}
             <div className="pt-4 pl-1">
               <a
                 href="#music"
-                className="group relative inline-flex items-center gap-3 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 border-2 border-yellow/40 hover:border-yellow text-yellow rounded font-mono text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(255,209,59,0.15)] hover:shadow-[0_0_25px_rgba(255,209,59,0.3)] hover:-translate-y-[1px] active:translate-y-[1px] transition-all duration-300 animate-[bounce_3s_infinite]"
+                className="group relative inline-flex items-center gap-3 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 border-2 text-white rounded font-mono text-xs uppercase tracking-widest shadow-lg hover:-translate-y-[1px] active:translate-y-[1px] transition-all duration-300 animate-[bounce_3s_infinite,colorShift_8s_linear_infinite]"
               >
+                {/* Custom Keyframe Styles injected directly */}
+                <style jsx>{`
+                  @keyframes colorShift {
+                    0%, 100% {
+                      border-color: #ffffff;
+                      color: #ffffff;
+                      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+                    }
+                    25% {
+                      border-color: #00d2ff; /* neon electron blue */
+                      color: #00d2ff;
+                      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+                    }
+                    50% {
+                      border-color: #ffd13b; /* neon yellow */
+                      color: #ffd13b;
+                      box-shadow: 0 0 15px rgba(255, 209, 59, 0.4);
+                    }
+                    75% {
+                      border-color: #39ff14; /* neon lime green */
+                      color: #39ff14;
+                      box-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+                    }
+                  }
+                `}</style>
+
                 {/* Pulsing Neon Radar Indicator */}
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-current"></span>
                 </span>
                 
                 <span className="font-extrabold tracking-[0.15em]">Listen to the Club Anthem</span>
