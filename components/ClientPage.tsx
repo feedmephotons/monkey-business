@@ -65,7 +65,34 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
   const [isMusicPlaying, setIsMusicPlaying] = useState(false)
   const [showLyrics, setShowLyrics] = useState(false)
+  const [shareText, setShareText] = useState("Share Song")
   const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const handleShare = async () => {
+    const shareData = {
+      title: "Monkey Biz Poker Anthem",
+      text: "Listen to the brand-new Monkey Biz Poker theme song! 🎰🎶",
+      url: "https://monkeybizpoker.com"
+    };
+    
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText("https://monkeybizpoker.com");
+        setShareText("Copied! 📋");
+        setTimeout(() => setShareText("Share Song"), 2000);
+      }
+    } catch (err) {
+      try {
+        await navigator.clipboard.writeText("https://monkeybizpoker.com");
+        setShareText("Copied! 📋");
+        setTimeout(() => setShareText("Share Song"), 2000);
+      } catch (clipErr) {
+        console.log(clipErr);
+      }
+    }
+  };
 
   const toggleMusic = () => {
     if (audioRef.current) {
@@ -1153,28 +1180,47 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   ))}
                 </div>
 
-                {/* Play/Pause Button */}
-                <button
-                  onClick={toggleMusic}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-yellow hover:bg-yellow/90 text-black font-bold font-mono text-sm tracking-wider uppercase rounded-sm shadow-[0_0_20px_rgba(255,209,59,0.3)] transition"
-                >
-                  {isMusicPlaying ? (
-                    <>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <rect x="4" y="4" width="4" height="16" />
-                        <rect x="16" y="4" width="4" height="16" />
-                      </svg>
-                      Pause Song
-                    </>
-                  ) : (
-                    <>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <polygon points="5,3 19,12 5,21" />
-                      </svg>
-                      Play Song
-                    </>
-                  )}
-                </button>
+                {/* Play & Share Controls */}
+                <div className="flex gap-3 w-full">
+                  {/* Play/Pause Button */}
+                  <button
+                    onClick={toggleMusic}
+                    className="flex-[2] flex items-center justify-center gap-2 px-6 py-3.5 bg-yellow hover:bg-yellow/90 text-black font-bold font-mono text-sm tracking-wider uppercase rounded-sm shadow-[0_0_20px_rgba(255,209,59,0.3)] transition"
+                  >
+                    {isMusicPlaying ? (
+                      <>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <rect x="4" y="4" width="4" height="16" />
+                          <rect x="16" y="4" width="4" height="16" />
+                        </svg>
+                        Pause Song
+                      </>
+                    ) : (
+                      <>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <polygon points="5,3 19,12 5,21" />
+                        </svg>
+                        Play Song
+                      </>
+                    )}
+                  </button>
+
+                  {/* Share Button */}
+                  <button
+                    onClick={handleShare}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-neutral-900 hover:bg-neutral-800 text-yellow font-bold font-mono text-xs tracking-wider uppercase rounded-sm border border-yellow/20 transition shadow-lg"
+                    title="Share this track!"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                      <circle cx="18" cy="5" r="3" />
+                      <circle cx="6" cy="12" r="3" />
+                      <circle cx="18" cy="19" r="3" />
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                    </svg>
+                    <span>{shareText}</span>
+                  </button>
+                </div>
 
                 {/* Native Browser Player Fallback for iOS/iPadOS */}
                 <div className="w-full mt-5 p-3 rounded-md bg-neutral-900/60 border border-yellow/15">
