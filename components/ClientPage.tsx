@@ -1133,6 +1133,15 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </p>
           </div>
 
+          {/* DJ Mandrill Hero Banner */}
+          <div className="relative w-full aspect-[16/9] rounded-sm overflow-hidden border border-yellow/30 shadow-[0_0_30px_rgba(255,204,0,0.15)] bg-neutral-900 mb-10">
+            <img
+              src="/img/mandrill-dj.png"
+              alt="Mandrill DJ spinning turntables"
+              className="w-full h-full object-cover select-none pointer-events-none"
+            />
+          </div>
+
           <div className="grid md:grid-cols-[1fr_1.2fr] gap-8 items-start">
             {/* Player Card (Left) */}
             <div className="relative rounded-sm border-2 border-yellow bg-black shadow-[0_0_40px_rgba(255,209,59,0.15)] p-6 sm:p-8 overflow-hidden">
