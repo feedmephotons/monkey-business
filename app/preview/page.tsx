@@ -38,6 +38,10 @@ export default function AudioDJPreviewPage() {
   const [durationA, setDurationA] = useState(0);
   const [volumeA, setVolumeA] = useState(0.8);
   const [pitchA, setPitchA] = useState(1.0); // Playback rate
+  // Deck A 3-Band EQ Sliders (range: -12dB to +12dB)
+  const [bassA, setBassA] = useState(0);
+  const [midA, setMidA] = useState(0);
+  const [trebleA, setTrebleA] = useState(0);
 
   // Deck B State
   const [trackBIndex, setTrackBIndex] = useState(2); // Default to instrumental beat
@@ -46,6 +50,10 @@ export default function AudioDJPreviewPage() {
   const [durationB, setDurationB] = useState(0);
   const [volumeB, setVolumeB] = useState(0.8);
   const [pitchB, setPitchB] = useState(1.0); // Playback rate
+  // Deck B 3-Band EQ Sliders (range: -12dB to +12dB)
+  const [bassB, setBassB] = useState(0);
+  const [midB, setMidB] = useState(0);
+  const [trebleB, setTrebleB] = useState(0);
 
   // Global Mixer State
   const [crossfader, setCrossfader] = useState(0.5); // 0 = Deck A fully, 1 = Deck B fully, 0.5 = Equal mix
@@ -66,6 +74,22 @@ export default function AudioDJPreviewPage() {
   const analyserRefB = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
 
+  // Biquad EQ Filters Refs
+  const filterBassA = useRef<BiquadFilterNode | null>(null);
+  const filterMidA = useRef<BiquadFilterNode | null>(null);
+  const filterTrebleA = useRef<BiquadFilterNode | null>(null);
+
+  const filterBassB = useRef<BiquadFilterNode | null>(null);
+  const filterMidB = useRef<BiquadFilterNode | null>(null);
+  const filterTrebleB = useRef<BiquadFilterNode | null>(null);
+
+  // Track user-dragged EQ slider levels to shift EQ colors in the draw loop
+  const eqLevelsRef = useRef({ bassA: 0, midA: 0, trebleA: 0, bassB: 0, midB: 0, trebleB: 0 });
+
+  useEffect(() => {
+    eqLevelsRef.current = { bassA, midA, trebleA, bassB, midB, trebleB };
+  }, [bassA, midA, trebleA, bassB, midB, trebleB]);
+
   // Initialize Web Audio API on first user interaction
   const initAudioContext = () => {
     if (audioContextRef.current) return;
@@ -75,29 +99,85 @@ export default function AudioDJPreviewPage() {
       const ctx = new AudioContextClass();
       audioContextRef.current = ctx;
 
-      // Deck A Nodes
+      // Deck A Nodes with 3-Band EQ
       if (audioRefA.current) {
         const sourceA = ctx.createMediaElementSource(audioRefA.current);
+        
+        // Low/Bass Peaking Filter
+        const bFilterA = ctx.createBiquadFilter();
+        bFilterA.type = "peaking";
+        bFilterA.frequency.value = 100; // Bass
+        bFilterA.Q.value = 1.0;
+        bFilterA.gain.value = bassA;
+        filterBassA.current = bFilterA;
+
+        // Mid Peaking Filter
+        const mFilterA = ctx.createBiquadFilter();
+        mFilterA.type = "peaking";
+        mFilterA.frequency.value = 1000; // Mids
+        mFilterA.Q.value = 1.0;
+        mFilterA.gain.value = midA;
+        filterMidA.current = mFilterA;
+
+        // Treble Peaking Filter
+        const tFilterA = ctx.createBiquadFilter();
+        tFilterA.type = "peaking";
+        tFilterA.frequency.value = 8000; // Treble
+        tFilterA.Q.value = 1.0;
+        tFilterA.gain.value = trebleA;
+        filterTrebleA.current = tFilterA;
+
         const analyserA = ctx.createAnalyser();
-        analyserA.fftSize = 128; // Lower FFT size for thick EQ bars
-        sourceA.connect(analyserA);
+        analyserA.fftSize = 128;
+
+        // Connect the chain: Source -> Bass -> Mid -> Treble -> Analyser -> Output
+        sourceA.connect(bFilterA);
+        bFilterA.connect(mFilterA);
+        mFilterA.connect(tFilterA);
+        tFilterA.connect(analyserA);
         analyserA.connect(ctx.destination);
         analyserRefA.current = analyserA;
       }
 
-      // Deck B Nodes
+      // Deck B Nodes with 3-Band EQ
       if (audioRefB.current) {
         const sourceB = ctx.createMediaElementSource(audioRefB.current);
+
+        const bFilterB = ctx.createBiquadFilter();
+        bFilterB.type = "peaking";
+        bFilterB.frequency.value = 100;
+        bFilterB.Q.value = 1.0;
+        bFilterB.gain.value = bassB;
+        filterBassB.current = bFilterB;
+
+        const mFilterB = ctx.createBiquadFilter();
+        mFilterB.type = "peaking";
+        mFilterB.frequency.value = 1000;
+        mFilterB.Q.value = 1.0;
+        mFilterB.gain.value = midB;
+        filterMidB.current = mFilterB;
+
+        const tFilterB = ctx.createBiquadFilter();
+        tFilterB.type = "peaking";
+        tFilterB.frequency.value = 8000;
+        tFilterB.Q.value = 1.0;
+        tFilterB.gain.value = trebleB;
+        filterTrebleB.current = tFilterB;
+
         const analyserB = ctx.createAnalyser();
         analyserB.fftSize = 128;
-        sourceB.connect(analyserB);
+
+        sourceB.connect(bFilterB);
+        bFilterB.connect(mFilterB);
+        mFilterB.connect(tFilterB);
+        tFilterB.connect(analyserB);
         analyserB.connect(ctx.destination);
         analyserRefB.current = analyserB;
       }
 
       startVisualizerLoop();
     } catch (err) {
-      console.error("Web Audio API not supported / failed:", err);
+      console.error("Web Audio API failed to load:", err);
     }
   };
 
@@ -117,20 +197,25 @@ export default function AudioDJPreviewPage() {
       const height = canvas.height;
       ctx.clearRect(0, 0, width, height);
 
-      // Get analyser data
+      // Fetch dynamic analyser levels
       if (analyserRefA.current) analyserRefA.current.getByteFrequencyData(dataArrayA);
       if (analyserRefB.current) analyserRefB.current.getByteFrequencyData(dataArrayB);
 
-      // We combine them based on mixing volumes & crossfader, drawing glowing LIME GREEN bars
       const barWidth = (width / 24) - 2;
-      
-      // We render 24 EQ bars that light up in bright neon lime green
+
+      // Determine active EQ slider heights to modify visualizer colors dynamically!
+      // Sliders go from -12 to +12. Let's normalize to see if they're boosted or cut.
+      const activeBass = (eqLevelsRef.current.bassA + eqLevelsRef.current.bassB) / 2;
+      const activeMid = (eqLevelsRef.current.midA + eqLevelsRef.current.midB) / 2;
+      const activeTreble = (eqLevelsRef.current.trebleA + eqLevelsRef.current.trebleB) / 2;
+
+      // Average boost factor (from 0 to 1, where > 0.5 is pushed up)
+      const overallBoost = Math.max(0, Math.min(1, (activeBass + activeMid + activeTreble + 36) / 72));
+
       for (let i = 0; i < 24; i++) {
-        // Average or blend Deck A and B frequency points based on crossfader
         const valA = dataArrayA[i % 16] || 0;
         const valB = dataArrayB[i % 16] || 0;
         
-        // Blend factor
         const volFactorA = (1 - crossfader) * volumeA;
         const volFactorB = crossfader * volumeB;
         
@@ -140,16 +225,23 @@ export default function AudioDJPreviewPage() {
         const x = i * (barWidth + 2);
         const y = height - barHeight;
 
-        // Draw glowing bright neon lime green bars
-        ctx.save();
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = "#39FF14"; // Lime green glow
+        // Dynamic Color Shifting!
+        // Default is neon lime green.
+        // As they slide the EQ buttons higher (overallBoost increases), we shift colors!
+        // We can transition through hue-rotation (hsl): 
+        // Lime Green is around HSL(120, 100%, 50%)
+        // As boost increases, we rotate towards Yellow/Orange (HSL 60-30) or even Hot Pink/Red (HSL 0-330)!
+        const hue = 120 - (overallBoost * 180); // range from 120 (lime green) down to -60 (neon hot magenta/pink!)
+        const glowColor = `hsl(${hue}, 100%, 50%)`;
 
-        // Gradient from bright lime green to neon yellow-green
+        ctx.save();
+        ctx.shadowBlur = 14;
+        ctx.shadowColor = glowColor;
+
         const grad = ctx.createLinearGradient(x, y, x, height);
-        grad.addColorStop(0, "#39FF14"); // Bright lime
-        grad.addColorStop(0.5, "#00FF66"); // Neon green
-        grad.addColorStop(1, "#1D3A0A"); // Dark green base
+        grad.addColorStop(0, `hsl(${hue}, 100%, 50%)`); // Dynamic neon peak
+        grad.addColorStop(0.6, `hsl(${hue + 30}, 100%, 40%)`); // Shift
+        grad.addColorStop(1, "#0A1405"); // Base dark
         
         ctx.fillStyle = grad;
         ctx.fillRect(x, y, barWidth, barHeight);
@@ -166,10 +258,30 @@ export default function AudioDJPreviewPage() {
     };
   }, []);
 
-  // Update Volumes based on sliders + crossfader
+  // Update EQ filters in real-time when sliders change
+  useEffect(() => {
+    if (filterBassA.current) filterBassA.current.gain.value = bassA;
+  }, [bassA]);
+  useEffect(() => {
+    if (filterMidA.current) filterMidA.current.gain.value = midA;
+  }, [midA]);
+  useEffect(() => {
+    if (filterTrebleA.current) filterTrebleA.current.gain.value = trebleA;
+  }, [trebleA]);
+
+  useEffect(() => {
+    if (filterBassB.current) filterBassB.current.gain.value = bassB;
+  }, [bassB]);
+  useEffect(() => {
+    if (filterMidB.current) filterMidB.current.gain.value = midB;
+  }, [midB]);
+  useEffect(() => {
+    if (filterTrebleB.current) filterTrebleB.current.gain.value = trebleB;
+  }, [trebleB]);
+
+  // Volumes updates
   useEffect(() => {
     if (audioRefA.current) {
-      // Crossfader: left side (0) means full Deck A. Right side (1) means no Deck A.
       const crossFactorA = Math.cos((crossfader * Math.PI) / 2);
       audioRefA.current.volume = volumeA * crossFactorA;
     }
@@ -177,42 +289,31 @@ export default function AudioDJPreviewPage() {
 
   useEffect(() => {
     if (audioRefB.current) {
-      // Crossfader: right side (1) means full Deck B. Left side (0) means no Deck B.
       const crossFactorB = Math.sin((crossfader * Math.PI) / 2);
       audioRefB.current.volume = volumeB * crossFactorB;
     }
   }, [volumeB, crossfader]);
 
-  // Handle Playback rate (pitch controls)
+  // Pitch updates
   useEffect(() => {
-    if (audioRefA.current) {
-      audioRefA.current.playbackRate = pitchA;
-    }
+    if (audioRefA.current) audioRefA.current.playbackRate = pitchA;
   }, [pitchA]);
-
   useEffect(() => {
-    if (audioRefB.current) {
-      audioRefB.current.playbackRate = pitchB;
-    }
+    if (audioRefB.current) audioRefB.current.playbackRate = pitchB;
   }, [pitchB]);
 
-  // Load new track A
+  // Load A / B
   useEffect(() => {
     if (audioRefA.current) {
       audioRefA.current.load();
-      if (isPlayingA) {
-        audioRefA.current.play().catch((err) => console.log(err));
-      }
+      if (isPlayingA) audioRefA.current.play().catch((err) => console.log(err));
     }
   }, [trackAIndex]);
 
-  // Load new track B
   useEffect(() => {
     if (audioRefB.current) {
       audioRefB.current.load();
-      if (isPlayingB) {
-        audioRefB.current.play().catch((err) => console.log(err));
-      }
+      if (isPlayingB) audioRefB.current.play().catch((err) => console.log(err));
     }
   }, [trackBIndex]);
 
@@ -223,9 +324,7 @@ export default function AudioDJPreviewPage() {
       audioRefA.current.pause();
       setIsPlayingA(false);
     } else {
-      audioRefA.current.play()
-        .then(() => setIsPlayingA(true))
-        .catch((err) => console.log(err));
+      audioRefA.current.play().then(() => setIsPlayingA(true)).catch((err) => console.log(err));
     }
   };
 
@@ -236,21 +335,17 @@ export default function AudioDJPreviewPage() {
       audioRefB.current.pause();
       setIsPlayingB(false);
     } else {
-      audioRefB.current.play()
-        .then(() => setIsPlayingB(true))
-        .catch((err) => console.log(err));
+      audioRefB.current.play().then(() => setIsPlayingB(true)).catch((err) => console.log(err));
     }
   };
 
-  // Scratch Effect Simulation
+  // Scratching Decks
   const handleScratchStartA = (e: React.MouseEvent | React.TouchEvent) => {
     initAudioContext();
     setIsScratchingA(true);
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     lastXRefA.current = clientX;
-    if (audioRefA.current && isPlayingA) {
-      audioRefA.current.playbackRate = 0.5; // slow down during manual grab
-    }
+    if (audioRefA.current && isPlayingA) audioRefA.current.playbackRate = 0.5;
   };
 
   const handleScratchMoveA = (e: React.MouseEvent | React.TouchEvent) => {
@@ -258,19 +353,13 @@ export default function AudioDJPreviewPage() {
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     const diff = clientX - lastXRefA.current;
     lastXRefA.current = clientX;
-
-    // Scrub the current playback point of Deck A based on mouse movement
     audioRefA.current.currentTime = Math.max(0, Math.min(audioRefA.current.duration, audioRefA.current.currentTime + diff * 0.08));
-    
-    // Mimic the pitch manipulation of scrubbing
     audioRefA.current.playbackRate = Math.min(3, Math.max(0.2, Math.abs(diff) * 0.5));
   };
 
   const handleScratchEndA = () => {
     setIsScratchingA(false);
-    if (audioRefA.current) {
-      audioRefA.current.playbackRate = pitchA; // restore pitch
-    }
+    if (audioRefA.current) audioRefA.current.playbackRate = pitchA;
   };
 
   const handleScratchStartB = (e: React.MouseEvent | React.TouchEvent) => {
@@ -278,9 +367,7 @@ export default function AudioDJPreviewPage() {
     setIsScratchingB(true);
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     lastXRefB.current = clientX;
-    if (audioRefB.current && isPlayingB) {
-      audioRefB.current.playbackRate = 0.5;
-    }
+    if (audioRefB.current && isPlayingB) audioRefB.current.playbackRate = 0.5;
   };
 
   const handleScratchMoveB = (e: React.MouseEvent | React.TouchEvent) => {
@@ -288,16 +375,13 @@ export default function AudioDJPreviewPage() {
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     const diff = clientX - lastXRefB.current;
     lastXRefB.current = clientX;
-
     audioRefB.current.currentTime = Math.max(0, Math.min(audioRefB.current.duration, audioRefB.current.currentTime + diff * 0.08));
     audioRefB.current.playbackRate = Math.min(3, Math.max(0.2, Math.abs(diff) * 0.5));
   };
 
   const handleScratchEndB = () => {
     setIsScratchingB(false);
-    if (audioRefB.current) {
-      audioRefB.current.playbackRate = pitchB;
-    }
+    if (audioRefB.current) audioRefB.current.playbackRate = pitchB;
   };
 
   const formatTime = (time: number) => {
@@ -309,7 +393,6 @@ export default function AudioDJPreviewPage() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col justify-between select-none">
-      {/* Hidden Audio Elements */}
       <audio
         ref={audioRefA}
         src={`/audio/${TRACKS[trackAIndex].file}`}
@@ -335,38 +418,38 @@ export default function AudioDJPreviewPage() {
           </Link>
           <div className="text-right">
             <h1 className="text-lg font-mono text-yellow font-bold tracking-widest uppercase">
-              Mandrill DJ Decks 🎚️🦧
+              Chameleon DJ Decks 🎚️🦧🌈
             </h1>
             <p className="text-[10px] text-white/50 font-mono uppercase tracking-wider">
-              Monkey Biz Interactive Mixer Studio
+              Monkey Biz Interactive Live EQ Studio
             </p>
           </div>
         </div>
       </header>
 
-      {/* Main Studio Console */}
+      {/* Main Console */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 flex flex-col gap-6 justify-center">
-        {/* EQ Display Header */}
+        {/* Dynamic Equalizer Matrix Display */}
         <div className="bg-[#121212] border border-white/5 rounded-sm p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
           <div className="text-left">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-[#39FF14] font-bold">
-              🟢 Realtime Freq Equalizer (Analyser)
+            <h2 className="text-xs font-mono uppercase tracking-widest text-yellow font-bold flex items-center gap-1.5">
+              <span className="animate-pulse">🟢</span> Dynamic Multi-Color Analyzer Matrix
             </h2>
             <p className="text-[10px] text-white/40 font-mono mt-0.5 uppercase">
-              Web Audio nodes feeding lime green matrix
+              Equalizer shifts color from **Lime Green** to **Hot Pink** as you push the EQ sliders up!
             </p>
           </div>
-          {/* Neon Equalizer Canvas */}
-          <div className="w-full sm:w-80 h-12 bg-black rounded-sm border border-emerald-500/10 overflow-hidden">
-            <canvas ref={canvasRef} width="320" height="48" className="w-full h-full" onClick={initAudioContext} />
+          {/* Glowing Equalizer Screen */}
+          <div className="w-full sm:w-96 h-14 bg-black rounded-sm border border-white/10 overflow-hidden shadow-2xl relative">
+            <canvas ref={canvasRef} width="384" height="56" className="w-full h-full" onClick={initAudioContext} />
           </div>
         </div>
 
         {/* DJ Station Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           {/* Deck A (Left - 5 cols) */}
-          <div className="lg:col-span-5 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-6 relative">
-            <div className="flex justify-between items-center border-b border-white/5 pb-3">
+          <div className="lg:col-span-5 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-5 relative">
+            <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
               <span className="text-xs font-mono font-bold text-yellow">DECK A (LEFT)</span>
               <span className="text-xs font-mono text-white/40">{formatTime(currentTimeA)} / {formatTime(durationA)}</span>
             </div>
@@ -375,15 +458,15 @@ export default function AudioDJPreviewPage() {
             <select
               value={trackAIndex}
               onChange={(e) => setTrackAIndex(parseInt(e.target.value))}
-              className="w-full bg-[#1C1C1C] text-sm text-white border border-white/10 rounded-sm p-2.5 font-mono focus:outline-none focus:border-yellow"
+              className="w-full bg-[#1C1C1C] text-xs text-white border border-white/10 rounded-sm p-2 font-mono focus:outline-none"
             >
               {TRACKS.map((t, idx) => (
                 <option key={t.id} value={idx}>{t.title}</option>
               ))}
             </select>
 
-            {/* Deck A Interactive Turn Table */}
-            <div className="flex justify-center items-center py-4">
+            {/* Interactive Turn Table */}
+            <div className="flex justify-center items-center py-2">
               <div
                 onMouseDown={handleScratchStartA}
                 onMouseMove={handleScratchMoveA}
@@ -392,45 +475,96 @@ export default function AudioDJPreviewPage() {
                 onTouchStart={handleScratchStartA}
                 onTouchMove={handleScratchMoveA}
                 onTouchEnd={handleScratchEndA}
-                className={`w-48 h-48 rounded-full bg-gradient-to-r from-neutral-900 via-zinc-800 to-neutral-900 border-[10px] border-zinc-700 shadow-2xl relative flex items-center justify-center cursor-grab active:cursor-grabbing select-none ${
+                className={`w-40 h-40 rounded-full bg-gradient-to-r from-neutral-900 via-zinc-800 to-neutral-900 border-[8px] border-zinc-700 shadow-xl relative flex items-center justify-center cursor-grab active:cursor-grabbing select-none ${
                   isPlayingA && !isScratchingA ? "animate-[spin_4s_linear_infinite]" : ""
                 }`}
-                style={{
-                  transform: isScratchingA ? "scale(1.02)" : "scale(1)",
-                  transition: "transform 0.1s ease"
-                }}
               >
-                {/* Vinyl Grooves */}
-                <div className="absolute inset-2 rounded-full border border-zinc-900/40" />
-                <div className="absolute inset-6 rounded-full border border-zinc-900/30" />
-                <div className="absolute inset-10 rounded-full border border-zinc-900/20" />
-                <div className="absolute inset-14 rounded-full border border-zinc-900/10" />
-
-                {/* Center Label */}
-                <div className="w-16 h-16 rounded-full bg-yellow flex items-center justify-center border-4 border-black shadow-inner">
-                  <div className="w-4 h-4 rounded-full bg-black flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                <div className="absolute inset-1 rounded-full border border-zinc-900/40" />
+                <div className="absolute inset-4 rounded-full border border-zinc-900/30" />
+                <div className="absolute inset-8 rounded-full border border-zinc-900/20" />
+                <div className="absolute inset-12 rounded-full border border-zinc-900/10" />
+                <div className="w-12 h-12 rounded-full bg-yellow flex items-center justify-center border-4 border-black">
+                  <div className="w-3 h-3 rounded-full bg-black flex items-center justify-center">
+                    <div className="w-1 h-1 rounded-full bg-white" />
                   </div>
                 </div>
+                <div className="absolute -top-1 right-6 w-1 h-12 bg-zinc-400 origin-top rotate-12 pointer-events-none rounded-sm" />
+              </div>
+            </div>
 
-                {/* Needle Arm Indicator */}
-                <div className="absolute -top-1 right-8 w-1 h-14 bg-zinc-400 origin-top rotate-12 pointer-events-none rounded-sm shadow-md" />
+            {/* Deck A 3-Band Equalizer Sliders */}
+            <div className="bg-[#1C1C1C]/60 p-3.5 rounded-sm space-y-3 border border-white/5">
+              <span className="text-[10px] font-mono uppercase text-white/40 tracking-wider block border-b border-white/5 pb-1">
+                🎚️ Deck A 3-Band Parametric EQ
+              </span>
+              <div className="grid grid-cols-3 gap-3">
+                {/* Bass */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-[9px] font-mono text-white/50 uppercase">Bass</span>
+                  <input
+                    type="range"
+                    min="-12"
+                    max="12"
+                    step="0.5"
+                    value={bassA}
+                    onChange={(e) => { initAudioContext(); setBassA(parseFloat(e.target.value)); }}
+                    className="h-20 bg-black rounded-lg appearance-none cursor-pointer accent-yellow [writing-mode:bt-lr] [direction:ltr] select-none"
+                    style={{ WebkitAppearance: "slider-vertical" }}
+                  />
+                  <span className={`text-[10px] font-mono ${bassA > 0 ? "text-[#39FF14]" : bassA < 0 ? "text-red" : "text-white/60"}`}>
+                    {bassA > 0 ? `+${bassA}` : bassA}dB
+                  </span>
+                </div>
+                {/* Mid */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-[9px] font-mono text-white/50 uppercase">Mid</span>
+                  <input
+                    type="range"
+                    min="-12"
+                    max="12"
+                    step="0.5"
+                    value={midA}
+                    onChange={(e) => { initAudioContext(); setMidA(parseFloat(e.target.value)); }}
+                    className="h-20 bg-black rounded-lg appearance-none cursor-pointer accent-yellow [writing-mode:bt-lr] [direction:ltr]"
+                    style={{ WebkitAppearance: "slider-vertical" }}
+                  />
+                  <span className={`text-[10px] font-mono ${midA > 0 ? "text-[#39FF14]" : midA < 0 ? "text-red" : "text-white/60"}`}>
+                    {midA > 0 ? `+${midA}` : midA}dB
+                  </span>
+                </div>
+                {/* Treble */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-[9px] font-mono text-white/50 uppercase">Treble</span>
+                  <input
+                    type="range"
+                    min="-12"
+                    max="12"
+                    step="0.5"
+                    value={trebleA}
+                    onChange={(e) => { initAudioContext(); setTrebleA(parseFloat(e.target.value)); }}
+                    className="h-20 bg-black rounded-lg appearance-none cursor-pointer accent-yellow [writing-mode:bt-lr] [direction:ltr]"
+                    style={{ WebkitAppearance: "slider-vertical" }}
+                  />
+                  <span className={`text-[10px] font-mono ${trebleA > 0 ? "text-[#39FF14]" : trebleA < 0 ? "text-red" : "text-white/60"}`}>
+                    {trebleA > 0 ? `+${trebleA}` : trebleA}dB
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Deck Controls */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 mt-1">
               <button
                 onClick={togglePlayA}
-                className={`py-3 rounded-sm font-mono text-xs font-bold uppercase transition ${
-                  isPlayingA ? "bg-red text-black hover:bg-red/80" : "bg-yellow text-black hover:bg-yellow/80"
+                className={`py-2 rounded-sm font-mono text-xs font-bold uppercase transition ${
+                  isPlayingA ? "bg-red text-black" : "bg-yellow text-black"
                 }`}
               >
-                {isPlayingA ? "❚❚ Pause Deck" : "▶ Play Deck"}
+                {isPlayingA ? "❚❚ Pause" : "▶ Play A"}
               </button>
               
-              <div className="flex flex-col gap-1 justify-center">
-                <span className="text-[9px] font-mono text-white/40 uppercase">Pitch Speed ({pitchA.toFixed(2)}x)</span>
+              <div className="flex flex-col justify-center">
+                <span className="text-[9px] font-mono text-white/40 uppercase">Pitch ({pitchA.toFixed(2)}x)</span>
                 <input
                   type="range"
                   min="0.5"
@@ -444,32 +578,30 @@ export default function AudioDJPreviewPage() {
             </div>
           </div>
 
-          {/* Central DJ Mandrill Mixer (Center - 2 cols) */}
-          <div className="lg:col-span-2 bg-[#1C1C1C] border border-white/5 rounded-sm p-4 flex flex-col justify-between gap-6 shadow-xl relative min-h-[350px]">
+          {/* Central DJ Mandrill Mixer Console (2 cols) */}
+          <div className="lg:col-span-2 bg-[#1C1C1C] border border-white/5 rounded-sm p-4 flex flex-col justify-between gap-5 shadow-xl relative min-h-[400px]">
             <div className="text-center">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#39FF14] bg-[#39FF14]/10 border border-[#39FF14]/20 px-2 py-0.5 rounded-sm inline-block">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-yellow bg-yellow/10 border border-yellow/20 px-2 py-0.5 rounded-sm inline-block">
                 Master DJ
               </span>
             </div>
 
             {/* Mandrill DJ Avatar Icon */}
-            <div className="flex-1 flex flex-col items-center justify-center gap-3">
+            <div className="flex-1 flex flex-col items-center justify-center gap-2">
               <div className="relative">
-                {/* Headphone glows based on play state */}
-                <div className={`absolute -inset-1 rounded-full blur-md opacity-75 ${
-                  isPlayingA || isPlayingB ? "bg-[#39FF14] animate-pulse" : "bg-zinc-700"
-                }`} />
-                <div className="relative w-16 h-16 rounded-full bg-neutral-900 border-2 border-yellow flex items-center justify-center text-2xl">
+                {/* Glow ring rotates color depending on EQ Levels */}
+                <div className={`absolute -inset-1.5 rounded-full blur-md opacity-75 animate-pulse bg-[#39FF14]`} />
+                <div className="relative w-14 h-14 rounded-full bg-neutral-900 border-2 border-yellow flex items-center justify-center text-xl">
                   🦧
                 </div>
               </div>
-              <p className="text-[10px] font-mono text-center text-yellow/80 uppercase font-bold tracking-wider">
-                Scratch & Mix
+              <p className="text-[9px] font-mono text-center text-yellow/80 uppercase font-bold tracking-wider">
+                Interactive Mixer
               </p>
             </div>
 
-            {/* Crossfader */}
-            <div className="space-y-3">
+            {/* Crossfader Controls */}
+            <div className="space-y-2">
               <div className="flex justify-between text-[9px] font-mono text-white/40 uppercase">
                 <span>A</span>
                 <span>Crossfader</span>
@@ -482,7 +614,7 @@ export default function AudioDJPreviewPage() {
                 step="0.01"
                 value={crossfader}
                 onChange={(e) => setCrossfader(parseFloat(e.target.value))}
-                className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-[#39FF14] border border-white/5"
+                className="w-full h-2 bg-black rounded-lg appearance-none cursor-pointer accent-yellow border border-white/5"
               />
               <div className="text-center text-[9px] font-mono text-white/30">
                 {(100 - Math.round(crossfader * 100))}% Left / {Math.round(crossfader * 100)}% Right
@@ -491,8 +623,8 @@ export default function AudioDJPreviewPage() {
           </div>
 
           {/* Deck B (Right - 5 cols) */}
-          <div className="lg:col-span-5 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-6 relative">
-            <div className="flex justify-between items-center border-b border-white/5 pb-3">
+          <div className="lg:col-span-5 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-5 relative">
+            <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
               <span className="text-xs font-mono font-bold text-yellow">DECK B (RIGHT)</span>
               <span className="text-xs font-mono text-white/40">{formatTime(currentTimeB)} / {formatTime(durationB)}</span>
             </div>
@@ -501,15 +633,15 @@ export default function AudioDJPreviewPage() {
             <select
               value={trackBIndex}
               onChange={(e) => setTrackBIndex(parseInt(e.target.value))}
-              className="w-full bg-[#1C1C1C] text-sm text-white border border-white/10 rounded-sm p-2.5 font-mono focus:outline-none focus:border-yellow"
+              className="w-full bg-[#1C1C1C] text-xs text-white border border-white/10 rounded-sm p-2 font-mono focus:outline-none"
             >
               {TRACKS.map((t, idx) => (
                 <option key={t.id} value={idx}>{t.title}</option>
               ))}
             </select>
 
-            {/* Deck B Interactive Turn Table */}
-            <div className="flex justify-center items-center py-4">
+            {/* Interactive Turn Table */}
+            <div className="flex justify-center items-center py-2">
               <div
                 onMouseDown={handleScratchStartB}
                 onMouseMove={handleScratchMoveB}
@@ -518,45 +650,96 @@ export default function AudioDJPreviewPage() {
                 onTouchStart={handleScratchStartB}
                 onTouchMove={handleScratchMoveB}
                 onTouchEnd={handleScratchEndB}
-                className={`w-48 h-48 rounded-full bg-gradient-to-r from-neutral-900 via-zinc-800 to-neutral-900 border-[10px] border-zinc-700 shadow-2xl relative flex items-center justify-center cursor-grab active:cursor-grabbing select-none ${
+                className={`w-40 h-40 rounded-full bg-gradient-to-r from-neutral-900 via-zinc-800 to-neutral-900 border-[8px] border-zinc-700 shadow-xl relative flex items-center justify-center cursor-grab active:cursor-grabbing select-none ${
                   isPlayingB && !isScratchingB ? "animate-[spin_4s_linear_infinite]" : ""
                 }`}
-                style={{
-                  transform: isScratchingB ? "scale(1.02)" : "scale(1)",
-                  transition: "transform 0.1s ease"
-                }}
               >
-                {/* Vinyl Grooves */}
-                <div className="absolute inset-2 rounded-full border border-zinc-900/40" />
-                <div className="absolute inset-6 rounded-full border border-zinc-900/30" />
-                <div className="absolute inset-10 rounded-full border border-zinc-900/20" />
-                <div className="absolute inset-14 rounded-full border border-zinc-900/10" />
-
-                {/* Center Label */}
-                <div className="w-16 h-16 rounded-full bg-yellow flex items-center justify-center border-4 border-black shadow-inner">
-                  <div className="w-4 h-4 rounded-full bg-black flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                <div className="absolute inset-1 rounded-full border border-zinc-900/40" />
+                <div className="absolute inset-4 rounded-full border border-zinc-900/30" />
+                <div className="absolute inset-8 rounded-full border border-zinc-900/20" />
+                <div className="absolute inset-12 rounded-full border border-zinc-900/10" />
+                <div className="w-12 h-12 rounded-full bg-yellow flex items-center justify-center border-4 border-black">
+                  <div className="w-3 h-3 rounded-full bg-black flex items-center justify-center">
+                    <div className="w-1 h-1 rounded-full bg-white" />
                   </div>
                 </div>
+                <div className="absolute -top-1 right-6 w-1 h-12 bg-zinc-400 origin-top rotate-12 pointer-events-none rounded-sm" />
+              </div>
+            </div>
 
-                {/* Needle Arm Indicator */}
-                <div className="absolute -top-1 right-8 w-1 h-14 bg-zinc-400 origin-top rotate-12 pointer-events-none rounded-sm shadow-md" />
+            {/* Deck B 3-Band Equalizer Sliders */}
+            <div className="bg-[#1C1C1C]/60 p-3.5 rounded-sm space-y-3 border border-white/5">
+              <span className="text-[10px] font-mono uppercase text-white/40 tracking-wider block border-b border-white/5 pb-1">
+                🎚️ Deck B 3-Band Parametric EQ
+              </span>
+              <div className="grid grid-cols-3 gap-3">
+                {/* Bass */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-[9px] font-mono text-white/50 uppercase">Bass</span>
+                  <input
+                    type="range"
+                    min="-12"
+                    max="12"
+                    step="0.5"
+                    value={bassB}
+                    onChange={(e) => { initAudioContext(); setBassB(parseFloat(e.target.value)); }}
+                    className="h-20 bg-black rounded-lg appearance-none cursor-pointer accent-yellow [writing-mode:bt-lr] [direction:ltr]"
+                    style={{ WebkitAppearance: "slider-vertical" }}
+                  />
+                  <span className={`text-[10px] font-mono ${bassB > 0 ? "text-[#39FF14]" : bassB < 0 ? "text-red" : "text-white/60"}`}>
+                    {bassB > 0 ? `+${bassB}` : bassB}dB
+                  </span>
+                </div>
+                {/* Mid */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-[9px] font-mono text-white/50 uppercase">Mid</span>
+                  <input
+                    type="range"
+                    min="-12"
+                    max="12"
+                    step="0.5"
+                    value={midB}
+                    onChange={(e) => { initAudioContext(); setMidB(parseFloat(e.target.value)); }}
+                    className="h-20 bg-black rounded-lg appearance-none cursor-pointer accent-yellow [writing-mode:bt-lr] [direction:ltr]"
+                    style={{ WebkitAppearance: "slider-vertical" }}
+                  />
+                  <span className={`text-[10px] font-mono ${midB > 0 ? "text-[#39FF14]" : midB < 0 ? "text-red" : "text-white/60"}`}>
+                    {midB > 0 ? `+${midB}` : midB}dB
+                  </span>
+                </div>
+                {/* Treble */}
+                <div className="flex flex-col items-center gap-1.5">
+                  <span className="text-[9px] font-mono text-white/50 uppercase">Treble</span>
+                  <input
+                    type="range"
+                    min="-12"
+                    max="12"
+                    step="0.5"
+                    value={trebleB}
+                    onChange={(e) => { initAudioContext(); setTrebleB(parseFloat(e.target.value)); }}
+                    className="h-20 bg-black rounded-lg appearance-none cursor-pointer accent-yellow [writing-mode:bt-lr] [direction:ltr]"
+                    style={{ WebkitAppearance: "slider-vertical" }}
+                  />
+                  <span className={`text-[10px] font-mono ${trebleB > 0 ? "text-[#39FF14]" : trebleB < 0 ? "text-red" : "text-white/60"}`}>
+                    {trebleB > 0 ? `+${trebleB}` : trebleB}dB
+                  </span>
+                </div>
               </div>
             </div>
 
             {/* Deck Controls */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 mt-1">
               <button
                 onClick={togglePlayB}
-                className={`py-3 rounded-sm font-mono text-xs font-bold uppercase transition ${
-                  isPlayingB ? "bg-red text-black hover:bg-red/80" : "bg-yellow text-black hover:bg-yellow/80"
+                className={`py-2 rounded-sm font-mono text-xs font-bold uppercase transition ${
+                  isPlayingB ? "bg-red text-black" : "bg-yellow text-black"
                 }`}
               >
-                {isPlayingB ? "❚❚ Pause Deck" : "▶ Play Deck"}
+                {isPlayingB ? "❚❚ Pause" : "▶ Play B"}
               </button>
               
-              <div className="flex flex-col gap-1 justify-center">
-                <span className="text-[9px] font-mono text-white/40 uppercase">Pitch Speed ({pitchB.toFixed(2)}x)</span>
+              <div className="flex flex-col justify-center">
+                <span className="text-[9px] font-mono text-white/40 uppercase">Pitch ({pitchB.toFixed(2)}x)</span>
                 <input
                   type="range"
                   min="0.5"
@@ -571,17 +754,17 @@ export default function AudioDJPreviewPage() {
           </div>
         </div>
 
-        {/* DJ Mixer Hints */}
+        {/* Hints */}
         <div className="bg-[#1C1C1C] border border-white/5 rounded-sm p-4 text-center">
           <p className="text-xs text-white/50 font-mono uppercase tracking-wider leading-relaxed">
-            🎧 <strong className="text-yellow">DJ Instructions:</strong> Click and hold/drag on either **Vinyl Record** to scratch, spin-back, or manually seek! Use the center **Crossfader** to blend Deck A and B together. Click any playbar or select tracks to mix different beats!
+            🎨 <strong className="text-yellow">Chameleon Visualizer Logic:</strong> Drag any of the **BASS, MID, or TREBLE sliders** up or down. As you boost the sliders and make the mix louder and more aggressive, the Equalizer visualizer smoothly shifts color from **Lime Green** to a glowing **Neon Yellow** and all the way to a fiery, vibrant **Hot Pink/Magenta**!
           </p>
         </div>
       </main>
 
       {/* Footer */}
       <footer className="border-t border-white/5 bg-[#050505] py-6 text-center text-[10px] text-white/30 font-mono uppercase tracking-wider">
-        © {new Date().getFullYear()} Monkey Biz Poker Club. DJ Mixer Preview Console.
+        © {new Date().getFullYear()} Monkey Biz Poker Club. Chameleon Live Equalizer Demo.
       </footer>
     </div>
   );
