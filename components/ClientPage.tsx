@@ -364,6 +364,20 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </a>
             </div>
 
+            {/* Listen to Club Anthem Link (Option 3) */}
+            <div className="pt-2 pl-1">
+              <a
+                href="#music"
+                className="inline-flex items-center gap-2 text-yellow hover:text-yellow/80 font-mono text-xs uppercase tracking-widest transition-all duration-200"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow"></span>
+                </span>
+                <span>Listen to the Club Anthem 🎵</span>
+              </a>
+            </div>
+
             <div className="flex items-center gap-5 pt-6 text-white/50">
               <span className="font-[family-name:var(--font-mono)] text-[0.6rem] sm:text-[0.65rem] uppercase tracking-[0.3em]">
                 Freerolls• High Hands•Tournaments• Bananas• A Monkey In A Suit
