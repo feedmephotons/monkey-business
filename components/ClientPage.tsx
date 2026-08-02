@@ -404,8 +404,11 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 
                 <span className="font-extrabold tracking-[0.15em]">Listen to the Club Anthem</span>
                 
-                {/* Animated Music Note */}
-                <span className="inline-block group-hover:animate-bounce">🎵</span>
+                {/* Animated Music Note and Speaker */}
+                <span className="inline-flex items-center gap-1 group-hover:animate-bounce">
+                  <span className="text-white">🎵</span>
+                  <span className="text-white text-sm">🔊</span>
+                </span>
               </a>
             </div>
 
