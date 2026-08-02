@@ -1239,7 +1239,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
 
       {/* ─────────────────────────── MONKEY MUSIC ─────────────────────────── */}
-      <section id="music" className="relative py-24 px-5 sm:px-10 overflow-hidden bg-[#0c0c0c] border-t border-yellow/20">
+      <section id="music" className="relative py-24 px-5 sm:px-10 overflow-hidden bg-[#0c0c0c] border-t border-yellow/20 z-10">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent opacity-40" />
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
