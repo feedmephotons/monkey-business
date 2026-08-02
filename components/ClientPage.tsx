@@ -407,7 +407,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 {/* Animated Music Note and Speaker */}
                 <span className="inline-flex items-center gap-1 group-hover:animate-bounce">
                   <span className="text-white">🎵</span>
-                  <span className="text-white text-sm">🔊</span>
+                  <span className="text-red-500 font-bold">🔊</span>
                 </span>
               </a>
             </div>
