@@ -1164,14 +1164,14 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                         <rect x="4" y="4" width="4" height="16" />
                         <rect x="16" y="4" width="4" height="16" />
                       </svg>
-                      Pause Beat
+                      Pause Song
                     </>
                   ) : (
                     <>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                         <polygon points="5,3 19,12 5,21" />
                       </svg>
-                      Play Beat
+                      Play Song
                     </>
                   )}
                 </button>
@@ -1183,7 +1183,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   </div>
                   <audio
                     ref={audioRef}
-                    src="/audio/monkey-biz-beat.mp3"
+                    src="/audio/monkey-biz-poker-2.mp3"
                     loop
                     preload="auto"
                     playsInline
