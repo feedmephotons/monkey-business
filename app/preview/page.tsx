@@ -447,8 +447,8 @@ export default function AudioDJPreviewPage() {
 
         {/* DJ Station Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          {/* Deck A (Left - 5 cols) */}
-          <div className="lg:col-span-5 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-5 relative">
+          {/* Deck A (Left - 4 cols) */}
+          <div className="lg:col-span-4 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-5 relative">
             <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
               <span className="text-xs font-mono font-bold text-yellow">DECK A (LEFT)</span>
               <span className="text-xs font-mono text-white/40">{formatTime(currentTimeA)} / {formatTime(durationA)}</span>
@@ -578,25 +578,29 @@ export default function AudioDJPreviewPage() {
             </div>
           </div>
 
-          {/* Central DJ Mandrill Mixer Console (2 cols) */}
-          <div className="lg:col-span-2 bg-[#1C1C1C] border border-white/5 rounded-sm p-4 flex flex-col justify-between gap-5 shadow-xl relative min-h-[400px]">
+          {/* Central DJ Mandrill Mixer Console (4 cols) */}
+          <div className="lg:col-span-4 bg-[#1C1C1C] border border-white/5 rounded-sm p-4 flex flex-col justify-between gap-5 shadow-xl relative min-h-[400px]">
             <div className="text-center">
               <span className="text-[10px] font-mono uppercase tracking-widest text-yellow bg-yellow/10 border border-yellow/20 px-2 py-0.5 rounded-sm inline-block">
-                Master DJ
+                Master DJ Console
               </span>
             </div>
 
-            {/* Mandrill DJ Avatar Icon */}
-            <div className="flex-1 flex flex-col items-center justify-center gap-2">
-              <div className="relative">
-                {/* Glow ring rotates color depending on EQ Levels */}
-                <div className={`absolute -inset-1.5 rounded-full blur-md opacity-75 animate-pulse bg-[#39FF14]`} />
-                <div className="relative w-14 h-14 rounded-full bg-neutral-900 border-2 border-yellow flex items-center justify-center text-xl">
-                  🦧
-                </div>
+            {/* Mandrill DJ Avatar Image */}
+            <div className="flex-1 flex flex-col items-center justify-center gap-3">
+              <div className="relative w-full max-w-[280px] aspect-[16/9] rounded-sm overflow-hidden border border-yellow/30 shadow-[0_0_20px_rgba(255,204,0,0.15)] bg-black/40">
+                {/* Glow overlay that pulses when playing */}
+                <div className={`absolute inset-0 border-[2px] rounded-sm pointer-events-none transition-all duration-300 z-10 ${
+                  isPlayingA || isPlayingB ? "border-[#39FF14] shadow-[inset_0_0_15px_rgba(57,255,20,0.3)]" : "border-yellow/20"
+                }`} />
+                <img
+                  src="/img/mandrill-dj.png"
+                  alt="Mandrill DJ Spinning Vinyls"
+                  className="w-full h-full object-cover select-none pointer-events-none"
+                />
               </div>
-              <p className="text-[9px] font-mono text-center text-yellow/80 uppercase font-bold tracking-wider">
-                Interactive Mixer
+              <p className="text-[10px] font-mono text-center text-yellow/80 uppercase font-bold tracking-wider">
+                Mandrill DJ on the Decks 🦧🎧
               </p>
             </div>
 
@@ -622,8 +626,8 @@ export default function AudioDJPreviewPage() {
             </div>
           </div>
 
-          {/* Deck B (Right - 5 cols) */}
-          <div className="lg:col-span-5 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-5 relative">
+          {/* Deck B (Right - 4 cols) */}
+          <div className="lg:col-span-4 bg-[#121212] border border-white/5 rounded-sm p-6 flex flex-col gap-5 relative">
             <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
               <span className="text-xs font-mono font-bold text-yellow">DECK B (RIGHT)</span>
               <span className="text-xs font-mono text-white/40">{formatTime(currentTimeB)} / {formatTime(durationB)}</span>
