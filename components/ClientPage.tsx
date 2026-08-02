@@ -68,6 +68,79 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
   const [shareText, setShareText] = useState("Share Song")
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
+  const [spinAngle, setSpinAngle] = useState(0)
+  const [isScratching, setIsScratching] = useState(false)
+  const scratchStartRef = useRef<number>(0)
+  const scratchTimeRef = useRef<number>(0)
+  const lyricsContainerRef = useRef<HTMLDivElement | null>(null)
+
+  // Turntable spin loop and auto-scroll lyrics
+  useEffect(() => {
+    let animId: number;
+    const updateLoop = () => {
+      if (isMusicPlaying && !isScratching) {
+        setSpinAngle(prev => (prev + 1.2) % 360);
+      }
+      
+      // Auto-scroll lyrics based on current track position
+      if (audioRef.current && lyricsContainerRef.current && isMusicPlaying) {
+        const { currentTime, duration } = audioRef.current;
+        if (duration > 0) {
+          const pct = currentTime / duration;
+          const container = lyricsContainerRef.current;
+          const targetScroll = pct * (container.scrollHeight - container.clientHeight);
+          container.scrollTop = targetScroll;
+        }
+      }
+      
+      animId = requestAnimationFrame(updateLoop);
+    };
+    animId = requestAnimationFrame(updateLoop);
+    return () => cancelAnimationFrame(animId);
+  }, [isMusicPlaying, isScratching]);
+
+  // Handle scratching interaction on the vinyl record
+  const handleVinylStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!audioRef.current) return;
+    setIsScratching(true);
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    scratchStartRef.current = clientX;
+    scratchTimeRef.current = audioRef.current.currentTime;
+    audioRef.current.pause();
+  };
+
+  const handleVinylMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isScratching || !audioRef.current) return;
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const deltaX = clientX - scratchStartRef.current;
+    
+    // Scale deltaX to seconds (e.g., 100px of drag is 1.5 seconds of scrubbing)
+    const timeShift = (deltaX / 100) * 1.5;
+    let newTime = scratchTimeRef.current + timeShift;
+    
+    // Bound the audio scrubbing
+    if (audioRef.current.duration) {
+      newTime = Math.max(0, Math.min(audioRef.current.duration, newTime));
+      audioRef.current.currentTime = newTime;
+      
+      // Rotate vinyl with the scratch drag
+      setSpinAngle(prev => (prev + deltaX * 0.5) % 360);
+      
+      // Rapid play/pause to generate the scratching audio effect
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch(() => {});
+      }
+    }
+  };
+
+  const handleVinylEnd = () => {
+    if (!isScratching) return;
+    setIsScratching(false);
+    if (isMusicPlaying && audioRef.current) {
+      audioRef.current.play().catch(() => {});
+    }
+  };
+
   const handleShare = async () => {
     const shareData = {
       title: "Monkey Biz Poker Anthem",
@@ -1148,23 +1221,48 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <div className="absolute top-0 right-0 w-24 h-24 bg-yellow/5 rounded-full blur-2xl -z-10" />
               
               <div className="flex flex-col items-center text-center">
-                {/* Spinning Vinyl Record Player Device */}
-                <div 
-                  onClick={toggleMusic}
-                  className="relative w-36 h-36 bg-neutral-950 border-4 border-yellow hover:border-yellow/80 rounded-full flex items-center justify-center overflow-hidden shadow-2xl mb-6 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300"
-                  title="Click to play/pause"
-                >
-                  {/* Outer Vinyl grooves */}
-                  <div className={`absolute inset-1 rounded-full bg-black border border-neutral-800 flex items-center justify-center ${
-                    isMusicPlaying ? 'animate-[spin_4s_linear_infinite]' : ''
-                  }`}>
-                    <div className="absolute inset-2.5 rounded-full border border-neutral-800/40" />
-                    <div className="absolute inset-6 rounded-full border border-neutral-800/30" />
-                    <div className="absolute inset-9 rounded-full border border-neutral-800/25" />
-                    <div className="absolute inset-12 rounded-full border border-neutral-800/10" />
+                {/* Turntable Platter Deck Base (Realistic Square Design) */}
+                <div className="relative w-44 h-44 bg-zinc-900 border-2 border-zinc-800 rounded-sm p-3 shadow-2xl flex items-center justify-center mb-6">
+                  {/* Glowing Platter Neon Ring */}
+                  <div className={`absolute inset-2.5 rounded-full border-2 transition-all duration-300 ${
+                    isMusicPlaying ? 'border-yellow/50 shadow-[0_0_15px_rgba(255,209,59,0.3)] animate-pulse' : 'border-neutral-800'
+                  }`} />
+
+                  {/* Pitch Control Sliders decorative layout */}
+                  <div className="absolute right-2 top-3 bottom-3 w-1.5 bg-neutral-950 rounded-full flex flex-col justify-between py-1 px-[1px] opacity-60">
+                    <div className="h-2 w-full bg-zinc-700 rounded-sm" />
+                    <div className="h-1.5 w-1.5 bg-yellow rounded-full shadow" style={{ transform: isMusicPlaying ? 'translateY(10px)' : 'translateY(0)' }} />
+                    <div className="h-2 w-full bg-zinc-700 rounded-sm" />
+                  </div>
+
+                  {/* Spinning Vinyl Record Disk */}
+                  <div 
+                    onMouseDown={handleVinylStart}
+                    onMouseMove={handleVinylMove}
+                    onMouseUp={handleVinylEnd}
+                    onMouseLeave={handleVinylEnd}
+                    onTouchStart={handleVinylStart}
+                    onTouchMove={handleVinylMove}
+                    onTouchEnd={handleVinylEnd}
+                    onClick={(e) => {
+                      // Only toggle play/pause if the drag movement was negligible (meaning it's a tap/click)
+                      if (!isScratching && Math.abs(scratchStartRef.current - ('touches' in e ? 0 : e.clientX)) < 5) {
+                        toggleMusic();
+                      }
+                    }}
+                    style={{ transform: `rotate(${spinAngle}deg)` }}
+                    className="relative w-36 h-36 rounded-full bg-black border-4 border-neutral-950 flex items-center justify-center cursor-grab active:cursor-grabbing select-none shadow-[0_0_20px_rgba(0,0,0,0.8)] z-10 animate-none"
+                    title="Drag left/right to scratch the track! Tap to Play/Pause."
+                  >
+                    {/* Vinyl grooves lines */}
+                    <div className="absolute inset-1.5 rounded-full border border-neutral-800/40" />
+                    <div className="absolute inset-4 rounded-full border border-neutral-800/30" />
+                    <div className="absolute inset-7 rounded-full border border-neutral-800/25" />
+                    <div className="absolute inset-10 rounded-full border border-neutral-800/15" />
+                    <div className="absolute inset-13 rounded-full border border-neutral-800/10" />
 
                     {/* Central Sticker */}
-                    <div className="w-12 h-12 rounded-full bg-yellow border-4 border-black flex flex-col items-center justify-center shadow-inner">
+                    <div className="w-12 h-12 rounded-full bg-yellow border-4 border-black flex flex-col items-center justify-center shadow-inner select-none pointer-events-none">
                       <span className="text-[5px] font-mono text-black font-extrabold uppercase tracking-tighter leading-none">MONKEY</span>
                       <span className="text-[5px] font-mono text-black font-extrabold uppercase tracking-tighter leading-none">BIZ</span>
                     </div>
@@ -1172,14 +1270,14 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
                   {/* Tiny Tone Arm Needle Overlay */}
                   <svg 
-                    className={`absolute top-1 right-3 w-10 h-16 origin-[30px_5px] transition-transform duration-700 pointer-events-none z-10 ${
-                      isMusicPlaying ? 'rotate-[20deg]' : 'rotate-0'
+                    className={`absolute top-2 right-4 w-12 h-20 origin-[30px_5px] transition-transform duration-700 pointer-events-none z-20 ${
+                      isMusicPlaying ? 'rotate-[25deg]' : 'rotate-0'
                     }`}
                     viewBox="0 0 40 60"
                   >
                     <circle cx="30" cy="5" r="5" fill="#52525b" />
-                    <path d="M30 5 L12 45 L6 45" stroke="#d4d4d8" strokeWidth="2" fill="none" strokeLinecap="round" />
-                    <rect x="4" y="42" width="3" height="6" fill="#3f3f46" transform="rotate(15, 6, 45)" />
+                    <path d="M30 5 L12 45 L6 45" stroke="#d4d4d8" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                    <rect x="4" y="42" width="4" height="8" fill="#3f3f46" transform="rotate(15, 6, 45)" />
                   </svg>
                 </div>
 
@@ -1278,7 +1376,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
 
             {/* Lyrics Sheet (Right) */}
-            <div className="rounded-sm border border-light-blue/20 bg-navy-deep/60 backdrop-blur p-6 sm:p-8 max-h-[500px] overflow-y-auto select-text shadow-xl">
+            <div ref={lyricsContainerRef} className="scroll-smooth rounded-sm border border-light-blue/20 bg-navy-deep/60 backdrop-blur p-6 sm:p-8 max-h-[500px] overflow-y-auto select-text shadow-xl">
               <h4 className="font-[family-name:var(--font-headline)] text-2xl text-yellow mb-1">
                 Lyrics Sheet
               </h4>
