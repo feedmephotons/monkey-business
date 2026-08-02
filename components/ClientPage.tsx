@@ -364,17 +364,22 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </a>
             </div>
 
-            {/* Listen to Club Anthem Link (Option 3) */}
-            <div className="pt-2 pl-1">
+            {/* Listen to Club Anthem Link (Upgraded High-Impact Neon Button) */}
+            <div className="pt-4 pl-1">
               <a
                 href="#music"
-                className="inline-flex items-center gap-2 text-yellow hover:text-yellow/80 font-mono text-xs uppercase tracking-widest transition-all duration-200"
+                className="group relative inline-flex items-center gap-3 px-6 py-3 bg-neutral-900 hover:bg-neutral-800 border-2 border-yellow/40 hover:border-yellow text-yellow rounded font-mono text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(255,209,59,0.15)] hover:shadow-[0_0_25px_rgba(255,209,59,0.3)] hover:-translate-y-[1px] active:translate-y-[1px] transition-all duration-300"
               >
-                <span className="relative flex h-2 w-2">
+                {/* Pulsing Neon Radar Indicator */}
+                <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow"></span>
                 </span>
-                <span>Listen to the Club Anthem 🎵</span>
+                
+                <span className="font-extrabold tracking-[0.15em]">Listen to the Club Anthem</span>
+                
+                {/* Animated Music Note */}
+                <span className="inline-block group-hover:animate-bounce">🎵</span>
               </a>
             </div>
 
