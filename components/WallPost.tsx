@@ -375,7 +375,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
     if (score <= 4) return "Lukewarm Beat"
     if (score <= 6) return "Ouch, Steaming! 🤕"
     if (score <= 8) return "Pure Highway Robbery! 🤬"
-    return "ABSOLUTELY RIGGED! 🥵🔥"
+    return "HORSE 💩"
   }
 
   const [localHeat, setLocalHeat] = useState(5)
@@ -916,6 +916,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     min="1"
                     max="10"
                     value={localHeat}
+                    onClick={(e) => e.stopPropagation()}
                     onChange={(e) => setLocalHeat(parseInt(e.target.value))}
                     className="flex-1 accent-red cursor-pointer h-1.5 rounded-lg bg-white/10 outline-none"
                     style={{
@@ -944,7 +945,11 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   </span>
                   
                   <button
-                    onClick={handleHeatRatingSubmit}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleHeatRatingSubmit()
+                    }}
                     disabled={isPending}
                     className="bg-yellow hover:bg-yellow-bright disabled:opacity-40 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md"
                   >
