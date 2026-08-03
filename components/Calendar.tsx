@@ -311,8 +311,13 @@ export default function Calendar() {
 
               <div className="w-12 h-1 bg-[#00c6ff]/20 mx-auto rounded-full mb-6" />
 
+              {/* Description */}
               <p className="font-[family-name:var(--font-body)] text-white/70 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
-                Stack chips, splash pots, and make some mischief at the lounge! Add this event to your phone's calendar so you never miss a game.
+                {selectedDay.type === 'seven-deuce' ? (
+                  "Every Wednesday in august we’re putting 72 game on the table. must be 72 off suit to count."
+                ) : (
+                  "Stack chips, splash pots, and make some mischief at the lounge! Add this event to your phone's calendar so you never miss a game."
+                )}
               </p>
 
               {/* Calendar Buttons */}
