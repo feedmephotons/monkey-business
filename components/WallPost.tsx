@@ -452,10 +452,15 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
   return (
     <div
+      onClick={() => {
+        if (!post.is_bad_beat && mediaUrl) {
+          window.open(mediaUrl, '_blank')
+        }
+      }}
       className={`wall-card rise flex flex-col justify-between h-full relative overflow-visible transition-all duration-200 ${
         post.is_bad_beat 
           ? 'border-2 border-yellow shadow-[0_0_20px_rgba(255,209,59,0.35)] bg-[#0f0f0f] rounded-xl' 
-          : ''
+          : 'cursor-pointer'
       }`}
       style={{
         background: post.is_bad_beat ? undefined : post.bg_color,
