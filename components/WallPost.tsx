@@ -915,31 +915,28 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
             {/* Slider or confirmation message */}
             {!hasRatedHeat ? (
               <div className="space-y-3 px-1 mt-3">
-                <div className="flex items-center gap-3">
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    value={localHeat}
-                    onChange={(e) => setLocalHeat(parseInt(e.target.value))}
-                    onInput={(e) => setLocalHeat(parseInt((e.target as HTMLInputElement).value))}
-                    className="flex-1 accent-red cursor-pointer h-1.5 rounded-lg bg-white/10 outline-none relative z-50"
-                    style={{
-                      // Visual glow color based on current local heat selection
-                      boxShadow: `0 0 8px ${localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'}44`
-                    }}
-                  />
-                  <span 
-                    className="w-7 font-black font-mono text-sm leading-none shrink-0"
-                    style={{
-                      color: localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'
-                    }}
-                  >
-                    {localHeat}
-                  </span>
+                <div className="flex flex-wrap justify-center gap-1.5 py-1">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setLocalHeat(num)}
+                      className={`w-7 h-7 rounded-full font-black font-mono text-xs flex items-center justify-center transition-all cursor-pointer relative z-50 shadow-sm border ${
+                        localHeat === num
+                          ? num >= 8
+                            ? 'bg-red text-white border-red shadow-[0_0_8px_#ef4444]'
+                            : num >= 5
+                            ? 'bg-orange text-white border-orange shadow-[0_0_8px_#f97316]'
+                            : 'bg-yellow text-felt-deep border-yellow shadow-[0_0_8px_#ffd13b]'
+                          : 'bg-black/40 hover:bg-white/10 text-white/70 border-white/10'
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
                 </div>
 
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center justify-between gap-2 border-t border-white/5 pt-2">
                   <span 
                     className="text-[0.65rem] font-bold tracking-wide transition-all uppercase"
                     style={{
@@ -953,9 +950,9 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     type="button"
                     onClick={handleHeatRatingSubmit}
                     disabled={isPending}
-                    className="bg-yellow hover:bg-yellow-bright disabled:bg-yellow/10 disabled:text-white/20 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50 border border-yellow/40"
+                    className="bg-yellow hover:bg-yellow-bright text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50"
                   >
-                    SUBMIT RATING
+                    SUBMIT VOTE
                   </button>
                 </div>
               </div>
