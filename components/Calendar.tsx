@@ -318,7 +318,7 @@ export default function Calendar() {
                 ) : selectedDay.type === 'bomb-pot' ? (
                   "Bomb pots every 15-25 minutes, 2 big blinds every bomb pot. Go straight to the flop."
                 ) : selectedDay.type === 'default' ? (
-                  ".50 1 dollar blinds classic 9 man hold em. Starts when 7 pkayers sit. Good Luck!"
+                  ".50 1 dollar blinds classic 9 man hold em. Starts when 7 players sit. Good Luck!"
                 ) : (
                   "Stack chips, splash pots, and make some mischief at the lounge! Add this event to your phone's calendar so you never miss a game."
                 )}
