@@ -1030,13 +1030,19 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               Monkey Biz Poker
             </span>
             <div className="flex items-center gap-4">
-              <a
-                href="/bad-beats/archive"
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveWallTab('bad_beat');
+                  setTimeout(() => {
+                    document.getElementById('wall-tab-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 50);
+                }}
                 className="relative px-5 py-2 rounded-full bg-gradient-to-r from-yellow via-amber-400 to-yellow text-black font-extrabold text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_12px_rgba(250,204,21,0.5)] hover:shadow-[0_0_22px_rgba(250,204,21,0.85)] border-2 border-white/20 flex items-center gap-1.5 font-[family-name:var(--font-mono)]"
               >
-                <span className="text-sm select-none animate-bounce">🏆</span>
-                <span>Bad Beat Archive</span>
-              </a>
+                <span className="text-sm select-none animate-bounce">🍌</span>
+                <span>Splat a Bad Beat</span>
+              </button>
               <div className="w-8 h-8 rounded-full bg-yellow/10 border border-yellow/30 flex items-center justify-center font-bold text-sm text-yellow">
                 🐒
               </div>
@@ -1076,8 +1082,14 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                     : 'text-white/60 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <span>Bad Beat Archive</span>
-                <span>🏆</span>
+                <span>Banana Splats</span>
+                <span>🍌</span>
+                
+                {posts.filter(p => p.is_bad_beat).length > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 bg-yellow text-felt-deep text-[0.65rem] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-felt-deep shadow">
+                    {posts.filter(p => p.is_bad_beat).length}
+                  </span>
+                )}
               </button>
             </div>
           </div>
@@ -1147,38 +1159,52 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             <div className="w-full max-w-xl mx-auto mb-10 bg-navy-deep/80 border border-yellow/30 rounded-xl p-6 shadow-xl relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-yellow/5 to-transparent pointer-events-none" />
               <div className="flex items-center justify-center gap-2 mb-4">
-                <span className="text-2xl animate-bounce">🏆</span>
+                <span className="text-2xl animate-bounce">🍌</span>
                 <h3 className="font-[family-name:var(--font-display)] text-xl text-yellow uppercase tracking-wider">
-                  Splat a Bad Beat — Archives
+                  Splat a Bad Beat — Contest Rules
                 </h3>
-                <span className="text-2xl animate-bounce">🏆</span>
+                <span className="text-2xl animate-bounce">🍌</span>
               </div>
-              <div className="space-y-4 text-sm text-cream/90 font-[family-name:var(--font-body)]">
+              <div className="space-y-3 text-sm text-cream/90 font-[family-name:var(--font-body)]">
                 <p className="text-center italic text-xs text-white/60 mb-2">
-                  Got coolered? Splatted on the river? Active submissions have closed. Visit our Hall of Pain to view historical votes and records!
+                  Got coolered? Splatted on the river? Don't suffer in silence—share your pain on the Wall!
                 </p>
-                <div className="text-center py-2">
-                  <a
-                    href="/bad-beats/archive"
-                    className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-red via-red-600 to-red text-white font-extrabold rounded-full hover:scale-105 hover:shadow-[0_0_25px_rgba(239,68,68,0.6)] transition-all duration-200 text-sm shadow-md cursor-pointer select-none border border-white/20 uppercase tracking-widest font-[family-name:var(--font-mono)]"
-                  >
-                    <span>🎰 VIEW BAD BEAT ARCHIVE</span>
-                    <span>→</span>
-                  </a>
+                <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
+                  <span className="text-lg">🎯</span>
+                  <div>
+                    <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">The Goal:</strong>
+                    Paste your PokerBros hand link and bad beat story. The weekly bad beat hand with the highest average point score wins!
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
+                  <span className="text-lg">🗳️</span>
+                  <div>
+                    <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">Your Votes:</strong>
+                    Cast a direct rating from <strong className="text-yellow">1 to 10</strong> (limit 1 vote per hand). The table reaction stickers (Banana Splats, Suffer, Ice) are infinite and purely for fun!
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
+                  <span className="text-lg">🏆</span>
+                  <div>
+                    <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">Weekly Contest:</strong>
+                    The wall resets every week, and the bad beat submission with the highest mathematical 1-10 average is crowned the champion.
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {/* FORM CONTAINER */}
-          {activeWallTab === 'general' && (
-            <div id="wall-form-container" className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
-              <WallForm 
-                isBadBeat={false} 
-                placeholder="Brag, rib, or leave a love letter..."
-              />
-            </div>
-          )}
+          <div id="wall-form-container" className="rounded-sm border border-light-blue/30 bg-navy-deep/70 backdrop-blur p-6 sm:p-10 mb-14">
+            <WallForm 
+              isBadBeat={activeWallTab === 'bad_beat'} 
+              placeholder={
+                activeWallTab === 'bad_beat' 
+                  ? "Paste your PokerBros hand link here (e.g. https://s.pokerbros.net/?t=...) along with your story!"
+                  : "Brag, rib, or leave a love letter..."
+              }
+            />
+          </div>
 
           {/* CARDS LIST */}
           {(() => {
