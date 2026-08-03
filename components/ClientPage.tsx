@@ -1173,21 +1173,21 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <span className="text-lg">🎯</span>
                   <div>
                     <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">The Goal:</strong>
-                    Paste your PokerBros hand link and story. The bad beat hand with the most community support wins!
+                    Paste your PokerBros hand link and bad beat story. The weekly bad beat hand with the highest average point score wins!
                   </div>
                 </div>
                 <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
                   <span className="text-lg">🗳️</span>
                   <div>
                     <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">Your Votes:</strong>
-                    Everyone gets <strong className="text-yellow">20 votes a day</strong> to spread around. Splat, suffer, or ice the hands you think deserve the weekly crown!
+                    Cast a direct rating from <strong className="text-yellow">1 to 10</strong> (limit 1 vote per hand). The table reaction stickers (Banana Splats, Suffer, Ice) are infinite and purely for fun!
                   </div>
                 </div>
                 <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
                   <span className="text-lg">🏆</span>
                   <div>
                     <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">Weekly Contest:</strong>
-                    The wall resets every week, and the top-voted bad beat story is crowned the champion.
+                    The wall resets every week, and the bad beat submission with the highest mathematical 1-10 average is crowned the champion.
                   </div>
                 </div>
               </div>
