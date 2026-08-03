@@ -922,6 +922,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     max="10"
                     value={localHeat}
                     onChange={(e) => setLocalHeat(parseInt(e.target.value))}
+                    onInput={(e) => setLocalHeat(parseInt((e.target as HTMLInputElement).value))}
                     className="flex-1 accent-red cursor-pointer h-1.5 rounded-lg bg-white/10 outline-none relative z-50"
                     style={{
                       // Visual glow color based on current local heat selection
