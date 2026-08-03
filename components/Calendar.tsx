@@ -16,7 +16,7 @@ const CALENDAR_DAYS: CalendarDay[] = [
   { day: 5, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
   { day: 6, weekday: 'Thu', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 7, weekday: 'Fri', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-  { day: 8, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
+  { day: 8, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\n3 PM Eastern" },
   { day: 9, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
   { day: 10, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 11, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
