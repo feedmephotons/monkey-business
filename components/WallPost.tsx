@@ -922,6 +922,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     max="10"
                     value={localHeat}
                     onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
                     onChange={(e) => setLocalHeat(parseInt(e.target.value))}
                     className="flex-1 accent-red cursor-pointer h-1.5 rounded-lg bg-white/10 outline-none"
                     style={{
@@ -952,8 +954,17 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   <button
                     type="button"
                     onClick={(e) => {
+                      e.preventDefault()
                       e.stopPropagation()
                       handleHeatRatingSubmit()
+                    }}
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
+                    onTouchStart={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
                     }}
                     disabled={isPending}
                     className="bg-yellow hover:bg-yellow-bright disabled:opacity-40 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md"
