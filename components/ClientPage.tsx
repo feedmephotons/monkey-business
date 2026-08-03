@@ -1225,9 +1225,9 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             }
 
             return (
-              <div className="columns-1 sm:columns-2 lg:columns-4 gap-6 [column-fill:_balance]">
+              <div className="flex flex-wrap justify-center gap-6">
                 {filteredPosts.map((p, i) => (
-                  <div key={p.id} className="mb-6 break-inside-avoid">
+                  <div key={p.id} className="w-full max-w-[340px] shrink-0">
                     <WallPost post={p} index={i} />
                   </div>
                 ))}
