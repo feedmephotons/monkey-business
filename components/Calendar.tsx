@@ -314,7 +314,7 @@ export default function Calendar() {
               {/* Description */}
               <p className="font-[family-name:var(--font-body)] text-white/70 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
                 {selectedDay.type === 'high-hand' ? (
-                  "The playwr with the Highest Hand of the night will win 100 chips. Make sure to grab your seat early!"
+                  "The player with the Highest Hand of the night will win 100 chips. Make sure to grab your seat early!"
                 ) : selectedDay.day === 3 ? (
                   "1 2 cash game starting in monkeys on the 3rd of every month. Sit if u dare."
                 ) : selectedDay.type === 'seven-deuce' ? (
