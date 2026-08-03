@@ -393,14 +393,13 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
     } catch (e) {}
   }, [post.id])
 
-  const handleHeatRatingSubmit = () => {
-    if (localHeat === null) return
+  const handleDirectHeatSubmit = (num: number) => {
     if (!checkAndRegisterBananaVote(post.id)) return
+    setLocalHeat(num)
     setHasRatedHeat(true)
     
     // Map local 1-10 to the 1-5 banana columns for storing votes
-    // We can distribute the weight or just map the tier nicely
-    const mappedTier = Math.min(5, Math.max(1, Math.ceil(localHeat / 2)))
+    const mappedTier = Math.min(5, Math.max(1, Math.ceil(num / 2)))
     
     startTransition(async () => {
       await ratePost(post.id, mappedTier)
@@ -907,40 +906,19 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     <button
                       key={num}
                       type="button"
-                      onClick={() => setLocalHeat(num)}
-                      className={`w-7 h-7 rounded-full font-black font-mono text-xs flex items-center justify-center transition-all cursor-pointer relative z-50 shadow-sm border ${
-                        localHeat === num
-                          ? num >= 8
-                            ? 'bg-red text-white border-red shadow-[0_0_8px_#ef4444]'
-                            : num >= 5
-                            ? 'bg-orange text-white border-orange shadow-[0_0_8px_#f97316]'
-                            : 'bg-yellow text-felt-deep border-yellow shadow-[0_0_8px_#ffd13b]'
-                          : 'bg-black/40 hover:bg-white/10 text-white/70 border-white/10'
-                      }`}
+                      onClick={() => handleDirectHeatSubmit(num)}
+                      disabled={isPending}
+                      className="w-7 h-7 rounded-full font-black font-mono text-xs flex items-center justify-center transition-all cursor-pointer relative z-50 shadow-sm border bg-black/40 hover:bg-yellow hover:text-felt-deep text-white/70 border-white/10 active:scale-95"
                     >
                       {num}
                     </button>
                   ))}
                 </div>
 
-                <div className="flex items-center justify-between gap-2 border-t border-white/5 pt-2">
-                  <span 
-                    className="text-[0.65rem] font-bold tracking-wide transition-all uppercase"
-                    style={{
-                      color: localHeat === null ? '#ffffff60' : localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'
-                    }}
-                  >
-                    {getHeatLabel(localHeat)}
+                <div className="text-center pt-2">
+                  <span className="text-[0.65rem] font-black tracking-widest text-yellow uppercase animate-pulse">
+                    👈 Tap any number to vote instantly!
                   </span>
-                  
-                  <button
-                    type="button"
-                    onClick={handleHeatRatingSubmit}
-                    disabled={isPending || localHeat === null}
-                    className="bg-yellow hover:bg-yellow-bright disabled:opacity-30 disabled:hover:bg-yellow text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50 border border-yellow"
-                  >
-                    SUBMIT VOTE
-                  </button>
                 </div>
               </div>
             ) : (
