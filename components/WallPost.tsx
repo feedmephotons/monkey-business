@@ -921,11 +921,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     min="1"
                     max="10"
                     value={localHeat}
-                    onClick={(e) => e.stopPropagation()}
-                    onMouseDown={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
                     onChange={(e) => setLocalHeat(parseInt(e.target.value))}
-                    className="flex-1 accent-red cursor-pointer h-1.5 rounded-lg bg-white/10 outline-none"
+                    className="flex-1 accent-red cursor-pointer h-1.5 rounded-lg bg-white/10 outline-none relative z-50"
                     style={{
                       // Visual glow color based on current local heat selection
                       boxShadow: `0 0 8px ${localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'}44`
@@ -953,21 +950,9 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      handleHeatRatingSubmit()
-                    }}
-                    onMouseDown={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                    }}
-                    onTouchStart={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                    }}
+                    onClick={handleHeatRatingSubmit}
                     disabled={isPending}
-                    className="bg-yellow hover:bg-yellow-bright disabled:opacity-40 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md"
+                    className="bg-yellow hover:bg-yellow-bright disabled:opacity-40 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50"
                   >
                     SUBMIT RATING
                   </button>

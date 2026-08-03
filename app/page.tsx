@@ -3,6 +3,7 @@ import ClientPage from '@/components/ClientPage'
 import { fetchHandData, type ParsedHand } from '@/lib/pokerbros'
 
 export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export type EnrichedWallPost = WallPostType & {
   handData?: ParsedHand | null
