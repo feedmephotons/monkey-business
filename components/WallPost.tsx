@@ -953,7 +953,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                     type="button"
                     onClick={handleHeatRatingSubmit}
                     disabled={isPending}
-                    className="bg-yellow hover:bg-yellow-bright disabled:opacity-40 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50"
+                    className="bg-yellow hover:bg-yellow-bright disabled:bg-yellow/10 disabled:text-white/20 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50 border border-yellow/40"
                   >
                     SUBMIT RATING
                   </button>
