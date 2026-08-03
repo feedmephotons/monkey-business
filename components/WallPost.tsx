@@ -370,7 +370,8 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const isFemaleWinner = winnerSeat ? isFemalePlayer(winnerSeat.name) : false
   const commentPlaceholder = isFemaleWinner ? "Nice hand, ma'am! 🍌" : "Nice hand, sir! 🍌"
 
-  const getHeatLabel = (score: number) => {
+  const getHeatLabel = (score: number | null) => {
+    if (score === null) return "Select a score above! 👇"
     if (score <= 2) return "Cold Deck ❄️"
     if (score <= 4) return "Lukewarm Beat"
     if (score <= 6) return "Ouch, Steaming! 🤕"
@@ -378,7 +379,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
     return "HORSE 💩"
   }
 
-  const [localHeat, setLocalHeat] = useState(5)
+  const [localHeat, setLocalHeat] = useState<number | null>(null)
   const [hasRatedHeat, setHasRatedHeat] = useState(false)
 
   useEffect(() => {
@@ -393,6 +394,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   }, [post.id])
 
   const handleHeatRatingSubmit = () => {
+    if (localHeat === null) return
     if (!checkAndRegisterBananaVote(post.id)) return
     setHasRatedHeat(true)
     
@@ -940,20 +942,22 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                   <span 
                     className="text-[0.65rem] font-bold tracking-wide transition-all uppercase"
                     style={{
-                      color: localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'
+                      color: localHeat === null ? '#ffffff60' : localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'
                     }}
                   >
                     {getHeatLabel(localHeat)}
                   </span>
                   
-                  <button
-                    type="button"
-                    onClick={handleHeatRatingSubmit}
-                    disabled={isPending}
-                    className="bg-yellow hover:bg-yellow-bright text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50"
-                  >
-                    SUBMIT VOTE
-                  </button>
+                  {localHeat !== null && (
+                    <button
+                      type="button"
+                      onClick={handleHeatRatingSubmit}
+                      disabled={isPending}
+                      className="bg-yellow hover:bg-yellow-bright text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md relative z-50 border border-yellow animate-bounce"
+                    >
+                      SUBMIT VOTE
+                    </button>
+                  )}
                 </div>
               </div>
             ) : (
