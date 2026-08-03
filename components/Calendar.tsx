@@ -315,6 +315,8 @@ export default function Calendar() {
               <p className="font-[family-name:var(--font-body)] text-white/70 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
                 {selectedDay.type === 'seven-deuce' ? (
                   "Every Wednesday in august we’re putting 72 game on the table. must be 72 off suit to count."
+                ) : selectedDay.type === 'bomb-pot' ? (
+                  "Bomb pots every 15-25 minutes, 2 big blinds every bomb pot and you go straight to the flop"
                 ) : (
                   "Stack chips, splash pots, and make some mischief at the lounge! Add this event to your phone's calendar so you never miss a game."
                 )}
