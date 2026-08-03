@@ -329,6 +329,8 @@ export default function Calendar() {
                   "Freeroll tournament starting at 1pm must play 100 hands before chip out"
                 ) : selectedDay.type === 'ladies-night' ? (
                   "For the ladies of the club were dedicating the last Saturday of every month to ladies night tournament. Half price for verified ladies."
+                ) : selectedDay.weekday === 'Sat' ? (
+                  "10 chips to play the 10 spot every Saturday. Start times may vary so check back each week. Always a rebuy and add on."
                 ) : (
                   "Stack chips, splash pots, and make some mischief at the lounge! Add this event to your phone's calendar so you never miss a game."
                 )}
