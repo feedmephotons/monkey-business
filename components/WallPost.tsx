@@ -260,12 +260,9 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
       const lastVote = votes[postId]
       
       if (lastVote && now - lastVote < 24 * 60 * 60 * 1000) {
-        alert("You have already rated this bad beat submission! You can rate it again in 24 hours. 🍌")
+        alert("You have already rated this bad beat submission! You can adjust your heat rating again in 24 hours. 🥵🔥")
         return false
       }
-      
-      // Also obey the general 20-votes-per-day cap!
-      if (!checkAndRegisterVote()) return false
       
       votes[postId] = now
       localStorage.setItem(key, JSON.stringify(votes))
@@ -372,6 +369,49 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   const winnerSeat = post.handData?.seats.find((s) => s.isWinner)
   const isFemaleWinner = winnerSeat ? isFemalePlayer(winnerSeat.name) : false
   const commentPlaceholder = isFemaleWinner ? "Nice hand, ma'am! 🍌" : "Nice hand, sir! 🍌"
+
+  const getHeatLabel = (score: number) => {
+    if (score <= 2) return "Cold Deck ❄️"
+    if (score <= 4) return "Lukewarm Beat"
+    if (score <= 6) return "Ouch, Steaming! 🤕"
+    if (score <= 8) return "Pure Highway Robbery! 🤬"
+    return "ABSOLUTELY RIGGED! 🥵🔥"
+  }
+
+  const [localHeat, setLocalHeat] = useState(5)
+  const [hasRatedHeat, setHasRatedHeat] = useState(false)
+
+  useEffect(() => {
+    try {
+      const key = 'mb_banana_votes'
+      const raw = localStorage.getItem(key)
+      const votes: Record<string, number> = raw ? JSON.parse(raw) : {}
+      if (votes[post.id]) {
+        setHasRatedHeat(true)
+      }
+    } catch (e) {}
+  }, [post.id])
+
+  const handleHeatRatingSubmit = () => {
+    if (!checkAndRegisterBananaVote(post.id)) return
+    setHasRatedHeat(true)
+    
+    // Map local 1-10 to the 1-5 banana columns for storing votes
+    // We can distribute the weight or just map the tier nicely
+    const mappedTier = Math.min(5, Math.max(1, Math.ceil(localHeat / 2)))
+    
+    startTransition(async () => {
+      await ratePost(post.id, mappedTier)
+    })
+  }
+
+  // Calculate dynamic stats
+  const totalBananaVotes = (post.banana_1 || 0) + (post.banana_2 || 0) + (post.banana_3 || 0) + (post.banana_4 || 0) + (post.banana_5 || 0)
+  const weightedSum = (post.banana_1 * 1) + (post.banana_2 * 2) + (post.banana_3 * 3) + (post.banana_4 * 4) + (post.banana_5 * 5)
+  
+  // Calculate average out of 10 points!
+  const rawAvg = totalBananaVotes > 0 ? (weightedSum / totalBananaVotes) * 2 : 0
+  const displayAverage = rawAvg.toFixed(1)
 
   const handleRate = (tier: number) => {
     if (!checkAndRegisterBananaVote(post.id)) return
@@ -846,50 +886,82 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
       </div>
 
       <div className="mt-4">
-        {/* 4. DRIPPING 5-TIER BANANA RATING ROW (FROM JOSH'S REQUEST) */}
+        {/* 4. DRIPPING RED HOT HEAT METER SLIDER (1-10) */}
         {post.is_bad_beat && (
           <div 
-            className="flex justify-between items-center gap-1 border-t border-dashed pt-3 mb-3 animate-fade-in"
-            style={{ borderColor: `rgba(255,209,59,0.2)` }}
+            className="border-t border-dashed pt-4 mb-3 animate-fade-in text-center select-none"
+            style={{ borderColor: `rgba(255,209,59,0.25)` }}
           >
-            {[1, 2, 3, 4, 5].map((tier) => {
-              const count = (post as any)[`banana_${tier}`] || 0
-              
-              const tierNames = [
-                "Slipped & Fell (The Peel)",
-                "Mild Bruising (Double)",
-                "Serious Pain (Trio Bunch)",
-                "Table Flipped (Quad Cluster)",
-                "Absolute Rigged (Monster Bunch)"
-              ]
-              
-              return (
-                <button
-                  key={tier}
-                  onClick={() => handleRate(tier)}
-                  disabled={isPending}
-                  className="flex flex-col items-center gap-1 p-1 rounded-lg hover:bg-white/5 active:scale-95 disabled:opacity-50 transition-all duration-150 group/btn flex-1 cursor-pointer"
-                  title={tierNames[tier - 1]}
-                >
-                  <div className="relative w-11 h-11 transition-transform group-hover/btn:scale-115">
-                    <Image
-                      src={`/img/banana-${tier}.png`}
-                      alt={tierNames[tier - 1]}
-                      fill
-                      sizes="44px"
-                      className="object-contain"
-                      priority
-                    />
-                  </div>
+            {/* Heat stats display */}
+            <div className="flex justify-between items-center mb-2 px-1">
+              <span className="text-[0.65rem] font-black uppercase text-white/50 tracking-wider font-mono">
+                🔥 HEAT SCORE:
+              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg font-black text-[#ffd13b] font-mono leading-none">
+                  {displayAverage}/10
+                </span>
+                <span className="text-[0.6rem] text-white/40 font-mono">
+                  ({totalBananaVotes} {totalBananaVotes === 1 ? 'vote' : 'votes'})
+                </span>
+              </div>
+            </div>
+
+            {/* Slider or confirmation message */}
+            {!hasRatedHeat ? (
+              <div className="space-y-3 px-1 mt-3">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={localHeat}
+                    onChange={(e) => setLocalHeat(parseInt(e.target.value))}
+                    className="flex-1 accent-red cursor-pointer h-1.5 rounded-lg bg-white/10 outline-none"
+                    style={{
+                      // Visual glow color based on current local heat selection
+                      boxShadow: `0 0 8px ${localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'}44`
+                    }}
+                  />
                   <span 
-                    className="text-[0.7rem] font-bold opacity-80" 
-                    style={{ color: '#ffd13b' }}
+                    className="w-7 font-black font-mono text-sm leading-none shrink-0"
+                    style={{
+                      color: localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'
+                    }}
                   >
-                    {count}
+                    {localHeat}
                   </span>
-                </button>
-              )
-            })}
+                </div>
+
+                <div className="flex items-center justify-between gap-2">
+                  <span 
+                    className="text-[0.65rem] font-bold tracking-wide transition-all uppercase"
+                    style={{
+                      color: localHeat >= 8 ? '#ef4444' : localHeat >= 5 ? '#f97316' : '#ffd13b'
+                    }}
+                  >
+                    {getHeatLabel(localHeat)}
+                  </span>
+                  
+                  <button
+                    onClick={handleHeatRatingSubmit}
+                    disabled={isPending}
+                    className="bg-yellow hover:bg-yellow-bright disabled:opacity-40 text-felt-deep font-black font-mono text-[0.65rem] tracking-wider uppercase px-4 py-1.5 rounded-lg transition active:scale-95 cursor-pointer shadow-md"
+                  >
+                    SUBMIT RATING
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white/5 border border-white/5 rounded-xl p-3 mt-2 text-center">
+                <p className="text-[0.7rem] font-bold text-yellow uppercase tracking-wider leading-none">
+                  🔥 Rating Submitted! 
+                </p>
+                <p className="text-[0.6rem] text-white/50 font-mono mt-1">
+                  Adjustments unlock in 24 hours. Good luck at the tables!
+                </p>
+              </div>
+            )}
           </div>
         )}
 
