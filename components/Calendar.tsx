@@ -16,7 +16,7 @@ const CALENDAR_DAYS: CalendarDay[] = [
   { day: 5, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
   { day: 6, weekday: 'Thu', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 7, weekday: 'Fri', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
-  { day: 8, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\n3 PM Eastern" },
+  { day: 8, weekday: 'Sat', type: 'high-hand', text: "Monkey's 10 Spot\nTourney at\n3 PM Eastern\n🏆 HIGH HAND 🏆" },
   { day: 9, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
   { day: 10, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 11, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
@@ -30,7 +30,7 @@ const CALENDAR_DAYS: CalendarDay[] = [
   { day: 19, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
   { day: 20, weekday: 'Thu', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 21, weekday: 'Fri', type: 'high-hand', text: 'HIGHEST\nHAND\nOF THE\nNIGHT' },
-  { day: 22, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
+  { day: 22, weekday: 'Sat', type: 'high-hand', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern\n🏆 HIGH HAND 🏆" },
   { day: 23, weekday: 'Sun', type: 'freeroll', text: 'Freeroll\nTournament\nNoon\nEastern' },
   { day: 24, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 25, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
@@ -313,7 +313,9 @@ export default function Calendar() {
 
               {/* Description */}
               <p className="font-[family-name:var(--font-body)] text-white/70 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
-                {selectedDay.day === 3 ? (
+                {selectedDay.type === 'high-hand' ? (
+                  "The playwr with the Highest Hand of the night will win 100 chips. Make sure to grab your seat early!"
+                ) : selectedDay.day === 3 ? (
                   "1 2 cash game starting in monkeys on the 3rd of every month. Sit if u dare."
                 ) : selectedDay.type === 'seven-deuce' ? (
                   "Every Wednesday in august we’re putting 72 game on the table. must be 72 off suit to count."
