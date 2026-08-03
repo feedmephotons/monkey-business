@@ -963,9 +963,25 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
                 <p className="text-[0.7rem] font-bold text-yellow uppercase tracking-wider leading-none">
                   🔥 Rating Submitted! 
                 </p>
-                <p className="text-[0.6rem] text-white/50 font-mono mt-1">
+                <p className="text-[0.6rem] text-white/50 font-mono mt-1 mb-2">
                   Adjustments unlock in 24 hours. Good luck at the tables!
                 </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    try {
+                      const key = 'mb_banana_votes'
+                      const raw = localStorage.getItem(key)
+                      const votes = raw ? JSON.parse(raw) : {}
+                      delete votes[post.id]
+                      localStorage.setItem(key, JSON.stringify(votes))
+                      setHasRatedHeat(false)
+                    } catch(e) {}
+                  }}
+                  className="px-2 py-1 bg-red/20 hover:bg-red/40 border border-red/30 rounded text-[0.55rem] font-mono font-bold text-red-400 uppercase tracking-widest transition"
+                >
+                  ⚡ DEV: Clear Vote Lock
+                </button>
               </div>
             )}
           </div>
