@@ -319,7 +319,6 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   }, [databaseSplatCount, databaseSufferCount, databaseIceCount])
 
   const handleSplat = () => {
-    if (!checkAndRegisterVote()) return
     setClientSplatCount((prev) => prev + 1)
     startTransition(async () => {
       await splatPost(post.id)
@@ -327,7 +326,6 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   }
 
   const handleSuffer = () => {
-    if (!checkAndRegisterVote()) return
     setClientSufferCount((prev) => prev + 1)
     startTransition(async () => {
       await sufferPost(post.id)
@@ -335,7 +333,6 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   }
 
   const handleIce = () => {
-    if (!checkAndRegisterVote()) return
     setClientIceCount((prev) => prev + 1)
     startTransition(async () => {
       await icePost(post.id)
