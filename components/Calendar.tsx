@@ -313,7 +313,9 @@ export default function Calendar() {
 
               {/* Description */}
               <p className="font-[family-name:var(--font-body)] text-white/70 text-sm mb-8 leading-relaxed max-w-sm mx-auto">
-                {selectedDay.type === 'seven-deuce' ? (
+                {selectedDay.day === 3 ? (
+                  "1 2 cash game starting in monkeys on the 3rd of every month. Sit if u dare."
+                ) : selectedDay.type === 'seven-deuce' ? (
                   "Every Wednesday in august we’re putting 72 game on the table. must be 72 off suit to count."
                 ) : selectedDay.type === 'bomb-pot' ? (
                   "Bomb pots every 15-25 minutes, 2 big blinds every bomb pot. Go straight to the flop."
