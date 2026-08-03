@@ -21,7 +21,7 @@ const CALENDAR_DAYS: CalendarDay[] = [
   { day: 10, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 11, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 12, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
-  { day: 13, weekday: 'Thu', type: 'bomb-pot', text: 'Bomb\nPot\nNight\n💣🔥' },
+  { day: 13, weekday: 'Thu', type: 'bomb-pot', text: '💣🔥\nBomb\nPot\nNight' },
   { day: 14, weekday: 'Fri', type: 'high-hand', text: 'HIGHEST\nHAND\nOF THE\nNIGHT' },
   { day: 15, weekday: 'Sat', type: 'special-event', text: "Monkey's 10 Spot\nTourney at\nNoon Eastern" },
   { day: 16, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
@@ -35,7 +35,7 @@ const CALENDAR_DAYS: CalendarDay[] = [
   { day: 24, weekday: 'Mon', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 25, weekday: 'Tue', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 26, weekday: 'Wed', type: 'seven-deuce', text: '7-2\nGame\nNight\n7️⃣2️⃣' },
-  { day: 27, weekday: 'Thu', type: 'bomb-pot', text: 'Bomb\nPot\nNight\n💣🔥' },
+  { day: 27, weekday: 'Thu', type: 'bomb-pot', text: '💣🔥\nBomb\nPot\nNight' },
   { day: 28, weekday: 'Fri', type: 'default', text: 'Nightly Game\nstarts around\n6-7 pm Eastern' },
   { day: 29, weekday: 'Sat', type: 'ladies-night', text: 'Ladies\nNight\nTournament' },
   { day: 30, weekday: 'Sun', type: 'heads-up', text: 'Heads Up\nTournament' },
@@ -316,7 +316,7 @@ export default function Calendar() {
                 {selectedDay.type === 'seven-deuce' ? (
                   "Every Wednesday in august we’re putting 72 game on the table. must be 72 off suit to count."
                 ) : selectedDay.type === 'bomb-pot' ? (
-                  "Bomb pots every 15-25 minutes, 2 big blinds every bomb pot and you go straight to the flop"
+                  "Bomb pots every 15-25 minutes, 2 big blinds every bomb pot. Go straight to the flop."
                 ) : (
                   "Stack chips, splash pots, and make some mischief at the lounge! Add this event to your phone's calendar so you never miss a game."
                 )}
