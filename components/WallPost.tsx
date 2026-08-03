@@ -899,21 +899,6 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
             className="border-t border-dashed pt-4 mb-3 animate-fade-in text-center select-none"
             style={{ borderColor: `rgba(255,209,59,0.25)` }}
           >
-            {/* Heat stats display */}
-            <div className="flex justify-between items-center mb-2 px-1">
-              <span className="text-[0.65rem] font-black uppercase text-white/50 tracking-wider font-mono">
-                🔥 HEAT SCORE:
-              </span>
-              <div className="flex items-center gap-1.5">
-                <span className="text-lg font-black text-[#ffd13b] font-mono leading-none">
-                  {displayAverage}/10
-                </span>
-                <span className="text-[0.6rem] text-white/40 font-mono">
-                  ({totalBananaVotes} {totalBananaVotes === 1 ? 'vote' : 'votes'})
-                </span>
-              </div>
-            </div>
-
             {/* Tap controls or confirmation message */}
             {!hasRatedHeat ? (
               <div className="space-y-3 px-1 mt-3">
