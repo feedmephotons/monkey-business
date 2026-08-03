@@ -317,6 +317,8 @@ export default function Calendar() {
                   "Every Wednesday in august we’re putting 72 game on the table. must be 72 off suit to count."
                 ) : selectedDay.type === 'bomb-pot' ? (
                   "Bomb pots every 15-25 minutes, 2 big blinds every bomb pot. Go straight to the flop."
+                ) : selectedDay.type === 'default' ? (
+                  ".50 1 dollar blinds classic 9 man hold em. Starts when 7 pkayers sit. Good Luck!"
                 ) : (
                   "Stack chips, splash pots, and make some mischief at the lounge! Add this event to your phone's calendar so you never miss a game."
                 )}
