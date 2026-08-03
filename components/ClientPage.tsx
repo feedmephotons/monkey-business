@@ -307,7 +307,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             <a href="#schedule" className="hover:text-red transition">
               Schedule
             </a>
-            <a href="#wall" className="hover:text-red transition">
+            <a href="#wall" onClick={() => setActiveWallTab('general')} className="hover:text-red transition">
               Wall
             </a>
             <a href="#contact" className="hover:text-red transition">
