@@ -1,85 +1,173 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
-const TRACKS = [
-  {
-    id: "poker-2",
-    title: "Monkey Biz Poker - Cut 2 (Current)",
-    file: "monkey-biz-poker-2.mp3",
-    duration: "4:21"
-  },
-  {
-    id: "poker-1",
-    title: "Monkey Biz Poker - Cut 1",
-    file: "monkey-biz-poker.mp3",
-    duration: "4:14"
-  },
-  {
-    id: "beat",
-    title: "Monkey Biz Beat (Instrumental)",
-    file: "monkey-biz-beat.mp3",
-    duration: "2:29"
-  },
-  {
-    id: "jungle",
-    title: "Welcome to the Jungle (Rock Theme)",
-    file: "welcome-to-the-jungle.mp3",
-    duration: "2:24"
-  }
+const INITIAL_PLAYERS = [
+  "Tony",
+  "Me (Josh)",
+  "You (Winston)",
+  "Diesel",
+  "Dragon queen",
+  "Boxman",
+  "Singram",
+  "Cee Brooklyn",
+  "Chickadee",
+  "Ahab",
+  "Scar",
+  "Bluffa",
+  "Ramhero",
+  "Bkuff n baddie",
+  "Aprob",
+  "Mama"
 ];
 
-export default function AudioPreviewHeroPage() {
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+interface Match {
+  p1: string;
+  p2: string;
+  winner: string | null;
+}
 
-  const handleTrackSelect = (index: number) => {
-    setCurrentTrackIndex(index);
-    setIsPlaying(true);
-  };
-
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (isPlaying) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current.play()
-        .then(() => setIsPlaying(true))
-        .catch((err) => console.log(err));
+export default function HeadsUpBracketPreviewPage() {
+  // We have 15 matches total for 16 players
+  // Matches 0-7: Round of 16
+  // Matches 8-11: Quarterfinals
+  // Matches 12-13: Semifinals
+  // Match 14: Finals
+  const [matches, setMatches] = useState<Match[]>(() => {
+    const list: Match[] = [];
+    
+    // Round of 16
+    for (let i = 0; i < 8; i++) {
+      list.push({
+        p1: INITIAL_PLAYERS[i * 2],
+        p2: INITIAL_PLAYERS[i * 2 + 1],
+        winner: null,
+      });
     }
+    
+    // Quarterfinals
+    for (let i = 0; i < 4; i++) {
+      list.push({ p1: "", p2: "", winner: null });
+    }
+    
+    // Semifinals
+    for (let i = 0; i < 2; i++) {
+      list.push({ p1: "", p2: "", winner: null });
+    }
+    
+    // Finals
+    list.push({ p1: "", p2: "", winner: null });
+    
+    return list;
+  });
+
+  // Handle setting a winner for a match
+  const selectWinner = (matchIndex: number, player: string) => {
+    if (!player) return;
+    
+    const newMatches = [...matches];
+    const prevWinner = newMatches[matchIndex].winner;
+    newMatches[matchIndex].winner = player;
+
+    // Propagate winner to next rounds
+    // Match 0,1 -> Match 8
+    // Match 2,3 -> Match 9
+    // Match 4,5 -> Match 10
+    // Match 6,7 -> Match 11
+    // Match 8,9 -> Match 12
+    // Match 10,11 -> Match 13
+    // Match 12,13 -> Match 14
+    
+    let targetMatchIndex = -1;
+    let targetSlot: "p1" | "p2" = "p1";
+
+    if (matchIndex >= 0 && matchIndex <= 7) {
+      targetMatchIndex = 8 + Math.floor(matchIndex / 2);
+      targetSlot = matchIndex % 2 === 0 ? "p1" : "p2";
+    } else if (matchIndex >= 8 && matchIndex <= 11) {
+      targetMatchIndex = 12 + Math.floor((matchIndex - 8) / 2);
+      targetSlot = (matchIndex - 8) % 2 === 0 ? "p1" : "p2";
+    } else if (matchIndex >= 12 && matchIndex <= 13) {
+      targetMatchIndex = 14;
+      targetSlot = matchIndex === 12 ? "p1" : "p2";
+    }
+
+    if (targetMatchIndex !== -1) {
+      // If there was a previous winner, clean up down the bracket
+      if (prevWinner && prevWinner !== player) {
+        clearCascade(newMatches, targetMatchIndex, prevWinner);
+      }
+      newMatches[targetMatchIndex][targetSlot] = player;
+    }
+
+    setMatches(newMatches);
   };
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.load();
-      if (isPlaying) {
-        audioRef.current.play().catch((err) => console.log(err));
+  // Helper to clear a player if they are overwritten/dethroned in prior rounds
+  const clearCascade = (matchList: Match[], index: number, playerToClear: string) => {
+    if (index >= matchList.length) return;
+    
+    let nextIndex = -1;
+    let isP1 = matchList[index].p1 === playerToClear;
+    let isP2 = matchList[index].p2 === playerToClear;
+
+    if (isP1) matchList[index].p1 = "";
+    if (isP2) matchList[index].p2 = "";
+
+    if (matchList[index].winner === playerToClear) {
+      matchList[index].winner = null;
+      
+      if (index >= 8 && index <= 11) {
+        nextIndex = 12 + Math.floor((index - 8) / 2);
+      } else if (index >= 12 && index <= 13) {
+        nextIndex = 14;
+      }
+      
+      if (nextIndex !== -1) {
+        clearCascade(matchList, nextIndex, playerToClear);
       }
     }
-  }, [currentTrackIndex]);
+  };
+
+  const resetBracket = () => {
+    const list: Match[] = [];
+    for (let i = 0; i < 8; i++) {
+      list.push({
+        p1: INITIAL_PLAYERS[i * 2],
+        p2: INITIAL_PLAYERS[i * 2 + 1],
+        winner: null,
+      });
+    }
+    for (let i = 0; i < 7; i++) {
+      list.push({ p1: "", p2: "", winner: null });
+    }
+    setMatches(list);
+  };
+
+  // Custom styling helper
+  const getPlayerClass = (matchWinner: string | null, currentPlayer: string) => {
+    if (!currentPlayer) return "text-white/20 italic font-mono text-[11px] h-9 px-3 flex items-center";
+    if (matchWinner === currentPlayer) {
+      return "text-black bg-yellow font-extrabold font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer transition shadow-[0_0_10px_rgba(255,204,0,0.3)]";
+    }
+    if (matchWinner && matchWinner !== currentPlayer) {
+      return "text-white/40 line-through font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer hover:bg-white/5 transition";
+    }
+    return "text-white hover:bg-yellow/10 font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer transition";
+  };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col justify-between select-none">
-      {/* Hidden Audio element */}
-      <audio
-        ref={audioRef}
-        src={`/audio/${TRACKS[currentTrackIndex].file}`}
-        onEnded={() => setIsPlaying(false)}
-        preload="auto"
-      />
-
       {/* Header */}
       <header className="border-b border-yellow/10 bg-[#080808]/80 backdrop-blur sticky top-0 z-50 px-4 py-4 sm:px-8">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-yellow font-bold uppercase tracking-wider hover:opacity-80 transition">
             <span>← Exit Preview</span>
           </Link>
           <div className="text-right">
             <h1 className="text-lg font-mono text-yellow font-bold tracking-widest uppercase">
-              Mandrill DJ Design Concept 🦧🎨
+              Heads Up Bracket Concept 🦧🏆
             </h1>
             <p className="text-[10px] text-white/50 font-mono uppercase tracking-wider">
               Monkey Biz Exclusive Preview
@@ -89,85 +177,165 @@ export default function AudioPreviewHeroPage() {
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8 flex flex-col items-center justify-center gap-8">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8 flex flex-col gap-6">
         {/* Title Block */}
-        <div className="text-center space-y-1">
-          <span className="text-xs bg-yellow/10 text-yellow border border-yellow/25 px-2.5 py-1 rounded-full uppercase tracking-widest font-mono">
-            Concept Showcase
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight uppercase text-yellow pt-1">
-            Mandrill DJ Player Concept
-          </h2>
-          <p className="text-xs text-white/50 max-w-lg mx-auto uppercase tracking-wide">
-            Designed to bring maximum high-energy club vibe right to the tables
-          </p>
-        </div>
-
-        {/* Hero Concept Image */}
-        <div className="relative w-full max-w-4xl aspect-[16/9] rounded-sm overflow-hidden border-2 border-yellow/40 shadow-[0_0_50px_rgba(255,204,0,0.15)] bg-neutral-900">
-          {/* Animated Neon Green/Yellow Ambient Border Glow */}
-          <div className="absolute inset-0 border-[3px] border-transparent rounded-sm animate-pulse pointer-events-none z-10 shadow-[inset_0_0_30px_rgba(57,255,20,0.1)]" />
-          <img
-            src="/img/mandrill-dj.png"
-            alt="Mandrill DJ Concept Art"
-            className="w-full h-full object-cover select-none pointer-events-none"
-          />
-        </div>
-
-        {/* Integrated Clean Playbar at Bottom */}
-        <div className="w-full max-w-3xl bg-[#121212] border border-white/5 rounded-sm p-6 space-y-5 shadow-2xl">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/5 pb-4">
-            <div className="text-left">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-yellow">Currently Playing</span>
-              <h3 className="font-mono text-base font-bold text-white leading-snug">
-                {TRACKS[currentTrackIndex].title}
-              </h3>
-            </div>
-            
-            {/* Play/Pause Button */}
-            <button
-              onClick={togglePlay}
-              className="px-8 py-3 bg-yellow hover:bg-yellow/90 text-black font-bold font-mono text-xs tracking-wider uppercase rounded-sm transition shrink-0 flex items-center gap-2"
-            >
-              {isPlaying ? (
-                <>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <rect x="4" y="4" width="4" height="16" />
-                    <rect x="16" y="4" width="4" height="16" />
-                  </svg>
-                  Pause Demo
-                </>
-              ) : (
-                <>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="5,3 19,12 5,21" />
-                  </svg>
-                  Play Demo
-                </>
-              )}
-            </button>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-white/5 pb-6">
+          <div className="space-y-1 text-center md:text-left">
+            <span className="text-xs bg-yellow/10 text-yellow border border-yellow/25 px-2.5 py-1 rounded-full uppercase tracking-widest font-mono">
+              Live Tournament Draft
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight uppercase text-yellow pt-1">
+              Heads Up Championship
+            </h2>
+            <p className="text-xs text-white/50 uppercase tracking-wide">
+              16 Players • No date set (by appointment / meet up) • TAP TO ADVANCE PLAYERS
+            </p>
           </div>
+          <button
+            onClick={resetBracket}
+            className="px-5 py-2.5 bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-200 font-mono text-xs tracking-wider uppercase rounded-sm transition shrink-0"
+          >
+            Reset Bracket
+          </button>
+        </div>
 
-          {/* Quick Track Switcher Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-            {TRACKS.map((track, idx) => {
-              const isSelected = currentTrackIndex === idx;
-              return (
-                <button
-                  key={track.id}
-                  onClick={() => handleTrackSelect(idx)}
-                  className={`p-3.5 rounded-sm border text-left flex flex-col justify-between gap-1.5 transition ${
-                    isSelected
-                      ? "bg-yellow/10 border-yellow text-yellow shadow-[0_0_15px_rgba(255,204,0,0.1)]"
-                      : "bg-[#1C1C1C]/50 border-white/5 text-white/70 hover:bg-[#1C1C1C] hover:border-white/10 hover:text-white"
-                  }`}
-                >
-                  <span className="text-[10px] font-mono uppercase text-white/40 tracking-wider">Track 0{idx + 1}</span>
-                  <span className="font-mono font-bold text-xs line-clamp-1">{track.title}</span>
-                  <span className="text-[10px] font-mono text-white/40">{track.duration}</span>
-                </button>
-              );
-            })}
+        {/* Bracket Grid Container */}
+        <div className="flex-1 overflow-x-auto pb-6">
+          <div className="min-w-[1000px] grid grid-cols-4 gap-8 py-4 px-2">
+            {/* COLUMN 1: Round of 16 */}
+            <div className="flex flex-col justify-around gap-4">
+              <div className="text-center border-b border-white/5 pb-2">
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round of 16</h3>
+                <p className="text-[9px] text-white/30 font-mono">Best of 3 Matchups</p>
+              </div>
+              {matches.slice(0, 8).map((match, idx) => (
+                <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md">
+                  <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Match {idx + 1}</span>
+                    <span className="text-[9px] font-mono text-yellow/50 uppercase">Active</span>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    <div 
+                      onClick={() => selectWinner(idx, match.p1)}
+                      className={getPlayerClass(match.winner, match.p1)}
+                    >
+                      <span className="truncate">{match.p1 || "TBD"}</span>
+                      {match.winner === match.p1 && <span className="text-[10px]">👑</span>}
+                    </div>
+                    <div 
+                      onClick={() => selectWinner(idx, match.p2)}
+                      className={getPlayerClass(match.winner, match.p2)}
+                    >
+                      <span className="truncate">{match.p2 || "TBD"}</span>
+                      {match.winner === match.p2 && <span className="text-[10px]">👑</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* COLUMN 2: Quarterfinals */}
+            <div className="flex flex-col justify-around gap-4">
+              <div className="text-center border-b border-white/5 pb-2">
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Quarterfinals</h3>
+                <p className="text-[9px] text-white/30 font-mono">Matchups 9-12</p>
+              </div>
+              {matches.slice(8, 12).map((match, idx) => (
+                <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md my-auto">
+                  <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">QF Match {idx + 1}</span>
+                    {match.p1 && match.p2 && <span className="text-[9px] font-mono text-yellow/50 uppercase">Ready</span>}
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    <div 
+                      onClick={() => selectWinner(8 + idx, match.p1)}
+                      className={getPlayerClass(match.winner, match.p1)}
+                    >
+                      <span className="truncate">{match.p1 || "Waiting for winner..."}</span>
+                      {match.winner === match.p1 && match.p1 && <span className="text-[10px]">👑</span>}
+                    </div>
+                    <div 
+                      onClick={() => selectWinner(8 + idx, match.p2)}
+                      className={getPlayerClass(match.winner, match.p2)}
+                    >
+                      <span className="truncate">{match.p2 || "Waiting for winner..."}</span>
+                      {match.winner === match.p2 && match.p2 && <span className="text-[10px]">👑</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* COLUMN 3: Semifinals */}
+            <div className="flex flex-col justify-around gap-4">
+              <div className="text-center border-b border-white/5 pb-2">
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Semifinals</h3>
+                <p className="text-[9px] text-white/30 font-mono">Matchups 13-14</p>
+              </div>
+              {matches.slice(12, 14).map((match, idx) => (
+                <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md my-auto">
+                  <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
+                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Semi Match {idx + 1}</span>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    <div 
+                      onClick={() => selectWinner(12 + idx, match.p1)}
+                      className={getPlayerClass(match.winner, match.p1)}
+                    >
+                      <span className="truncate">{match.p1 || "Waiting for winner..."}</span>
+                      {match.winner === match.p1 && match.p1 && <span className="text-[10px]">👑</span>}
+                    </div>
+                    <div 
+                      onClick={() => selectWinner(12 + idx, match.p2)}
+                      className={getPlayerClass(match.winner, match.p2)}
+                    >
+                      <span className="truncate">{match.p2 || "Waiting for winner..."}</span>
+                      {match.winner === match.p2 && match.p2 && <span className="text-[10px]">👑</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* COLUMN 4: Finals & Champion */}
+            <div className="flex flex-col justify-center gap-12">
+              <div className="text-center border-b border-white/5 pb-2">
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Championship</h3>
+                <p className="text-[9px] text-white/30 font-mono">Main Event</p>
+              </div>
+              
+              {/* Grand Final Match */}
+              <div className="bg-[#121212] border-2 border-yellow/30 rounded-sm overflow-hidden shadow-xl">
+                <div className="bg-[#1C1C1C] border-b border-white/5 px-2.5 py-1.5 flex items-center justify-between">
+                  <span className="text-[10px] font-mono text-yellow font-bold uppercase">🏆 Grand Finale</span>
+                </div>
+                <div className="divide-y divide-white/5">
+                  <div 
+                    onClick={() => selectWinner(14, matches[14].p1)}
+                    className={getPlayerClass(matches[14].winner, matches[14].p1)}
+                  >
+                    <span className="truncate">{matches[14].p1 || "Waiting..."}</span>
+                    {matches[14].winner === matches[14].p1 && matches[14].p1 && <span className="text-[10px]">🏆</span>}
+                  </div>
+                  <div 
+                    onClick={() => selectWinner(14, matches[14].p2)}
+                    className={getPlayerClass(matches[14].winner, matches[14].p2)}
+                  >
+                    <span className="truncate">{matches[14].p2 || "Waiting..."}</span>
+                    {matches[14].winner === matches[14].p2 && matches[14].p2 && <span className="text-[10px]">🏆</span>}
+                  </div>
+                </div>
+              </div>
+
+              {/* Champion Podium */}
+              <div className="bg-[#181818]/60 border border-yellow/10 rounded-sm p-4 text-center space-y-2">
+                <span className="text-[9px] font-mono text-yellow/50 uppercase tracking-widest block">Championship Winner</span>
+                <div className="text-xl font-bold font-mono tracking-tight text-yellow truncate">
+                  {matches[14].winner ? `👑 ${matches[14].winner} 👑` : "UNDECIDED"}
+                </div>
+                <p className="text-[9px] text-white/30 font-mono uppercase">Monkey Biz Heads Up Champ</p>
+              </div>
+            </div>
           </div>
         </div>
       </main>
