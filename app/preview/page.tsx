@@ -5,22 +5,22 @@ import Link from "next/link";
 import { getBracketState, saveBracketState } from "../actions";
 
 const INITIAL_PLAYERS = [
-  "Tony",
   "2up",
-  "Loucifer",
-  "Diesel",
-  "Dragon queen",
-  "Boxman",
+  "2pretty2call",
   "Singram",
-  "Cee Brooklyn",
-  "Chickadee",
-  "Ahab",
   "Scar",
+  "Tony",
+  "Chickadee",
+  "Dragon queen",
+  "Diesel",
+  "Ahab",
   "Bluffa",
+  "Loucifer",
+  "Boxman",
   "Ramhero",
   "Bluffnbaddie",
   "Aprob",
-  "2pretty2call"
+  "Cee Brooklyn"
 ];
 
 interface Match {
