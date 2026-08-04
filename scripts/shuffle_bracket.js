@@ -33,7 +33,7 @@ const PLAYERS = [
   "Scar",
   "Bluffa",
   "Ramhero",
-  "Bkuff n baddie",
+  "Bluffnbaddie",
   "Aprob",
   "Mama"
 ];
