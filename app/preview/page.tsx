@@ -198,7 +198,7 @@ export default function HeadsUpBracketPreviewPage() {
           </Link>
           <div className="text-right">
             <h1 className="text-lg font-mono text-yellow font-bold tracking-widest uppercase">
-              Heads Up Bracket Concept 🦧🏆
+              Heads Up Tournament 2 Preview 🦧🏆
             </h1>
             <p className="text-[10px] text-white/50 font-mono uppercase tracking-wider">
               Monkey Biz Exclusive Preview
@@ -216,7 +216,7 @@ export default function HeadsUpBracketPreviewPage() {
               Admin Control Panel
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight uppercase text-yellow pt-1">
-              Heads Up Championship
+              Heads Up Tournament 2
             </h2>
             <p className="text-xs text-white/50 uppercase tracking-wide">
               16 Players • Tap any player to advance them • Changes persist to live bracket instantly

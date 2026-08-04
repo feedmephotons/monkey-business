@@ -96,7 +96,7 @@ export default function PublicBracketPage() {
           </Link>
           <div className="text-right">
             <h1 className="text-lg font-mono text-yellow font-bold tracking-widest uppercase">
-              Heads Up Tournament Standings 🦧🏆
+              Heads Up Tournament 2 Standings 🦧🏆
             </h1>
             <p className="text-[10px] text-white/50 font-mono uppercase tracking-wider">
               Monkey Biz Poker Club Live
@@ -114,7 +114,7 @@ export default function PublicBracketPage() {
               Live Standings
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight uppercase text-yellow pt-1">
-              Heads Up Championship
+              Heads Up Tournament 2
             </h2>
             <p className="text-xs text-white/50 uppercase tracking-wide">
               16 Players • Meet up game / by appointment • Standings updated live by management
