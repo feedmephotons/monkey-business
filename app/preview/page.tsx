@@ -20,7 +20,7 @@ const INITIAL_PLAYERS = [
   "Ramhero",
   "Bluffnbaddie",
   "Aprob",
-  "Mama"
+  "2pretty2call"
 ];
 
 interface Match {

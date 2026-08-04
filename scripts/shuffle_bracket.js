@@ -35,7 +35,7 @@ const PLAYERS = [
   "Ramhero",
   "Bluffnbaddie",
   "Aprob",
-  "Mama"
+  "2pretty2call"
 ];
 
 function shuffle(array) {
