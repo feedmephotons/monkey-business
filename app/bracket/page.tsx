@@ -6,8 +6,8 @@ import { getBracketState } from "../actions";
 
 const INITIAL_PLAYERS = [
   "Tony",
-  "Me (Josh)",
-  "You (Winston)",
+  "2up",
+  "Loucifer",
   "Diesel",
   "Dragon queen",
   "Boxman",
