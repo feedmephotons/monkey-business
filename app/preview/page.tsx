@@ -69,7 +69,15 @@ export default function HeadsUpBracketPreviewPage() {
   const persistState = async (updatedMatches: Match[]) => {
     setSavingStatus("saving");
     try {
-      const res = await saveBracketState(JSON.stringify(updatedMatches), 'draft_bracket_state');
+      // Compact matches to stay under 500 characters database check constraint
+      const compactMatches = updatedMatches.map(m => {
+        const clean: any = {};
+        if (m.p1) clean.p1 = m.p1;
+        if (m.p2) clean.p2 = m.p2;
+        if (m.winner) clean.winner = m.winner;
+        return clean;
+      });
+      const res = await saveBracketState(JSON.stringify(compactMatches), 'draft_bracket_state');
       if (res.ok) {
         setSavingStatus("saved");
         setTimeout(() => setSavingStatus("idle"), 2000);
