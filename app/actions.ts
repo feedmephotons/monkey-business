@@ -272,11 +272,11 @@ export async function icePost(postId: string) {
   return { ok: true as const }
 }
 
-export async function getBracketState() {
+export async function getBracketState(key: string = 'bracket_state') {
   const { data, error } = await admin()
     .from('mb_wall_posts')
     .select('message')
-    .eq('author', 'bracket_state')
+    .eq('author', key)
     .maybeSingle()
   
   if (error) {
@@ -286,11 +286,11 @@ export async function getBracketState() {
   return { ok: true as const, state: data?.message || null }
 }
 
-export async function saveBracketState(stateJson: string) {
+export async function saveBracketState(stateJson: string, key: string = 'bracket_state') {
   const { data, error: findError } = await admin()
     .from('mb_wall_posts')
     .select('id')
-    .eq('author', 'bracket_state')
+    .eq('author', key)
     .maybeSingle()
 
   if (findError) {
@@ -311,7 +311,7 @@ export async function saveBracketState(stateJson: string) {
     const { error } = await admin()
       .from('mb_wall_posts')
       .insert({
-        author: 'bracket_state',
+        author: key,
         message: stateJson,
         font_color: '#f4c430',
         bg_color: '#0a3d1f',
