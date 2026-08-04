@@ -271,3 +271,62 @@ export async function icePost(postId: string) {
   revalidatePath('/')
   return { ok: true as const }
 }
+
+export async function getBracketState() {
+  const { data, error } = await admin()
+    .from('mb_wall_posts')
+    .select('message')
+    .eq('author', 'bracket_state')
+    .maybeSingle()
+  
+  if (error) {
+    console.error('Error fetching bracket state:', error)
+    return { ok: false as const, error: error.message }
+  }
+  return { ok: true as const, state: data?.message || null }
+}
+
+export async function saveBracketState(stateJson: string) {
+  const { data, error: findError } = await admin()
+    .from('mb_wall_posts')
+    .select('id')
+    .eq('author', 'bracket_state')
+    .maybeSingle()
+
+  if (findError) {
+    console.error('Error finding bracket state post:', findError)
+    return { ok: false as const, error: findError.message }
+  }
+
+  if (data) {
+    const { error } = await admin()
+      .from('mb_wall_posts')
+      .update({ message: stateJson })
+      .eq('id', data.id)
+    if (error) {
+      console.error('Error updating bracket state:', error)
+      return { ok: false as const, error: error.message }
+    }
+  } else {
+    const { error } = await admin()
+      .from('mb_wall_posts')
+      .insert({
+        author: 'bracket_state',
+        message: stateJson,
+        font_color: '#f4c430',
+        bg_color: '#0a3d1f',
+        font_family: 'mono',
+        rotation: 0,
+        is_bad_beat: false
+      })
+    if (error) {
+      console.error('Error inserting bracket state:', error)
+      return { ok: false as const, error: error.message }
+    }
+  }
+
+  revalidatePath('/preview')
+  revalidatePath('/bracket')
+  return { ok: true as const }
+}
+
