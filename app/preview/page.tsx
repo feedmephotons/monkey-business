@@ -205,14 +205,14 @@ export default function HeadsUpBracketPreviewPage() {
             {/* COLUMN 1: Round of 16 */}
             <div className="flex flex-col justify-around gap-4">
               <div className="text-center border-b border-white/5 pb-2">
-                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round of 16</h3>
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round 1</h3>
                 <p className="text-[9px] text-white/30 font-mono">Best of 3 Rounds</p>
               </div>
               {matches.slice(0, 8).map((match, idx) => (
                 <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md">
                   <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Round {idx + 1}</span>
-                    <span className="text-[9px] font-mono text-yellow/50 uppercase">Active</span>
+                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Round 1</span>
+                    <span className="text-[9px] font-mono text-yellow/50 uppercase">Table {idx + 1}</span>
                   </div>
                   <div className="divide-y divide-white/5">
                     <div 
@@ -237,14 +237,14 @@ export default function HeadsUpBracketPreviewPage() {
             {/* COLUMN 2: Quarterfinals */}
             <div className="flex flex-col justify-around gap-4">
               <div className="text-center border-b border-white/5 pb-2">
-                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Quarterfinals</h3>
-                <p className="text-[9px] text-white/30 font-mono">Rounds 9-12</p>
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round 2</h3>
+                <p className="text-[9px] text-white/30 font-mono">Quarterfinals</p>
               </div>
               {matches.slice(8, 12).map((match, idx) => (
                 <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md my-auto">
                   <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">QF Round {idx + 1}</span>
-                    {match.p1 && match.p2 && <span className="text-[9px] font-mono text-yellow/50 uppercase">Ready</span>}
+                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Round 2</span>
+                    <span className="text-[9px] font-mono text-yellow/50 uppercase">Table {idx + 1}</span>
                   </div>
                   <div className="divide-y divide-white/5">
                     <div 
@@ -269,13 +269,14 @@ export default function HeadsUpBracketPreviewPage() {
             {/* COLUMN 3: Semifinals */}
             <div className="flex flex-col justify-around gap-4">
               <div className="text-center border-b border-white/5 pb-2">
-                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Semifinals</h3>
-                <p className="text-[9px] text-white/30 font-mono">Rounds 13-14</p>
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round 3</h3>
+                <p className="text-[9px] text-white/30 font-mono">Semifinals</p>
               </div>
               {matches.slice(12, 14).map((match, idx) => (
                 <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md my-auto">
                   <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Semi Round {idx + 1}</span>
+                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Round 3</span>
+                    <span className="text-[9px] font-mono text-yellow/50 uppercase">Table {idx + 1}</span>
                   </div>
                   <div className="divide-y divide-white/5">
                     <div 
@@ -300,14 +301,14 @@ export default function HeadsUpBracketPreviewPage() {
             {/* COLUMN 4: Finals & Champion */}
             <div className="flex flex-col justify-center gap-12">
               <div className="text-center border-b border-white/5 pb-2">
-                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Championship</h3>
-                <p className="text-[9px] text-white/30 font-mono">Main Event</p>
+                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round 4</h3>
+                <p className="text-[9px] text-white/30 font-mono">Championship</p>
               </div>
               
               {/* Grand Final Match */}
               <div className="bg-[#121212] border-2 border-yellow/30 rounded-sm overflow-hidden shadow-xl">
                 <div className="bg-[#1C1C1C] border-b border-white/5 px-2.5 py-1.5 flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-yellow font-bold uppercase">🏆 Grand Finale</span>
+                  <span className="text-[10px] font-mono text-yellow font-bold uppercase">🏆 Championship Round</span>
                 </div>
                 <div className="divide-y divide-white/5">
                   <div 
