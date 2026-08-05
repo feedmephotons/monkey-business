@@ -13,6 +13,7 @@ async function getWallPosts(): Promise<WallPostType[]> {
   const { data, error } = await supabase
     .from('mb_wall_posts')
     .select('*')
+    .not('author', 'in', '("bracket_state","draft_bracket_state")')
     .order('created_at', { ascending: false })
     .limit(40)
   if (error) {
