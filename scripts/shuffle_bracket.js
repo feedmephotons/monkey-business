@@ -20,7 +20,7 @@ const supabase = createClient(url, service, {
 });
 
 const PLAYERS = [
-  "Tony",
+  "Smokey 420",
   "2up",
   "Loucifer",
   "Diesel",

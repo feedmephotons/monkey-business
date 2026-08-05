@@ -9,7 +9,7 @@ const INITIAL_PLAYERS = [
   "2pretty2call",
   "Singram",
   "Scar",
-  "Tony",
+  "Smokey 420",
   "Chickadee",
   "Dragon queen",
   "Diesel",
