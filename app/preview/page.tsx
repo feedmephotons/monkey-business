@@ -172,7 +172,7 @@ export default function HeadsUpBracketPreviewPage() {
       return "text-black bg-yellow font-extrabold font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer transition shadow-[0_0_10px_rgba(255,204,0,0.3)]";
     }
     if (matchWinner && matchWinner !== currentPlayer) {
-      return "text-white/40 line-through font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer hover:bg-white/5 transition";
+      return "text-[#ff4444]/60 bg-red-950/10 line-through font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer hover:bg-white/5 transition";
     }
     return "text-white hover:bg-yellow/10 font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer transition";
   };

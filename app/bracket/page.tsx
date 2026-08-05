@@ -70,7 +70,7 @@ export default function PublicBracketPage() {
       return "text-black bg-yellow font-extrabold font-mono text-xs h-9 px-3 flex items-center justify-between";
     }
     if (matchWinner && matchWinner !== currentPlayer) {
-      return "text-white/40 line-through font-mono text-xs h-9 px-3 flex items-center justify-between";
+      return "text-[#ff4444]/60 bg-red-950/10 line-through font-mono text-xs h-9 px-3 flex items-center justify-between";
     }
     return "text-white font-mono text-xs h-9 px-3 flex items-center justify-between";
   };
