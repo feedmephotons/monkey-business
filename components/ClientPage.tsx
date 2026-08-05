@@ -547,8 +547,17 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               <p className="font-[family-name:var(--font-body)] text-white/80 mb-4">
                 Head 2 Head tournament is back! 1 round elimination. Looking for the 4 players to reach the top of the bracket. The tournament will kick off as soon as we have 16 players locked in.
               </p>
-              <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60">
+              <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60 mb-5">
                 <span className="font-bold text-white">Requirement:</span> 16 Confirmed & Paid Players to Start
+              </div>
+              <div>
+                <a
+                  href="/bracket"
+                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-[#ff0000] hover:bg-[#bd0000] text-white text-xs font-mono uppercase tracking-widest rounded transition-all shadow-[0_4px_12px_rgba(255,0,0,0.35)] hover:shadow-[0_4px_20px_rgba(255,0,0,0.55)]"
+                >
+                  View Live Bracket 🏆
+                  <span className="inline-block group-hover:translate-x-1 transition-transform">→</span>
+                </a>
               </div>
             </div>
 
