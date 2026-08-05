@@ -45,6 +45,13 @@ const CALENDAR_DAYS: CalendarDay[] = [
 export default function Calendar() {
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null);
 
+  // Filter days to show only today and future days on mobile agenda list
+  const today = new Date();
+  const isAugust2026 = today.getFullYear() === 2026 && today.getMonth() === 7; // Month is 0-indexed (7 = August)
+  const currentDay = isAugust2026 ? today.getDate() : 1; // Fallback to 1 if we're not in August 2026 yet
+
+  const mobileCalendarDays = CALENDAR_DAYS.filter(d => d.day >= currentDay);
+
   const getEventStyle = (type: string) => {
     let borderClass = 'border-[#00c6ff]/30';
     let bgGradient = 'from-[#111] to-[#222]';
@@ -241,7 +248,7 @@ export default function Calendar() {
 
       {/* ─────────────────────────── MOBILE AGENDA LIST VIEW ─────────────────────────── */}
       <div className="sm:hidden space-y-3 max-h-[550px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-white/10">
-        {CALENDAR_DAYS.map((d) => {
+        {mobileCalendarDays.map((d) => {
           const { borderClass, bgGradient, textClass, badgeBg, badgeText } = getEventStyle(d.type);
 
           return (
