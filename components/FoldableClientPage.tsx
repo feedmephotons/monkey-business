@@ -662,8 +662,8 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
           </div>
         </div>
+        )}
       </section>
-      )}
 
       {/* ─────────────────────────── SCHEDULE ─────────────────────────── */}
       <section id="schedule" className="relative border-b border-white/5">
@@ -1159,8 +1159,6 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
 
         {openSections.wall && (
           <div className="relative z-10 pb-20 px-5 sm:px-10 max-w-6xl mx-auto animate-fade-in">
-        </div>
-        <div className="max-w-6xl mx-auto">
           {/* HEADER BAR (FROM PHONE MOCKUP) */}
           <div className="flex justify-between items-center pb-6 mb-8 border-b border-light-blue/20">
             <span className="font-[family-name:var(--font-display)] text-banana text-lg sm:text-xl tracking-wider">
@@ -1403,15 +1401,15 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
         </div>
 
         {openSections.music && (
-          <div className="pb-20 px-5 sm:px-10 max-w-4xl mx-auto animate-fade-in">
-            </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-              Monkey <em className="text-yellow not-italic">Music</em>
-            </h2>
-            <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
-              Our first official club banger! Crank up the bass, review the lyrics, and let Great Apes set the vibe while you build those stacks.
-            </p>
-          </div>
+          <div className="max-w-4xl mx-auto pb-20 px-5 sm:px-10 animate-fade-in">
+            <div className="text-center mb-12">
+              <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+                Monkey <em className="text-yellow not-italic">Music</em>
+              </h2>
+              <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
+                Our first official club banger! Crank up the bass, review the lyrics, and let Great Apes set the vibe while you build those stacks.
+              </p>
+            </div>
 
           {/* DJ Mandrill Hero Banner */}
           <div className="relative w-full aspect-[16/9] rounded-sm overflow-hidden border border-yellow/30 shadow-[0_0_30px_rgba(255,204,0,0.15)] bg-neutral-900 mb-10">
