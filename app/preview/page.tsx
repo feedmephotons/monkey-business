@@ -169,7 +169,7 @@ export default function HeadsUpBracketPreviewPage() {
   const getPlayerClass = (matchWinner: string | null, currentPlayer: string) => {
     if (!currentPlayer) return "text-white/20 italic font-mono text-[11px] h-9 px-3 flex items-center";
     if (matchWinner === currentPlayer) {
-      return "text-black bg-yellow font-extrabold font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer transition shadow-[0_0_10px_rgba(255,204,0,0.3)]";
+      return "text-black bg-gradient-to-r from-zinc-300 via-zinc-100 to-zinc-400 font-extrabold font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer transition shadow-[0_0_12px_rgba(255,255,255,0.25)] border border-white/20";
     }
     if (matchWinner && matchWinner !== currentPlayer) {
       return "text-[#ff4444]/60 bg-red-950/10 line-through font-mono text-xs h-9 px-3 flex items-center justify-between cursor-pointer hover:bg-white/5 transition";
