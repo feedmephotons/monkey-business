@@ -38,7 +38,7 @@ export default function HeadsUpBracketPreviewPage() {
   useEffect(() => {
     async function loadState() {
       try {
-        const res = await getBracketState('draft_bracket_state');
+        const res = await getBracketState('bracket_state');
         if (res.ok && res.state) {
           setMatches(JSON.parse(res.state));
         } else {
@@ -77,7 +77,7 @@ export default function HeadsUpBracketPreviewPage() {
         if (m.winner) clean.winner = m.winner;
         return clean;
       });
-      const res = await saveBracketState(JSON.stringify(compactMatches), 'draft_bracket_state');
+      const res = await saveBracketState(JSON.stringify(compactMatches), 'bracket_state');
       if (res.ok) {
         setSavingStatus("saved");
         setTimeout(() => setSavingStatus("idle"), 2000);
