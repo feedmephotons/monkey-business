@@ -221,6 +221,9 @@ export default function HeadsUpBracketPreviewPage() {
             <p className="text-xs text-white/50 uppercase tracking-wide">
               16 Players • Tap any player to advance them • Changes persist to live bracket instantly
             </p>
+            <p className="text-xs text-yellow/95 font-bold uppercase tracking-wider mt-1.5 flex items-center justify-center md:justify-start gap-1.5 animate-pulse">
+              <span>🏆</span> Championship Game is best 2 out of 3 to decide the winner
+            </p>
           </div>
           <div className="flex items-center gap-4">
             {/* Saving Indicator */}
