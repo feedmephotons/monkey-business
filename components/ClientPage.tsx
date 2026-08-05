@@ -58,6 +58,24 @@ interface ClientPageProps {
 }
 
 export default function ClientPage({ posts, budget }: ClientPageProps) {
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    events: true,
+    schedule: true,
+    club: false,
+    promotions: false,
+    merch: false,
+    contact: false,
+    wall: true,
+    music: false,
+  })
+
+  const toggleSection = (section: string) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }))
+  }
+
   const [activeFlyerIndex, setActiveFlyerIndex] = useState(0)
   const [rsvpName, setRsvpName] = useState('')
   const [isRsvped, setIsRsvped] = useState(false)
@@ -531,17 +549,31 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
       </section>
 
       {/* ─────────────────────────── UPCOMING EVENTS ─────────────────────────── */}
-      <section id="events" className="relative py-20 px-5 sm:px-10 bg-navy">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
+      <section id="events" className="relative bg-navy border-b border-white/5">
+        <div 
+          onClick={() => toggleSection('events')}
+          className="py-8 px-5 sm:px-10 max-w-5xl mx-auto flex justify-between items-center cursor-pointer select-none group"
+        >
+          <div>
             <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
               Big Games Coming
             </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+            <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
               Special <em className="text-red">Events</em>
             </h2>
-            <div className="deco-divider mt-6 max-w-sm mx-auto" />
           </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
+              {openSections.events ? 'COLLAPSE ▲' : 'EXPAND ▼'}
+            </span>
+            <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.events ? 'bg-red text-black border-red' : 'bg-transparent text-white'}`}>
+              {openSections.events ? '✕' : '＋'}
+            </div>
+          </div>
+        </div>
+
+        {openSections.events && (
+          <div className="pb-20 px-5 sm:px-10 max-w-5xl mx-auto animate-fade-in">
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Event 1: Ladies Night */}
@@ -657,31 +689,46 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
           </div>
         </div>
+        )}
       </section>
 
       {/* ─────────────────────────── SCHEDULE ─────────────────────────── */}
-      <section id="schedule" className="relative py-24 px-5 sm:px-10">
+      <section id="schedule" className="relative border-b border-white/5">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-schedule.png" alt="" fill className="object-cover opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
         </div>
 
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
+        <div 
+          onClick={() => toggleSection('schedule')}
+          className="relative z-10 py-8 px-5 sm:px-10 max-w-6xl mx-auto flex justify-between items-center cursor-pointer select-none group"
+        >
+          <div>
             <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
               This Month
             </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+            <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
               August <em className="text-red">Schedule</em>
             </h2>
-            <div className="deco-divider mt-6 max-w-sm mx-auto" />
-            <p className="mt-4 font-[family-name:var(--font-body)] text-white/70 italic max-w-xl mx-auto mb-10">
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
+              {openSections.schedule ? 'COLLAPSE ▲' : 'EXPAND ▼'}
+            </span>
+            <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.schedule ? 'bg-red text-black border-red' : 'bg-transparent text-white'}`}>
+              {openSections.schedule ? '✕' : '＋'}
+            </div>
+          </div>
+        </div>
+
+        {openSections.schedule && (
+          <div className="relative z-10 pb-20 px-5 sm:px-10 max-w-6xl mx-auto animate-fade-in">
+            <p className="font-[family-name:var(--font-body)] text-white/70 italic max-w-xl mx-auto mb-10 text-center">
               Interactive Club Calendar. Tap or hover on dates to plan your games.
             </p>
+            <Calendar />
           </div>
-
-          <Calendar />
-        </div>
+        )}
       </section>
 
       {/* ─────────────────────────── BUDGET CAGE ─────────────────────────── */}
@@ -803,203 +850,222 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
       </section> */}
 
       {/* ─────────────────────────── JOIN THE CLUB ─────────────────────────── */}
-      <section id="club" className="relative py-24 px-5 sm:px-10">
+      <section id="club" className="relative border-b border-white/5">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-jungle.png" alt="" fill className="object-cover opacity-15" />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
         </div>
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-14">
+
+        <div 
+          onClick={() => toggleSection('club')}
+          className="relative z-10 py-8 px-5 sm:px-10 max-w-5xl mx-auto flex justify-between items-center cursor-pointer select-none group"
+        >
+          <div>
             <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
               Chapter Four
             </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+            <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
               Join <em className="text-red">Monkey Biz</em>
             </h2>
-            <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
+              {openSections.club ? 'COLLAPSE ▲' : 'EXPAND ▼'}
+            </span>
+            <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.club ? 'bg-red text-black border-red' : 'bg-transparent text-white'}`}>
+              {openSections.club ? '✕' : '＋'}
+            </div>
+          </div>
+        </div>
+
+        {openSections.club && (
+          <div className="relative z-10 pb-20 px-5 sm:px-10 max-w-5xl mx-auto animate-fade-in">
+            <p className="font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto mb-10 text-center">
               Download PokerBros and join the club. Click the referral link below and you&apos;ll be
               added to Monkey Biz Poker automatically.
             </p>
-          </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Left — QR code + club info */}
-            <div className="rounded-sm border border-light-blue/40 bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)]">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-48 h-48 sm:w-56 sm:h-56 bg-white rounded-lg p-2.5 shadow-lg">
-                  <Image
-                    src="/img/pokerbros-qr-official.png"
-                    alt="Scan to join Monkey Biz Poker on PokerBros"
-                    width={224}
-                    height={224}
-                    className="w-full h-full"
-                  />
-                </div>
-                <p className="mt-4 font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.25em] text-white/50">
-                  Scan with your phone camera
-                </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Left — QR code + club info */}
+              <div className="rounded-sm border border-light-blue/40 bg-navy-deep/75 backdrop-blur p-6 sm:p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.8)]">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-48 h-48 sm:w-56 sm:h-56 bg-white rounded-lg p-2.5 shadow-lg">
+                    <Image
+                      src="/img/pokerbros-qr-official.png"
+                      alt="Scan to join Monkey Biz Poker on PokerBros"
+                      width={224}
+                      height={224}
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <p className="mt-4 font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.25em] text-white/50">
+                    Scan with your phone camera
+                  </p>
 
-                <div className="mt-6 w-full">
-                  <div className="rounded border border-light-blue/30 bg-navy/30 p-4 text-center">
-                    <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-white/50 mb-1">
-                      Club ID
-                    </div>
-                    <div className="font-[family-name:var(--font-display)] text-2xl text-red-bright neon">
-                      1670819
+                  <div className="mt-6 w-full">
+                    <div className="rounded border border-light-blue/30 bg-navy/30 p-4 text-center">
+                      <div className="font-[family-name:var(--font-mono)] text-[0.6rem] uppercase tracking-[0.2em] text-white/50 mb-1">
+                        Club ID
+                      </div>
+                      <div className="font-[family-name:var(--font-display)] text-2xl text-red-bright neon">
+                        1670819
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right — steps */}
-            <div className="space-y-5">
-              <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">1</span>
-                  <span className="font-[family-name:var(--font-headline)] text-xl text-white">Download PokerBros</span>
+              {/* Right — steps */}
+              <div className="space-y-5">
+                <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">1</span>
+                    <span className="font-[family-name:var(--font-headline)] text-xl text-white">Download PokerBros</span>
+                  </div>
+                  <p className="font-[family-name:var(--font-body)] text-white/70 mb-4">
+                    Free app available on iPhone and Android. Takes 30 seconds.
+                  </p>
+                  <div className="flex gap-3">
+                    <a
+                      href="https://i.pokerbros.net/D1LwWJqsU2b"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
+                    >
+                      App Store
+                    </a>
+                    <a
+                      href="https://i.pokerbros.net/D1LwWJqsU2b"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
+                    >
+                      Google Play
+                    </a>
+                  </div>
                 </div>
-                <p className="font-[family-name:var(--font-body)] text-white/70 mb-4">
-                  Free app available on iPhone and Android. Takes 30 seconds.
-                </p>
-                <div className="flex gap-3">
+
+                <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">2</span>
+                    <span className="font-[family-name:var(--font-headline)] text-xl text-white">Join the Club</span>
+                  </div>
+                  <p className="font-[family-name:var(--font-body)] text-white/70 mb-4">
+                    Tap the link below from your phone. It opens PokerBros and auto-adds you to
+                    Monkey Biz Poker — no club code needed.
+                  </p>
                   <a
                     href="https://i.pokerbros.net/D1LwWJqsU2b"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
+                    className="block w-full text-center px-6 py-4 border-2 border-red-bright text-red-bright rounded font-[family-name:var(--font-display)] tracking-wider text-2xl hover:bg-red/20 transition"
                   >
-                    App Store
-                  </a>
-                  <a
-                    href="https://i.pokerbros.net/D1LwWJqsU2b"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 text-center px-4 py-2.5 bg-gradient-to-b from-red-bright to-red text-white rounded font-[family-name:var(--font-mono)] text-xs uppercase tracking-widest shadow-[0_3px_0_rgba(0,0,0,0.3)] hover:translate-y-[1px] transition"
-                  >
-                    Google Play
+                    JOIN MONKEY BIZ
                   </a>
                 </div>
-              </div>
 
-              <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">2</span>
-                  <span className="font-[family-name:var(--font-headline)] text-xl text-white">Join the Club</span>
+                <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">3</span>
+                    <span className="font-[family-name:var(--font-headline)] text-xl text-white">Or Join Manually</span>
+                  </div>
+                  <p className="font-[family-name:var(--font-body)] text-white/70">
+                    Open PokerBros, tap the <span className="text-red font-bold">magnifying glass icon</span> on the right, enter Club ID <strong className="text-red">1670819</strong>, and apply.
+                  </p>
                 </div>
-                <p className="font-[family-name:var(--font-body)] text-white/70 mb-4">
-                  Tap the link below from your phone. It opens PokerBros and auto-adds you to
-                  Monkey Biz Poker — no club code needed.
-                </p>
-                <a
-                  href="https://i.pokerbros.net/D1LwWJqsU2b"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full text-center px-6 py-4 border-2 border-red-bright text-red-bright rounded font-[family-name:var(--font-display)] tracking-wider text-2xl hover:bg-red/20 transition"
-                >
-                  JOIN MONKEY BIZ
-                </a>
-              </div>
-
-              <div className="rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="w-8 h-8 rounded-full bg-red text-white font-bold flex items-center justify-center font-[family-name:var(--font-mono)]">3</span>
-                  <span className="font-[family-name:var(--font-headline)] text-xl text-white">Or Join Manually</span>
-                </div>
-                <p className="font-[family-name:var(--font-body)] text-white/70">
-                  Open PokerBros, tap the <span className="text-red font-bold">magnifying glass icon</span> on the right, enter Club ID <strong className="text-red">1670819</strong>, and apply.
-                </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ─────────────────────────── PROMOTIONS ─────────────────────────── */}
-      <section id="promotions" className="relative py-20 px-5 sm:px-10">
-          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-navy-deep via-navy/60 to-navy-deep" />
-          <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-12">
-              <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
-                  Spread the Word
-              </span>
-              <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-                  Share the <em className="text-red">Action</em>
-              </h2>
-              <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
-                  Invite your friends, join the community, and get in on the conversation.
-              </p>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-5">
-                  <a href="https://t.me/Monkeybizpoker" target="_blank" rel="noopener noreferrer" className="block p-6 rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur hover:border-red/70 transition">
-                      <h3 className="font-[family-name:var(--font-headline)] text-2xl text-red">Join on Telegram</h3>
-                      <p className="text-white/70">Get updates, chat with players, and never miss a game.</p>
-                  </a>
-                  <button onClick={() => navigator.clipboard.writeText('https://monkeybizpoker.com')} className="block p-6 rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur hover:border-red/70 transition text-left">
-                      <h3 className="font-[family-name:var(--font-headline)] text-2xl text-red">Share This Page</h3>
-                      <p className="text-white/70">Copy a link to the site and send it to your crew.</p>
-                  </button>
-              </div>
-          </div>
+        )}
       </section>
 
       {/* ─────────────────────────── MERCH ─────────────────────────── */}
-      <section id="merch" className="relative py-24 px-5 sm:px-10">
+      <section id="merch" className="relative border-b border-white/5">
           <div className="absolute inset-0 -z-10">
               <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/95 to-navy-deep" />
           </div>
-          <div className="max-w-5xl mx-auto">
-              <div className="text-center">
+          <div 
+            onClick={() => toggleSection('merch')}
+            className="py-8 px-5 sm:px-10 max-w-5xl mx-auto flex justify-between items-center cursor-pointer select-none group"
+          >
+            <div>
               <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
-                  Coming Soon
+                Coming Soon
               </span>
-              <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-                  Monkey <em className="text-red">Merch</em>
+              <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
+                Monkey <em className="text-red">Merch</em>
               </h2>
-              <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
+                {openSections.merch ? 'COLLAPSE ▲' : 'EXPAND ▼'}
+              </span>
+              <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.merch ? 'bg-red text-black border-red' : 'bg-transparent text-white'}`}>
+                {openSections.merch ? '✕' : '＋'}
+              </div>
+            </div>
+          </div>
+
+          {openSections.merch && (
+            <div className="pb-20 px-5 sm:px-10 max-w-5xl mx-auto animate-fade-in text-center">
+              <p className="font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
                   T-shirts, hoodies, card protectors, and more. Stay tuned for the drop.
               </p>
-              </div>
-          </div>
+            </div>
+          )}
       </section>
 
       {/* ─────────────────────────── CONTACT ─────────────────────────── */}
-      <section id="contact" className="relative py-20 px-5 sm:px-10">
+      <section id="contact" className="relative border-b border-white/5">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-navy-deep via-navy/60 to-navy-deep" />
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+        <div 
+          onClick={() => toggleSection('contact')}
+          className="py-8 px-5 sm:px-10 max-w-4xl mx-auto flex justify-between items-center cursor-pointer select-none group"
+        >
+          <div>
             <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
               Got Questions?
             </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+            <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
               Talk to a <em className="text-red">Monkey</em>
             </h2>
-            <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
+              {openSections.contact ? 'COLLAPSE ▲' : 'EXPAND ▼'}
+            </span>
+            <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.contact ? 'bg-red text-black border-red' : 'bg-transparent text-white'}`}>
+              {openSections.contact ? '✕' : '＋'}
+            </div>
+          </div>
+        </div>
+
+        {openSections.contact && (
+          <div className="pb-20 px-5 sm:px-10 max-w-4xl mx-auto animate-fade-in">
+            <p className="font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto mb-10 text-center">
               Ring the hosts or slide into Telegram. We don&apos;t bite.
             </p>
-          </div>
 
-          <div className="grid sm:grid-cols-2 gap-5">
-            {[
-              { name: 'Banana Lou', phone: '509-666-2743', phoneHref: 'tel:+15096662743', tg: '@Monkeybizpoker', tgHref: 'https://t.me/Monkeybizpoker' },
-              { name: 'Donkey Diesel', phone: '302-784-4793', phoneHref: 'tel:+13027844793', tg: '@BigDiesel22', tgHref: 'https://t.me/BigDiesel22' },
-            ].map((c) => (
-              <div
-                key={c.name}
-                className="relative rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6 sm:p-8 overflow-hidden group hover:border-red/70 transition"
-              >
-                <span className="absolute top-2 left-2 text-light-blue/40 text-xs">✦</span>
-                <span className="absolute top-2 right-2 text-light-blue/40 text-xs">✦</span>
-                <span className="absolute bottom-2 left-2 text-light-blue/40 text-xs">✦</span>
-                <span className="absolute bottom-2 right-2 text-light-blue/40 text-xs">✦</span>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {[
+                { name: 'Banana Lou', phone: '509-666-2743', phoneHref: 'tel:+15096662743', tg: '@Monkeybizpoker', tgHref: 'https://t.me/Monkeybizpoker' },
+                { name: 'Donkey Diesel', phone: '302-784-4793', phoneHref: 'tel:+13027844793', tg: '@BigDiesel22', tgHref: 'https://t.me/BigDiesel22' },
+              ].map((c) => (
+                <div
+                  key={c.name}
+                  className="relative rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur p-6 sm:p-8 overflow-hidden group hover:border-red/70 transition w-full"
+                >
+                  <span className="absolute top-2 left-2 text-light-blue/40 text-xs">✦</span>
+                  <span className="absolute top-2 right-2 text-light-blue/40 text-xs">✦</span>
+                  <span className="absolute bottom-2 left-2 text-light-blue/40 text-xs">✦</span>
+                  <span className="absolute bottom-2 right-2 text-light-blue/40 text-xs">✦</span>
 
-                <div className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.25em] text-white/50 mb-1">
-                  Host
-                </div>
-                <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-red mb-5">
-                  {c.name}
-                </h3>
+                  <div className="font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.25em] text-white/50 mb-1">
+                    Host
+                  </div>
+                  <h3 className="font-[family-name:var(--font-headline)] text-3xl sm:text-4xl text-red mb-5">
+                    {c.name}
+                  </h3>
 
                 <div className="space-y-3">
                   <a
@@ -1042,15 +1108,40 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             ))}
           </div>
         </div>
+      )}
       </section>
 
       {/* ─────────────────────────── THE WALL ─────────────────────────── */}
-      <section id="wall" className="relative py-24 px-5 sm:px-10 bg-gradient-to-b from-navy-deep to-[#052112]">
+      <section id="wall" className="relative bg-gradient-to-b from-navy-deep to-[#052112] border-b border-white/5">
         <div className="absolute inset-0 -z-10">
           <Image src="/img/bg-wall.png" alt="" fill className="object-cover opacity-25" />
           <div className="absolute inset-0 bg-gradient-to-b from-navy-deep via-navy-deep/90 to-[#052112]" />
         </div>
-        <div className="max-w-6xl mx-auto">
+
+        <div 
+          onClick={() => toggleSection('wall')}
+          className="relative z-10 py-8 px-5 sm:px-10 max-w-6xl mx-auto flex justify-between items-center cursor-pointer select-none group"
+        >
+          <div>
+            <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
+              Contest & Feed
+            </span>
+            <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
+              Splat <em className="text-red">Wall</em>
+            </h2>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
+              {openSections.wall ? 'COLLAPSE ▲' : 'EXPAND ▼'}
+            </span>
+            <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.wall ? 'bg-red text-black border-red' : 'bg-transparent text-white'}`}>
+              {openSections.wall ? '✕' : '＋'}
+            </div>
+          </div>
+        </div>
+
+        {openSections.wall && (
+          <div className="relative z-10 pb-20 px-5 sm:px-10 max-w-6xl mx-auto animate-fade-in">
           {/* HEADER BAR (FROM PHONE MOCKUP) */}
           <div className="flex justify-between items-center pb-6 mb-8 border-b border-light-blue/20">
             <span className="font-[family-name:var(--font-display)] text-banana text-lg sm:text-xl tracking-wider">
@@ -1262,24 +1353,46 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             )
           })()}
         </div>
+      )}
       </section>
 
 
       {/* ─────────────────────────── MONKEY MUSIC ─────────────────────────── */}
-      <section id="music" className="relative py-24 px-5 sm:px-10 overflow-hidden bg-[#0c0c0c] border-t border-yellow/20 z-10">
+      <section id="music" className="relative bg-[#0c0c0c] border-t border-yellow/20 z-10">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent opacity-40" />
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+        
+        <div 
+          onClick={() => toggleSection('music')}
+          className="py-8 px-5 sm:px-10 max-w-4xl mx-auto flex justify-between items-center cursor-pointer select-none group"
+        >
+          <div>
             <span className="text-[0.7rem] uppercase tracking-[0.3em] text-yellow font-[family-name:var(--font-mono)]">
               Club Hits & Anthems
             </span>
-            <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
-              Monkey <em className="text-yellow not-italic">Music</em>
+            <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
+              Monkey <em className="text-yellow">Music</em>
             </h2>
-            <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
-              Our first official club banger! Crank up the bass, review the lyrics, and let Great Apes set the vibe while you build those stacks.
-            </p>
           </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
+              {openSections.music ? 'COLLAPSE ▲' : 'EXPAND ▼'}
+            </span>
+            <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.music ? 'bg-yellow text-black border-yellow' : 'bg-transparent text-white'}`}>
+              {openSections.music ? '✕' : '＋'}
+            </div>
+          </div>
+        </div>
+
+        {openSections.music && (
+          <div className="max-w-4xl mx-auto pb-20 px-5 sm:px-10 animate-fade-in">
+            <div className="text-center mb-12">
+              <h2 className="mt-3 font-[family-name:var(--font-headline)] text-5xl sm:text-6xl text-white">
+                Monkey <em className="text-yellow not-italic">Music</em>
+              </h2>
+              <p className="mt-4 font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto">
+                Our first official club banger! Crank up the bass, review the lyrics, and let Great Apes set the vibe while you build those stacks.
+              </p>
+            </div>
 
           {/* DJ Mandrill Hero Banner */}
           <div className="relative w-full aspect-[16/9] rounded-sm overflow-hidden border border-yellow/30 shadow-[0_0_30px_rgba(255,204,0,0.15)] bg-neutral-900 mb-10">
@@ -1595,6 +1708,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
             </div>
           </div>
         </div>
+        )}
       </section>
 
       {/* ─────────────────────────── FOOTER ─────────────────────────── */}

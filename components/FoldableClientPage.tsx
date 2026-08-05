@@ -979,50 +979,6 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
         )}
       </section>
 
-      {/* ─────────────────────────── PROMOTIONS ─────────────────────────── */}
-      <section id="promotions" className="relative border-b border-white/5">
-          <div className="absolute inset-0 -z-10 bg-gradient-to-b from-navy-deep via-navy/60 to-navy-deep" />
-          <div 
-            onClick={() => toggleSection('promotions')}
-            className="py-8 px-5 sm:px-10 max-w-4xl mx-auto flex justify-between items-center cursor-pointer select-none group"
-          >
-            <div>
-              <span className="text-[0.7rem] uppercase tracking-[0.3em] text-red font-[family-name:var(--font-mono)]">
-                Spread the Word
-              </span>
-              <h2 className="mt-1 font-[family-name:var(--font-headline)] text-4xl sm:text-5xl text-white">
-                Share the <em className="text-red">Action</em>
-              </h2>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] uppercase tracking-widest font-mono text-white/40 group-hover:text-yellow transition-all">
-                {openSections.promotions ? 'COLLAPSE ▲' : 'EXPAND ▼'}
-              </span>
-              <div className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all ${openSections.promotions ? 'bg-red text-black border-red' : 'bg-transparent text-white'}`}>
-                {openSections.promotions ? '✕' : '＋'}
-              </div>
-            </div>
-          </div>
-
-          {openSections.promotions && (
-            <div className="pb-20 px-5 sm:px-10 max-w-4xl mx-auto animate-fade-in">
-              <p className="font-[family-name:var(--font-body)] italic text-white/70 max-w-xl mx-auto mb-10 text-center">
-                  Invite your friends, join the community, and get in on the conversation.
-              </p>
-              <div className="grid sm:grid-cols-2 gap-5">
-                  <a href="https://t.me/Monkeybizpoker" target="_blank" rel="noopener noreferrer" className="block p-6 rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur hover:border-red/70 transition">
-                      <h3 className="font-[family-name:var(--font-headline)] text-2xl text-red">Join on Telegram</h3>
-                      <p className="text-white/70">Get updates, chat with players, and never miss a game.</p>
-                  </a>
-                  <button onClick={() => navigator.clipboard.writeText('https://monkeybizpoker.com')} className="block p-6 rounded-sm border border-light-blue/30 bg-navy-deep/75 backdrop-blur hover:border-red/70 transition text-left w-full">
-                      <h3 className="font-[family-name:var(--font-headline)] text-2xl text-red">Share This Page</h3>
-                      <p className="text-white/70">Copy a link to the site and send it to your crew.</p>
-                  </button>
-              </div>
-            </div>
-          )}
-      </section>
-
       {/* ─────────────────────────── MERCH ─────────────────────────── */}
       <section id="merch" className="relative border-b border-white/5">
           <div className="absolute inset-0 -z-10">
