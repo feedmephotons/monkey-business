@@ -382,6 +382,24 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               </a>
             </div>
 
+            {/* Heads Up Bracket Link (Noticeable High-Impact Pulsing Button) */}
+            <div className="pt-4 pl-1">
+              <a
+                href="/bracket"
+                className="group relative inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#bd0000] to-[#ff0000] hover:from-[#d00000] hover:to-[#ff2020] border border-red/40 text-white rounded font-mono text-xs uppercase tracking-widest shadow-[0_0_15px_rgba(255,0,0,0.45)] hover:-translate-y-[1px] active:translate-y-[1px] transition-all duration-300 animate-[pulse_2s_infinite]"
+              >
+                {/* Pulsing Yellow Radar Indicator */}
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-yellow"></span>
+                </span>
+                
+                <span className="font-extrabold tracking-[0.15em]">Heads Up Bracket Standings</span>
+                
+                <span className="text-sm group-hover:scale-125 transition-transform">🏆</span>
+              </a>
+            </div>
+
             {/* Listen to Club Anthem Link (Upgraded High-Impact Attention-Grabbing Wiggle Button with Dynamic Neon Color Shift) */}
             <div className="pt-4 pl-1">
               <a
