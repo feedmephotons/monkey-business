@@ -384,8 +384,12 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
       const key = 'mb_banana_votes'
       const raw = localStorage.getItem(key)
       const votes: Record<string, number> = raw ? JSON.parse(raw) : {}
-      if (votes[post.id]) {
+      const lastVote = votes[post.id]
+      const now = Date.now()
+      if (lastVote && (now - lastVote < 24 * 60 * 60 * 1000)) {
         setHasRatedHeat(true)
+      } else {
+        setHasRatedHeat(false)
       }
     } catch (e) {}
   }, [post.id])
