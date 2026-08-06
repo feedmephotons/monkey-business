@@ -632,7 +632,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 Let's go bananas, dial up the blinds. Secure your seat at the table now!
               </p>
               <div className="font-[family-name:var(--font-mono)] text-sm uppercase tracking-widest text-white/60 mb-6">
-                <span className="font-bold text-white">Date:</span> August 3rd @ 8 PM Eastern
+                <span className="font-bold text-white">Date:</span> September 3rd @ 8 PM Eastern
               </div>
 
               {/* RSVP Form */}
