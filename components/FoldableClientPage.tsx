@@ -58,6 +58,16 @@ interface ClientPageProps {
 }
 
 export default function ClientPage({ posts, budget }: ClientPageProps) {
+  // Force scroll to top on refresh
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     events: true,
     schedule: true,
