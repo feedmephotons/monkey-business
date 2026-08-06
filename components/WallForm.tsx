@@ -12,6 +12,7 @@ const FONT_COLORS = [
   '#ff8c42', // orange
   '#f6ecc9', // cream
   '#ffffff', // white
+  '#c0c0c0', // silver
   '#000000', // black
 ]
 
