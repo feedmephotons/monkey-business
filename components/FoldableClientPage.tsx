@@ -11,10 +11,10 @@ import type { WallPost as WallPostType, BudgetRow } from '@/lib/supabase'
 import type { EnrichedWallPost } from '@/app/page'
 
 const FLYERS = [
-  { src: '/img/hero-10-spot-flyer.png', alt: "Monkey's 10 Spot Tournament - Every Saturday at Noon Eastern", scrollTo: '#schedule' },
-  { src: '/img/hero-heads-up-flyer.png', alt: "Heads Up Tournament - 1 Round Elimination All Month Long", scrollTo: '#schedule' },
+  { src: '/img/hero-10-spot-flyer.png', alt: "Monkey's 10 Spot Tournament - Every Saturday at Noon Eastern", scrollTo: '#events' },
+  { src: '/img/hero-heads-up-flyer.png', alt: "Heads Up Tournament - 1 Round Elimination All Month Long", href: '/bracket' },
   { src: '/img/hero-august-calendar.png', alt: "August 2026 Club Schedule - Full Month Calendar", scrollTo: '#schedule' },
-  { src: '/img/hero-ladies-night.png', alt: "Ladies Night Tournament - Last Saturday of Every Month", scrollTo: '#schedule' },
+  { src: '/img/hero-ladies-night.png', alt: "Ladies Night Tournament - Last Saturday of Every Month", scrollTo: '#events' },
   { src: '/img/hero-contest-flyer.png', alt: 'Enter our weekly contest - SPLAT A Bad Beat!', scrollTo: '#wall-tab-section', isContest: true },
 ]
 
@@ -463,7 +463,9 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
               onTouchEnd={onTouchEnd}
               onClick={() => {
                 const currentFlyer = FLYERS[activeFlyerIndex];
-                if (currentFlyer.scrollTo) {
+                if ((currentFlyer as any).href) {
+                  window.location.href = (currentFlyer as any).href;
+                } else if (currentFlyer.scrollTo) {
                   if (currentFlyer.isContest) {
                     setActiveWallTab('bad_beat');
                   }
@@ -474,7 +476,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 }
               }}
               className={`relative rounded-lg overflow-hidden ring-2 ring-light-blue/50 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.7)] group transition-all ${
-                FLYERS[activeFlyerIndex].scrollTo ? 'cursor-pointer hover:ring-yellow hover:scale-[1.01]' : 'cursor-grab active:cursor-grabbing'
+                FLYERS[activeFlyerIndex].scrollTo || (FLYERS[activeFlyerIndex] as any).href ? 'cursor-pointer hover:ring-yellow hover:scale-[1.01]' : 'cursor-grab active:cursor-grabbing'
               }`}
             >
               <Image
