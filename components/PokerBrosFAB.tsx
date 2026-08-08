@@ -132,9 +132,10 @@ export default function PokerBrosFAB() {
                     <Image
                       src="/img/pokerbros-qr-official.png"
                       alt="Scan to join Monkey Biz Poker on PokerBros"
-                      width={80}
-                      height={80}
-                      className="w-full h-full"
+                      width={200}
+                      height={200}
+                      unoptimized
+                      className="w-full h-full object-contain"
                     />
                   </div>
                 </div>

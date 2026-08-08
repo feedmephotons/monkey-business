@@ -905,9 +905,10 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                     <Image
                       src="/img/pokerbros-qr-official.png"
                       alt="Scan to join Monkey Biz Poker on PokerBros"
-                      width={224}
-                      height={224}
-                      className="w-full h-full"
+                      width={300}
+                      height={300}
+                      unoptimized
+                      className="w-full h-full object-contain"
                     />
                   </div>
                   <p className="mt-4 font-[family-name:var(--font-mono)] text-[0.65rem] uppercase tracking-[0.25em] text-white/50">
