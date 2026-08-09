@@ -62,6 +62,8 @@ export default function PublicBracketPage() {
       }
     }
     loadState();
+    const interval = setInterval(loadState, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const getPlayerClass = (matchWinner: string | null, currentPlayer: string) => {
@@ -91,9 +93,9 @@ export default function PublicBracketPage() {
       {/* Header */}
       <header className="border-b border-yellow/10 bg-[#080808]/80 backdrop-blur sticky top-0 z-50 px-4 py-4 sm:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-yellow font-bold uppercase tracking-wider hover:opacity-80 transition">
+          <a href="/" className="flex items-center gap-2 text-yellow font-bold uppercase tracking-wider hover:opacity-80 transition">
             <span>← Exit Bracket</span>
-          </Link>
+          </a>
           <div className="text-right">
             <h1 className="text-lg font-mono text-yellow font-bold tracking-widest uppercase">
               Heads Up Tournament 2 Standings 🦧🏆
