@@ -95,6 +95,19 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
   const [showLyrics, setShowLyrics] = useState(false)
   const [shareText, setShareText] = useState("Share Song")
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [currentTrack, setCurrentTrack] = useState<'club' | 'country'>('country');
+
+  const handleTrackChange = (track: 'club' | 'country') => {
+    setCurrentTrack(track);
+    if (audioRef.current) {
+      const playing = isMusicPlaying;
+      audioRef.current.src = track === 'club' ? '/audio/monkey-biz-poker-2.mp3' : '/audio/monkey-biz-poker-country.mp3';
+      audioRef.current.load();
+      if (playing) {
+        audioRef.current.play().catch(e => console.log("Play failed", e));
+      }
+    }
+  };
 
   const [spinAngle, setSpinAngle] = useState(0)
   const [isScratching, setIsScratching] = useState(false)
@@ -1485,8 +1498,28 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   </svg>
                 </div>
 
-                <div className="inline-block px-3 py-1 bg-yellow/10 border border-yellow/30 rounded-full text-[0.65rem] text-yellow font-mono mb-3">
-                  🔥 TOP CLUB HIT
+                {/* Track Selector Tabs */}
+                <div className="flex bg-[#050505] border border-white/10 rounded-full p-1 mb-4 gap-1 max-w-[280px] mx-auto">
+                  <button
+                    onClick={() => handleTrackChange('club')}
+                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-bold uppercase tracking-wider transition ${
+                      currentTrack === 'club' 
+                        ? 'bg-yellow text-black shadow-[0_0_12px_rgba(255,209,59,0.35)]' 
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    Club Anthem 🎵
+                  </button>
+                  <button
+                    onClick={() => handleTrackChange('country')}
+                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-bold uppercase tracking-wider transition ${
+                      currentTrack === 'country' 
+                        ? 'bg-yellow text-black shadow-[0_0_12px_rgba(255,209,59,0.35)]' 
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    Country Rock 🤠
+                  </button>
                 </div>
                 <h3 
                   onClick={toggleMusic}
@@ -1495,7 +1528,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   }`}
                   title="Click to play/pause"
                 >
-                  Great Apes (Country Rock) 🤠
+                  {currentTrack === 'club' ? 'Great Apes (Club Mix) 🎵' : 'Great Apes (Country Rock) 🤠'}
 
                   {/* Color-shifting styles specifically for "Great Apes" title while music plays */}
                   <style jsx>{`
@@ -1590,7 +1623,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   </div>
                   <audio
                     ref={audioRef}
-                    src="/audio/monkey-biz-poker-country.mp3"
+                    src={currentTrack === 'club' ? '/audio/monkey-biz-poker-2.mp3' : '/audio/monkey-biz-poker-country.mp3'}
                     preload="auto"
                     playsInline
                     controls
@@ -1608,19 +1641,33 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 Lyrics Sheet
               </h4>
               <p className="text-[0.65rem] text-white/50 font-mono mb-6 uppercase tracking-wider">
-                RAP ANTHEM · BEAT: GRITTY 808 TRAP
+                {currentTrack === 'club' ? 'RAP ANTHEM · BEAT: GRITTY 808 TRAP' : 'COUNTRY ROCK HYBRID · BEAT: SLIDIN\' BANJO & HEAVY GUITARS'}
               </p>
 
               <div className="space-y-6 text-sm leading-relaxed text-white/80 font-[family-name:var(--font-body)]">
                 <div>
                   <div className="text-[0.7rem] text-yellow font-mono uppercase tracking-wider font-bold mb-1">[INTRO]</div>
-                  <p className="text-white/50 italic mb-2">{"*(Heavy bass drops, sounds of poker chips splashing, a monkey howling)*"}</p>
-                  <p>{"Yeah… Welcome to the jungle, baby."}</p>
-                  <p>{"Where the stakes are high, and the beasts run the table."}</p>
-                  <p>{"Monkey Biz Poker on PokerBros."}</p>
-                  <p>{"You know the code: 1670819."}</p>
-                  <p>{"Stack 'em up or get felted."}</p>
-                  <p>{"Let's get nasty. Uh."}</p>
+                  {currentTrack === 'club' ? (
+                    <>
+                      <p className="text-white/50 italic mb-2">{"*(Heavy bass drops, sounds of poker chips splashing, a monkey howling)*"}</p>
+                      <p>{"Yeah… Welcome to the jungle, baby."}</p>
+                      <p>{"Where the stakes are high, and the beasts run the table."}</p>
+                      <p>{"Monkey Biz Poker on PokerBros."}</p>
+                      <p>{"You know the code: 1670819."}</p>
+                      <p>{"Stack 'em up or get felted."}</p>
+                      <p>{"Let's get nasty. Uh."}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-white/50 italic mb-2">{"*(A lone banjo twangs, heavy boot stomps, a train whistle blows, a monkey screeches)*"}</p>
+                      <p>{"Well howdy, partner… Welcome to the jungle, baby!"}</p>
+                      <p>{"Where the stakes are sky-high, and the wild beasts run this range."}</p>
+                      <p>{"Monkey Biz Poker on PokerBros."}</p>
+                      <p>{"Write down this club code: 1670819."}</p>
+                      <p>{"Stack 'em tall or get clean felted!"}</p>
+                      <p>{"Let's get rowdy! Yee-haw!"}</p>
+                    </>
+                  )}
                 </div>
 
                 <div>
