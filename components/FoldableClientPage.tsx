@@ -1495,7 +1495,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   }`}
                   title="Click to play/pause"
                 >
-                  Great Apes (Country Remix) 🤠
+                  Great Apes (Country Rock) 🤠
 
                   {/* Color-shifting styles specifically for "Great Apes" title while music plays */}
                   <style jsx>{`
