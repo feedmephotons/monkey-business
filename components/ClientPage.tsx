@@ -1499,23 +1499,23 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 </div>
 
                 {/* Track Selector Tabs */}
-                <div className="flex bg-[#050505] border border-white/10 rounded-full p-1 mb-4 gap-1 max-w-[280px] mx-auto">
+                <div className="flex bg-[#050505] border border-white/20 rounded-full p-1 mb-4 gap-1 max-w-[280px] mx-auto">
                   <button
                     onClick={() => handleTrackChange('club')}
-                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-bold uppercase tracking-wider transition ${
+                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-extrabold uppercase tracking-wider transition ${
                       currentTrack === 'club' 
                         ? 'bg-yellow text-black shadow-[0_0_12px_rgba(255,209,59,0.35)]' 
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                        : 'text-white hover:text-yellow hover:bg-white/10'
                     }`}
                   >
                     Club Anthem 🎵
                   </button>
                   <button
                     onClick={() => handleTrackChange('country')}
-                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-bold uppercase tracking-wider transition ${
+                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-extrabold uppercase tracking-wider transition ${
                       currentTrack === 'country' 
                         ? 'bg-yellow text-black shadow-[0_0_12px_rgba(255,209,59,0.35)]' 
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                        : 'text-white hover:text-yellow hover:bg-white/10'
                     }`}
                   >
                     Country Rock 🤠
