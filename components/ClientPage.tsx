@@ -1499,23 +1499,23 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 </div>
 
                 {/* Track Selector Tabs */}
-                <div className="flex bg-[#050505] border border-white/20 rounded-full p-1 mb-4 gap-1 max-w-[280px] mx-auto">
+                <div className="flex bg-[#050505] border border-white/15 rounded-full p-1.5 mb-4 gap-2 max-w-[300px] mx-auto">
                   <button
                     onClick={() => handleTrackChange('club')}
-                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-extrabold uppercase tracking-wider transition ${
+                    className={`flex-1 px-4 py-2 rounded-full text-[0.7rem] font-mono font-extrabold uppercase tracking-wider transition-all duration-200 ${
                       currentTrack === 'club' 
-                        ? 'bg-yellow text-black shadow-[0_0_12px_rgba(255,209,59,0.35)]' 
-                        : 'text-white hover:text-yellow hover:bg-white/10'
+                        ? 'bg-red-600 text-white font-black shadow-[0_0_15px_rgba(220,38,38,0.5)] border border-red-500' 
+                        : 'text-red-400 bg-red-950/10 border border-red-500/20 hover:text-red hover:bg-red-950/20'
                     }`}
                   >
                     Club Anthem 🎵
                   </button>
                   <button
                     onClick={() => handleTrackChange('country')}
-                    className={`flex-1 px-4 py-1.5 rounded-full text-[0.65rem] font-mono font-extrabold uppercase tracking-wider transition ${
+                    className={`flex-1 px-4 py-2 rounded-full text-[0.7rem] font-mono font-extrabold uppercase tracking-wider transition-all duration-200 ${
                       currentTrack === 'country' 
-                        ? 'bg-yellow text-black shadow-[0_0_12px_rgba(255,209,59,0.35)]' 
-                        : 'text-white hover:text-yellow hover:bg-white/10'
+                        ? 'bg-yellow text-black font-black shadow-[0_0_15px_rgba(255,209,59,0.5)] border border-yellow-400' 
+                        : 'text-yellow-400 bg-yellow-950/10 border border-yellow-500/20 hover:text-yellow hover:bg-yellow-950/20'
                     }`}
                   >
                     Country Rock 🤠
