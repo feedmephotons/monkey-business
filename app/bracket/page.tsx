@@ -29,6 +29,54 @@ interface Match {
   winner: string | null;
 }
 
+function reconstructMatches(storedData: any): Match[] {
+  let winners: (string | null)[] = Array(15).fill(null);
+  if (Array.isArray(storedData)) {
+    if (storedData.length > 0 && (typeof storedData[0] === 'string' || storedData[0] === null)) {
+      winners = storedData;
+    } else {
+      winners = storedData.map((m: any) => m.winner || null);
+    }
+  }
+
+  const matchList: Match[] = [];
+  for (let i = 0; i < 8; i++) {
+    matchList.push({
+      p1: INITIAL_PLAYERS[i * 2] || "",
+      p2: INITIAL_PLAYERS[i * 2 + 1] || "",
+      winner: winners[i] || null,
+    });
+  }
+  for (let i = 0; i < 7; i++) {
+    matchList.push({ p1: "", p2: "", winner: winners[8 + i] || null });
+  }
+
+  for (let i = 0; i < 14; i++) {
+    const winner = matchList[i].winner;
+    if (winner) {
+      let targetMatchIndex = -1;
+      let targetSlot: "p1" | "p2" = "p1";
+
+      if (i >= 0 && i <= 7) {
+        targetMatchIndex = 8 + Math.floor(i / 2);
+        targetSlot = i % 2 === 0 ? "p1" : "p2";
+      } else if (i >= 8 && i <= 11) {
+        targetMatchIndex = 12 + Math.floor((i - 8) / 2);
+        targetSlot = (i - 8) % 2 === 0 ? "p1" : "p2";
+      } else if (i >= 12 && i <= 13) {
+        targetMatchIndex = 14;
+        targetSlot = i === 12 ? "p1" : "p2";
+      }
+
+      if (targetMatchIndex !== -1) {
+        matchList[targetMatchIndex][targetSlot] = winner;
+      }
+    }
+  }
+
+  return matchList;
+}
+
 export default function PublicBracketPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +87,8 @@ export default function PublicBracketPage() {
       try {
         const res = await getBracketState();
         if (res.ok && res.state) {
-          setMatches(JSON.parse(res.state));
+          const parsed = JSON.parse(res.state);
+          setMatches(reconstructMatches(parsed));
         } else {
           // Fallback to fresh initial bracket
           const list: Match[] = [];

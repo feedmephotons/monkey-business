@@ -9,7 +9,7 @@ const INITIAL_PLAYERS = [
   "2pretty2call",
   "Singram",
   "Scar",
-  "Tony",
+  "Smokey 420",
   "Chickadee",
   "Dragon queen",
   "Diesel",
@@ -29,6 +29,54 @@ interface Match {
   winner: string | null;
 }
 
+function reconstructMatches(storedData: any): Match[] {
+  let winners: (string | null)[] = Array(15).fill(null);
+  if (Array.isArray(storedData)) {
+    if (storedData.length > 0 && (typeof storedData[0] === 'string' || storedData[0] === null)) {
+      winners = storedData;
+    } else {
+      winners = storedData.map((m: any) => m.winner || null);
+    }
+  }
+
+  const matchList: Match[] = [];
+  for (let i = 0; i < 8; i++) {
+    matchList.push({
+      p1: INITIAL_PLAYERS[i * 2] || "",
+      p2: INITIAL_PLAYERS[i * 2 + 1] || "",
+      winner: winners[i] || null,
+    });
+  }
+  for (let i = 0; i < 7; i++) {
+    matchList.push({ p1: "", p2: "", winner: winners[8 + i] || null });
+  }
+
+  for (let i = 0; i < 14; i++) {
+    const winner = matchList[i].winner;
+    if (winner) {
+      let targetMatchIndex = -1;
+      let targetSlot: "p1" | "p2" = "p1";
+
+      if (i >= 0 && i <= 7) {
+        targetMatchIndex = 8 + Math.floor(i / 2);
+        targetSlot = i % 2 === 0 ? "p1" : "p2";
+      } else if (i >= 8 && i <= 11) {
+        targetMatchIndex = 12 + Math.floor((i - 8) / 2);
+        targetSlot = (i - 8) % 2 === 0 ? "p1" : "p2";
+      } else if (i >= 12 && i <= 13) {
+        targetMatchIndex = 14;
+        targetSlot = i === 12 ? "p1" : "p2";
+      }
+
+      if (targetMatchIndex !== -1) {
+        matchList[targetMatchIndex][targetSlot] = winner;
+      }
+    }
+  }
+
+  return matchList;
+}
+
 export default function HeadsUpBracketPreviewPage() {
   const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,7 +88,8 @@ export default function HeadsUpBracketPreviewPage() {
       try {
         const res = await getBracketState('bracket_state');
         if (res.ok && res.state) {
-          setMatches(JSON.parse(res.state));
+          const parsed = JSON.parse(res.state);
+          setMatches(reconstructMatches(parsed));
         } else {
           // Initialize fresh bracket
           const list: Match[] = [];
@@ -69,15 +118,9 @@ export default function HeadsUpBracketPreviewPage() {
   const persistState = async (updatedMatches: Match[]) => {
     setSavingStatus("saving");
     try {
-      // Compact matches to stay under 500 characters database check constraint
-      const compactMatches = updatedMatches.map(m => {
-        const clean: any = {};
-        if (m.p1) clean.p1 = m.p1;
-        if (m.p2) clean.p2 = m.p2;
-        if (m.winner) clean.winner = m.winner;
-        return clean;
-      });
-      const res = await saveBracketState(JSON.stringify(compactMatches), 'bracket_state');
+      // Store ONLY the array of winners to guarantee staying under the 500-character constraint
+      const winners = updatedMatches.map(m => m.winner || null);
+      const res = await saveBracketState(JSON.stringify(winners), 'bracket_state');
       if (res.ok) {
         setSavingStatus("saved");
         setTimeout(() => setSavingStatus("idle"), 2000);
