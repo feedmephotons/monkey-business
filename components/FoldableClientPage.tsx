@@ -1495,7 +1495,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   }`}
                   title="Click to play/pause"
                 >
-                  Great Apes
+                  Great Apes (Country Remix) 🤠
 
                   {/* Color-shifting styles specifically for "Great Apes" title while music plays */}
                   <style jsx>{`
@@ -1590,7 +1590,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   </div>
                   <audio
                     ref={audioRef}
-                    src="/audio/monkey-biz-poker-2.mp3"
+                    src="/audio/monkey-biz-poker-country.mp3"
                     preload="auto"
                     playsInline
                     controls
