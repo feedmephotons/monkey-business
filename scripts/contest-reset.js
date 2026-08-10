@@ -74,8 +74,8 @@ async function runContestReset() {
     // Sum up the 5 tiers of banana ratings left on the card
     const ratingsCount = (post.banana_1 || 0) + (post.banana_2 || 0) + (post.banana_3 || 0) + (post.banana_4 || 0) + (post.banana_5 || 0);
 
-    // Total score is the sum of splats, suffer reactions, comments, ice clicks, and banana ratings (each counts as 1 vote!)
-    const totalScore = splatCount + sufferCount + iceCount + commentsCount + ratingsCount;
+    // Total score is calculated from the actual banana ratings (direct 1 to 10 ratings)
+    const totalScore = ratingsCount;
 
     console.log(`Post by ${post.author}: Splats=${splatCount}, Suffer=${sufferCount}, Ice=${iceCount}, Comments=${commentsCount}, Ratings=${ratingsCount}, Total Score=${totalScore}`);
 
