@@ -178,33 +178,7 @@ export default function PublicBracketPage() {
 
         {/* Bracket Grid Container */}
         <div className="flex-1 overflow-x-auto pb-6">
-          <div className="min-w-[1000px] grid grid-cols-4 gap-8 py-4 px-2">
-            {/* COLUMN 1: Round 1 */}
-            <div className="flex flex-col justify-around gap-4">
-              <div className="text-center border-b border-white/5 pb-2">
-                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round 1</h3>
-                <p className="text-[9px] text-white/30 font-mono">Best of 3 Rounds</p>
-              </div>
-              {matches.slice(0, 8).map((match, idx) => (
-                <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md">
-                  <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Round 1</span>
-                    <span className="text-[9px] font-mono text-yellow/50 uppercase">Table {idx + 1}</span>
-                  </div>
-                  <div className="divide-y divide-white/5">
-                    <div className={getPlayerClass(match.winner, match.p1)}>
-                      <span className="truncate">{match.p1 || "TBD"}</span>
-                      {match.winner === match.p1 && <span className="text-[10px]">👑</span>}
-                    </div>
-                    <div className={getPlayerClass(match.winner, match.p2)}>
-                      <span className="truncate">{match.p2 || "TBD"}</span>
-                      {match.winner === match.p2 && <span className="text-[10px]">👑</span>}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
+          <div className="min-w-[750px] grid grid-cols-3 gap-8 py-4 px-2">
             {/* COLUMN 2: Round 2 */}
             <div className="flex flex-col justify-around gap-4">
               <div className="text-center border-b border-white/5 pb-2">
