@@ -1289,7 +1289,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                 </div>
                 <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 text-[0.65rem] font-bold font-mono">
                   <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🫟 {weeklyWinner.splatCount || 0} Splats</span>
-                  <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🤢 {weeklyWinner.sufferCount || 0} Suffers</span>
+                  <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🤕 {weeklyWinner.sufferCount || 0} Suffers</span>
                   <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🧊 {weeklyWinner.iceCount || 0} Ice Clicks</span>
                   <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">💬 {weeklyWinner.commentsCount || 0} Comments</span>
                   <span className="px-2.5 py-1 bg-white/5 rounded-full border border-white/5 text-cream/80">🍌 {weeklyWinner.ratingsCount || 0} Ratings</span>
@@ -1324,7 +1324,7 @@ export default function ClientPage({ posts, budget }: ClientPageProps) {
                   <span className="text-lg">🗳️</span>
                   <div>
                     <strong className="text-white block font-[family-name:var(--font-mono)] text-xs uppercase tracking-wider mb-0.5">Your Votes:</strong>
-                    Cast a direct rating from <strong className="text-yellow">1 to 10</strong> (limit 1 vote per hand). The table reaction stickers (Banana Splats, Suffer, Ice) are infinite and purely for fun!
+                    Direct 1-10 voting is active <strong className="text-yellow">ONLY on Sundays</strong> from 12:01 AM to 11:59 PM EST (limit 1 vote per hand). The table reaction stickers (Banana Splats, Suffer, Ice) are infinite and purely for fun!
                   </div>
                 </div>
                 <div className="flex items-start gap-3 bg-white/5 p-3 rounded-lg border border-white/5">

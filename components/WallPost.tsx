@@ -44,6 +44,40 @@ function isFemalePlayer(name: string): boolean {
   return FEMALE_PLAYERS.some(f => clean.includes(f) || f.includes(clean))
 }
 
+function isVotingActive(): boolean {
+  try {
+    const options = { timeZone: 'America/New_York' };
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      ...options,
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: false
+    });
+    const parts = formatter.formatToParts(new Date());
+    const weekday = parts.find(p => p.type === 'weekday')?.value;
+    const hour = parseInt(parts.find(p => p.type === 'hour')?.value || '0', 10);
+    const minute = parseInt(parts.find(p => p.type === 'minute')?.value || '0', 10);
+
+    if (weekday === 'Sunday') {
+      const totalMinutes = hour * 60 + minute;
+      const startMinutes = 0 * 60 + 1; // 12:01 AM
+      const endMinutes = 23 * 60 + 59; // 11:59 PM
+      return totalMinutes >= startMinutes && totalMinutes <= endMinutes;
+    }
+  } catch (e) {
+    const localDate = new Date();
+    const day = localDate.getDay(); // 0 is Sunday
+    const hour = localDate.getHours();
+    const minute = localDate.getMinutes();
+    if (day === 0) {
+      const totalMinutes = hour * 60 + minute;
+      return totalMinutes >= 1 && totalMinutes <= 1439;
+    }
+  }
+  return false;
+}
+
 function renderMiniCard(cardStr: string, isSmall = false) {
   if (!cardStr || cardStr.trim() === '' || cardStr.length < 2) {
     return renderCardBack(isSmall)
@@ -340,9 +374,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
   }
 
   const getSufferEmoji = (count: number) => {
-    if (count <= 1) return '🤕'
-    if (count === 2) return '🤢'
-    return '🤮'
+    return '🤕'
   }
 
   const getSufferScale = (count: number) => {
@@ -894,7 +926,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
 
       <div className="mt-4">
         {/* 4. DRIPPING RED HOT HEAT METER BUTTON ROW (1-10) */}
-        {post.is_bad_beat && (
+        {post.is_bad_beat && isVotingActive() && (
           <div 
             className="border-t border-dashed pt-4 mb-3 animate-fade-in text-center select-none"
             style={{ borderColor: `rgba(255,209,59,0.25)` }}
