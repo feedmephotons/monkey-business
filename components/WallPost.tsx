@@ -567,7 +567,7 @@ export default function WallPost({ post, index }: { post: EnrichedWallPost; inde
         )}
 
         {/* 3. POKER TABLE AREA AND COLLAPSIBLE INLINE COMMENTS */}
-        {post.is_bad_beat && hasLink && (
+        {post.is_bad_beat && (
           <div className="relative w-full max-w-[270px] my-4 overflow-visible">
             {/* Message Icon (💬) at the Top Left of Table */}
             <button
