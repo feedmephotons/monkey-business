@@ -178,33 +178,7 @@ export default function PublicBracketPage() {
 
         {/* Bracket Grid Container */}
         <div className="flex-1 overflow-x-auto pb-6">
-          <div className="min-w-[750px] grid grid-cols-3 gap-8 py-4 px-2">
-            {/* COLUMN 2: Round 2 */}
-            <div className="flex flex-col justify-around gap-4">
-              <div className="text-center border-b border-white/5 pb-2">
-                <h3 className="text-xs font-mono font-bold tracking-widest uppercase text-yellow/70">Round 2</h3>
-                <p className="text-[9px] text-white/30 font-mono">Quarterfinals</p>
-              </div>
-              {matches.slice(8, 12).map((match, idx) => (
-                <div key={idx} className="bg-[#121212] border border-white/5 rounded-sm overflow-hidden shadow-md my-auto">
-                  <div className="bg-[#181818] border-b border-white/5 px-2.5 py-1 flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-white/40 uppercase font-bold">Round 2</span>
-                    <span className="text-[9px] font-mono text-yellow/50 uppercase">Table {idx + 1}</span>
-                  </div>
-                  <div className="divide-y divide-white/5">
-                    <div className={getPlayerClass(match.winner, match.p1)}>
-                      <span className="truncate">{match.p1 || "Waiting for winner..."}</span>
-                      {match.winner === match.p1 && match.p1 && <span className="text-[10px]">👑</span>}
-                    </div>
-                    <div className={getPlayerClass(match.winner, match.p2)}>
-                      <span className="truncate">{match.p2 || "Waiting for winner..."}</span>
-                      {match.winner === match.p2 && match.p2 && <span className="text-[10px]">👑</span>}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
+          <div className="min-w-[500px] grid grid-cols-2 gap-8 py-4 px-2">
             {/* COLUMN 3: Round 3 */}
             <div className="flex flex-col justify-around gap-4">
               <div className="text-center border-b border-white/5 pb-2">
